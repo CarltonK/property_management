@@ -10,7 +10,6 @@ class TenantHome extends StatefulWidget {
 }
 
 class _TenantHomeState extends State<TenantHome> {
-
   //A list to hold payments
   List<Payment> payments = [
     june,
@@ -30,10 +29,14 @@ class _TenantHomeState extends State<TenantHome> {
         child: Stack(
           children: <Widget>[
             Container(
-              //This container lays out the theme of the page
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(color: Colors.indigo),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                Colors.indigo,
+                Colors.indigo[700],
+                Colors.indigo[900]
+              ], begin: Alignment.topCenter, end: Alignment.bottomRight)),
             ),
             Container(
               //This Container lays out the UI
@@ -53,7 +56,6 @@ class _TenantHomeState extends State<TenantHome> {
                     SizedBox(
                       height: 30,
                     ),
-                    _landlordDetails(context),
                     _userFunctions(context, payments),
                   ],
                 ),
@@ -71,11 +73,12 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
     padding: EdgeInsets.all(40),
     width: double.infinity,
     decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: LinearGradient(colors: [
+          Colors.indigo[800],
+          Colors.indigo[900],
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40),
-            topRight: Radius.circular(40))
-    ),
+            topLeft: Radius.circular(40), topRight: Radius.circular(40))),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -86,7 +89,7 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
               'Payment',
               style: GoogleFonts.muli(
                   textStyle: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       letterSpacing: .5)),
@@ -95,7 +98,7 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
               'History',
               style: GoogleFonts.muli(
                   textStyle: TextStyle(
-                      color: Colors.grey,
+                      color: Colors.grey[400],
                       fontSize: 20,
                       letterSpacing: .5)),
             )
@@ -106,7 +109,7 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
         ),
         Container(
           width: double.infinity,
-          height: 220,
+          height: 300,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: payments.length,
@@ -114,28 +117,25 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
               return Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: Card(
+                  elevation: 2,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[300]
-                    ),
-                    height: 200,
+                        color: Colors.grey[100]),
+                    height: 250,
                     padding: EdgeInsets.all(15),
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
                           '${payments[index].month}',
                           style: GoogleFonts.quicksand(
                               textStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 24
-                              )
-                          ),
+                                  fontWeight: FontWeight.w600, fontSize: 24)),
                         ),
                         SizedBox(
                           height: 10,
@@ -145,18 +145,15 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
                           children: <Widget>[
                             Text(
                               'Rent amount',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                  )
-                              ),
+                              style:
+                                  GoogleFonts.quicksand(textStyle: TextStyle()),
                             ),
                             Text(
                               'KES ${payments[index].rent}',
                               style: GoogleFonts.quicksand(
                                   textStyle: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  )
-                              ),
+                                fontWeight: FontWeight.w600,
+                              )),
                             )
                           ],
                         ),
@@ -168,35 +165,28 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
                           children: <Widget>[
                             Text(
                               'Rent due',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                  )
-                              ),
+                              style:
+                                  GoogleFonts.quicksand(textStyle: TextStyle()),
                             ),
                             Text(
                               '${payments[index].date.day} '
-                                  '${payments[index].month} '
-                                  '${payments[index].date.year}',
+                              '${payments[index].month} '
+                              '${payments[index].date.year}',
                               style: GoogleFonts.quicksand(
                                   textStyle: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  )
-                              ),
+                                fontWeight: FontWeight.w600,
+                              )),
                             )
                           ],
                         ),
                         Center(
                           child: Container(
                             width: double.maxFinite,
-                            margin: EdgeInsets.only(
-                              top: 30,
-                              right: 20,
-                              left: 20
-                            ),
+                            margin:
+                                EdgeInsets.only(top: 30, right: 20, left: 20),
                             decoration: BoxDecoration(
                                 color: Colors.indigo,
-                                borderRadius: BorderRadius.circular(16)
-                            ),
+                                borderRadius: BorderRadius.circular(16)),
                             child: FlatButton(
                                 onPressed: null,
                                 child: Text(
@@ -204,9 +194,7 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
                                   style: GoogleFonts.quicksand(
                                       textStyle: TextStyle(
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold
-                                      )
-                                  ),
+                                          fontWeight: FontWeight.bold)),
                                 )),
                           ),
                         )
@@ -218,109 +206,6 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
             },
           ),
         ),
-        SizedBox(
-          height: 30,
-        ),
-        Text(
-          'Complaint',
-          style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: .5)),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          width: double.infinity,
-          height: 220,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)
-                ),
-                child: Container(
-                  height: 180,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.blueGrey[50]
-                  ),
-                  width: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FloatingActionButton(
-                        onPressed: () {
-                          print('I want to add a new complaint');
-                        },
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.add, color: Colors.indigo, size: 30,),),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'Add New',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: .5)),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 30,
-              ),
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)
-                ),
-                child: Container(
-                  height: 180,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.pink[50]
-                  ),
-                  width: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '4',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: .5)),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'Complaints',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 20,
-                                letterSpacing: .5)),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-                ),
-        ),
       ],
     ),
   );
@@ -331,17 +216,13 @@ Widget _landlordDetails(BuildContext context) {
     //This container shows the landlord details
     width: MediaQuery.of(context).size.width,
     decoration: BoxDecoration(
-      gradient: LinearGradient(
-          colors: [
-            Colors.indigo,
-            Colors.indigo[800]
-          ],
-      begin: Alignment.bottomCenter,
-      end: Alignment.topCenter),
+        gradient: LinearGradient(
+            colors: [Colors.indigo, Colors.indigo[800]],
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter),
         color: Colors.indigo,
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40),
-            topRight: Radius.circular(40))),
+            topLeft: Radius.circular(40), topRight: Radius.circular(40))),
     padding: EdgeInsets.all(40),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,9 +231,7 @@ Widget _landlordDetails(BuildContext context) {
           'Landlord Information',
           style: GoogleFonts.muli(
               textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .5)),
+                  color: Colors.white, fontSize: 20, letterSpacing: .5)),
         ),
         SizedBox(
           height: 10,
@@ -406,7 +285,8 @@ Widget _landlordDetails(BuildContext context) {
               },
               minWidth: MediaQuery.of(context).size.width * 0.35,
               padding: EdgeInsets.all(16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
               child: Text(
                 'Call',
                 style: GoogleFonts.quicksand(
@@ -415,7 +295,8 @@ Widget _landlordDetails(BuildContext context) {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         letterSpacing: .5)),
-              ),),
+              ),
+            ),
             MaterialButton(
               color: Colors.indigo,
               onPressed: () {
@@ -425,9 +306,7 @@ Widget _landlordDetails(BuildContext context) {
               padding: EdgeInsets.all(16),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(
-                      color: Colors.white
-                  )),
+                  side: BorderSide(color: Colors.white)),
               child: Text(
                 'Send SMS',
                 style: GoogleFonts.quicksand(
@@ -435,7 +314,8 @@ Widget _landlordDetails(BuildContext context) {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         letterSpacing: .5)),
-              ),)
+              ),
+            )
           ],
         )
       ],
@@ -488,7 +368,7 @@ Widget _appBarLayout() {
                   color: Colors.white,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 2)),
+                  letterSpacing: 1)),
         ),
         MaterialButton(
           color: Colors.black,
@@ -499,14 +379,18 @@ Widget _appBarLayout() {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Row(
             children: <Widget>[
-              Icon(Icons.alarm, color: Colors.white,),
+              Icon(
+                Icons.alarm,
+                color: Colors.white,
+              ),
               SizedBox(
                 width: 5,
               ),
               Text(
                 'Rent Reminder',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: Colors.white, letterSpacing: .5)),
+                    textStyle:
+                        TextStyle(color: Colors.white, letterSpacing: .8)),
               ),
             ],
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:property_management/auth/forgot_pass.dart';
 import 'package:property_management/auth/login.dart';
 import 'package:property_management/auth/registration.dart';
+import 'package:property_management/pages/tenant.dart';
 import 'package:property_management/pages/tenant_home.dart';
 import 'package:property_management/pages/tenant_prof.dart';
 
@@ -17,16 +18,13 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => Login(),
         '/register': (context) => Registration(),
-        '/tenant-home': (context) => TenantHome(),
+        '/tenant-home': (context) => TenantBase(),
         '/tenant-profile': (context) => TenantProfile(),
-        '/reset': (context) => ForgotPassword()
-
+        '/reset': (context) => ForgotPassword(),
+        '/login': (context) => Login(),
       },
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          color: Colors.blue,
-          elevation: 0
-        ),
+        appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),
         primarySwatch: Colors.blue,
       ),
     );

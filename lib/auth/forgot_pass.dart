@@ -9,12 +9,11 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-
   String _email;
 
   final _formKey = GlobalKey<FormState>();
 
-  void _emailHandler(String email){
+  void _emailHandler(String email) {
     _email = email;
     print('Email: $_email');
   }
@@ -27,51 +26,40 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           'Email',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 20,
                   letterSpacing: .2,
-                  fontWeight: FontWeight.bold
-              )
-          ),
+                  fontWeight: FontWeight.bold)),
         ),
         SizedBox(
           height: 10,
         ),
         TextFormField(
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18
-              )
-          ),
+              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
               errorStyle: GoogleFonts.quicksand(
                 textStyle: TextStyle(
+                    color: Colors.white
                 ),
               ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white
+                )
+              ),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.indigo,
-                      width: 1.5
-                  )
-              ),
-
+                  borderSide: BorderSide(color: Colors.indigo, width: 1.5)),
               errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.red
-                  )
-              ),
+                  borderSide: BorderSide(color: Colors.red)),
               labelText: 'Please enter your email',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-
-                  )
-              ),
-              icon: Icon(Icons.email)
-          ),
+              labelStyle: GoogleFonts.quicksand(textStyle: TextStyle(
+                color: Colors.white
+              )),
+              icon: Icon(Icons.email, color: Colors.white,)),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
-            if (value.isEmpty){
+            if (value.isEmpty) {
               return 'Email is required';
             }
             return null;
@@ -92,7 +80,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
     }
-
   }
 
   Widget _resetBtn() {
@@ -100,22 +87,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       width: double.infinity,
       child: RaisedButton(
-        color: Colors.indigo,
+        color: Colors.white,
         onPressed: _resetBtnPressed,
         padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Text(
           'RESET PASSWORD',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
-                  color: Colors.white,
+                  color: Colors.indigo,
                   fontSize: 18,
                   letterSpacing: 0.5,
-                  fontWeight: FontWeight.w500
-              )
-          ),),),
+                  fontWeight: FontWeight.w500)),
+        ),
+      ),
     );
   }
 
@@ -123,9 +108,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.indigo,
         leading: IconButton(
-            icon: Icon(CupertinoIcons.back, color: Colors.black,),
+            icon: Icon(
+              CupertinoIcons.back,
+              color: Colors.white,
+            ),
             onPressed: () => Navigator.of(context).pop()),
         elevation: 0.0,
       ),
@@ -141,16 +129,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.white
+                    gradient: LinearGradient(
+                        colors: [
+                          Colors.indigo,
+                          Colors.indigo[700],
+                          Colors.indigo[900]
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomRight)
                 ),
               ),
               Container(
                 height: double.infinity,
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 50
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 50),
                   physics: AlwaysScrollableScrollPhysics(),
                   child: Form(
                     key: _formKey,
@@ -162,12 +154,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           'Happens to the best of us',
                           style: GoogleFonts.quicksand(
                               textStyle: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 24,
-                                  letterSpacing: 0.5
-                              )
-                          ),
+                                  letterSpacing: 0.5)),
                         ),
                         SizedBox(
                           height: 5,
@@ -176,12 +166,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           'You will receive a password reset link in your email',
                           style: GoogleFonts.quicksand(
                               textStyle: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 20,
-                                  letterSpacing: 0.5
-                              )
-                          ),
+                                  letterSpacing: 0.5)),
                         ),
                         SizedBox(
                           height: 50,
