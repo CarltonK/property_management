@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:property_management/auth/forgot_pass.dart';
 import 'package:property_management/auth/login.dart';
 import 'package:property_management/auth/registration.dart';
-import 'package:property_management/pages/tenant.dart';
-import 'package:property_management/pages/tenant_home.dart';
-import 'package:property_management/pages/tenant_prof.dart';
+import 'package:property_management/owner_pages/owner.dart';
+import 'package:property_management/tenant_pages/tenant.dart';
+import 'package:property_management/tenant_pages/tenant_prof.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,12 +16,16 @@ class MyApp extends StatelessWidget {
       title: 'Property Management',
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (context) => Login(),
+        '/': (context) => OwnerBase(),
+        //Authentication
         '/register': (context) => Registration(),
-        '/tenant-home': (context) => TenantBase(),
-        '/tenant-profile': (context) => TenantProfile(),
         '/reset': (context) => ForgotPassword(),
         '/login': (context) => Login(),
+        //Tenant
+        '/tenant-home': (context) => TenantBase(),
+        '/tenant-profile': (context) => TenantProfile(),
+        //Owner
+        '/owner_home': (context) => OwnerBase()
       },
       theme: ThemeData(
         appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),
