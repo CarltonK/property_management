@@ -15,7 +15,7 @@ class _TenVacateState extends State<TenVacate> {
   Widget _appBarLayout() {
     //This custom appBar replaces the Flutter App Bar
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -61,14 +61,11 @@ class _TenVacateState extends State<TenVacate> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                  Colors.indigo,
-                  Colors.indigo[700],
-                  Colors.indigo[900]
-                ], begin: Alignment.topCenter, end: Alignment.bottomRight)),
+                    color: Colors.indigo[900]
+                ),
               ),
               Container(
-                  padding: EdgeInsets.only(top: 40),
+                  padding: EdgeInsets.only(top: 30),
                   height: double.infinity,
                   width: MediaQuery.of(context).size.width,
                   child: SingleChildScrollView(

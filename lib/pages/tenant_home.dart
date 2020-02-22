@@ -32,15 +32,12 @@ class _TenantHomeState extends State<TenantHome> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Colors.indigo,
-                Colors.indigo[700],
-                Colors.indigo[900]
-              ], begin: Alignment.topCenter, end: Alignment.bottomRight)),
+                  color: Colors.indigo[900]
+              ),
             ),
             Container(
               //This Container lays out the UI
-              padding: EdgeInsets.only(top: 40),
+              padding: EdgeInsets.only(top: 30),
               height: double.infinity,
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(
@@ -48,15 +45,13 @@ class _TenantHomeState extends State<TenantHome> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _appBarLayout(),
+                    _appBarLayout(context),
                     SizedBox(
-                      height: 30,
-                    ),
-                    _rowTenantDetails(context),
-                    SizedBox(
-                      height: 30,
+                      height: 10,
                     ),
                     _userFunctions(context, payments),
+                    SizedBox(height: 10,),
+                    //_landlordDetails(context)
                   ],
                 ),
               ),
@@ -70,13 +65,10 @@ class _TenantHomeState extends State<TenantHome> {
 
 Widget _userFunctions(BuildContext context, List<Payment> payments) {
   return Container(
-    padding: EdgeInsets.all(40),
+    padding: EdgeInsets.all(30),
     width: double.infinity,
     decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Colors.indigo[800],
-          Colors.indigo[900],
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        color: Colors.indigo[900],
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40), topRight: Radius.circular(40))),
     child: Column(
@@ -217,13 +209,13 @@ Widget _landlordDetails(BuildContext context) {
     width: MediaQuery.of(context).size.width,
     decoration: BoxDecoration(
         gradient: LinearGradient(
-            colors: [Colors.indigo, Colors.indigo[800]],
+            colors: [Colors.indigo[900], Colors.indigo[900]],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter),
         color: Colors.indigo,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-    padding: EdgeInsets.all(40),
+    padding: EdgeInsets.all(30),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -231,10 +223,10 @@ Widget _landlordDetails(BuildContext context) {
           'Landlord Information',
           style: GoogleFonts.muli(
               textStyle: TextStyle(
-                  color: Colors.white, fontSize: 20, letterSpacing: .5)),
+                  color: Colors.white, fontSize: 22, letterSpacing: .5)),
         ),
         SizedBox(
-          height: 10,
+          height: 20,
         ),
         Row(
           children: <Widget>[
@@ -243,7 +235,7 @@ Widget _landlordDetails(BuildContext context) {
               backgroundColor: Colors.white,
             ),
             SizedBox(
-              width: 20,
+              width: 15,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,14 +283,14 @@ Widget _landlordDetails(BuildContext context) {
                 'Call',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                        color: Colors.indigo,
+                        color: Colors.indigo[900],
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         letterSpacing: .5)),
               ),
             ),
             MaterialButton(
-              color: Colors.indigo,
+              color: Colors.indigo[900],
               onPressed: () {
                 print('I want to send an sms to the landlord');
               },
@@ -323,76 +315,42 @@ Widget _landlordDetails(BuildContext context) {
   );
 }
 
-Widget _rowTenantDetails(BuildContext context) {
+
+Widget _appBarLayout(context) {
+  //This custom appBar replaces the Flutter App Bar
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 30),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         GestureDetector(
           onTap: () {
             Navigator.of(context).pushNamed('/tenant-profile');
           },
-          child: Hero(
-            tag: 'tenant',
-            child: CircleAvatar(
-              radius: 45,
-              backgroundColor: Colors.white,
+          child: Container(
+            height: 80,
+            child: Hero(
+              tag: 'tenant',
+              child: CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.white,
+              ),
             ),
           ),
         ),
-        SizedBox(
-          width: 20,
-        ),
-        Text(
-          'Hello, Jon',
-          style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                  color: Colors.white, fontSize: 20, letterSpacing: .5)),
-        )
-      ],
-    ),
-  );
-}
-
-Widget _appBarLayout() {
-  //This custom appBar replaces the Flutter App Bar
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 30),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          'Home',
-          style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1)),
-        ),
-        MaterialButton(
-          color: Colors.black,
+        FloatingActionButton(
+          elevation: 10,
+          mini: false,
+          splashColor: Colors.indigo,
+          tooltip: 'Rent reminder',
           onPressed: () {
-            print('I want to set the reminder');
+            print('I want to set a rent reminder');
           },
-          padding: EdgeInsets.all(12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          child: Row(
-            children: <Widget>[
-              Icon(
-                Icons.alarm,
-                color: Colors.white,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                'Rent Reminder',
-                style: GoogleFonts.quicksand(
-                    textStyle:
-                        TextStyle(color: Colors.white, letterSpacing: .8)),
-              ),
-            ],
+          backgroundColor: Colors.indigo[900],
+          child: Icon(
+            Icons.alarm,
+            color: Colors.white,
+            size: 30,
           ),
         )
       ],

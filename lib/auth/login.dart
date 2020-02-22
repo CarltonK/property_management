@@ -231,7 +231,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.indigo[900],
         leading: IconButton(
             icon: Icon(
               CupertinoIcons.back,
@@ -252,14 +252,7 @@ class _LoginState extends State<Login> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [
-                          Colors.indigo,
-                          Colors.indigo[700],
-                          Colors.indigo[900]
-                        ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomRight)
+                  color: Colors.indigo[900]
                 ),
               ),
               Container(

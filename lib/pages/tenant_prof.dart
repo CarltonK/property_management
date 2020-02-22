@@ -8,7 +8,7 @@ class TenantProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.indigo[900],
         elevation: 0.0,
         leading: IconButton(
             icon: Icon(
@@ -39,11 +39,8 @@ class TenantProfile extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Colors.indigo,
-                Colors.indigo[700],
-                Colors.indigo[900]
-              ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                  color: Colors.indigo[900]
+              ),
             ),
             Container(
               height: MediaQuery.of(context).size.height,

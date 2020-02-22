@@ -20,7 +20,7 @@ class _SearchResultsState extends State<SearchResults> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.indigo[600],
+          color: Colors.indigo[900],
           borderRadius: BorderRadius.circular(10),
         ),
         height: 140,

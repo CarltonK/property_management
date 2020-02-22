@@ -51,14 +51,11 @@ class _TenSearchState extends State<TenSearch> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                  Colors.indigo,
-                  Colors.indigo[700],
-                  Colors.indigo[900]
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                    color: Colors.indigo[900]
+                ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 40, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 20),
                 height: double.infinity,
                 width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
@@ -73,7 +70,7 @@ class _TenSearchState extends State<TenSearch> {
                       _filterChips(),
                       Container(
                         height: MediaQuery.of(context).size.height,
-                        margin: EdgeInsets.symmetric(vertical: 20),
+                        margin: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                         child: ListView(
                           itemExtent: 140,
                           children: <Widget>[
@@ -175,15 +172,21 @@ Widget _appBarLayout() {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1)),
         ),
-        RaisedButton(
-            onPressed: () => print('This adjusts the filters'),
-            splashColor: Colors.white,
-            color: Colors.indigo,
-            child: Icon(
-              Icons.list,
-              color: Colors.white,
-              size: 30,
-            ))
+        FloatingActionButton(
+          elevation: 10,
+          mini: false,
+          splashColor: Colors.indigo,
+          tooltip: 'Adjust filters',
+          onPressed: () {
+            print('I want to adjust filters');
+          },
+          backgroundColor: Colors.indigo[900],
+          child: Icon(
+            Icons.list,
+            color: Colors.white,
+            size: 30,
+          ),
+        )
       ],
     ),
   );

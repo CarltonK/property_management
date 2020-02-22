@@ -42,11 +42,8 @@ class _TenantBaseState extends State<TenantBase> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                  Colors.indigo,
-                  Colors.indigo[700],
-                  Colors.indigo[900]
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                    color: Colors.indigo[900]
+                ),
               ),
               Container(
                 height: double.infinity,
@@ -71,7 +68,7 @@ class _TenantBaseState extends State<TenantBase> {
         ),
         bottomNavigationBar: CurvedNavigationBar(
             backgroundColor: Colors.indigo[900],
-            height: 55,
+            height: 50,
             index: _selectedIndex,
             items: [
               Icon(
@@ -98,8 +95,8 @@ class _TenantBaseState extends State<TenantBase> {
             onTap: (index) => setState(() {
                   _selectedIndex = index;
                   _pageController.animateToPage(index,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.easeIn);
+                      duration: Duration(milliseconds: 10),
+                      curve: Curves.easeInOut);
                 })));
   }
 }

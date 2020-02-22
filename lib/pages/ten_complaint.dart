@@ -14,15 +14,12 @@ class TenantComplain extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Colors.indigo,
-                Colors.indigo[700],
-                Colors.indigo[900]
-              ], begin: Alignment.topCenter, end: Alignment.bottomRight)),
+                  color: Colors.indigo[900]
+              ),
             ),
             Container(
               //This Container lays out the UI
-              padding: EdgeInsets.only(top: 40),
+              padding: EdgeInsets.only(top: 30),
               height: double.infinity,
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(
@@ -33,29 +30,6 @@ class TenantComplain extends StatelessWidget {
                     _appBarLayout(),
                     SizedBox(
                       height: 20,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      child: _createComplaintWidget(context),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Text(
-                        'My complaints',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: 1)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
                     ),
                     _listHolder(context)
                   ],
@@ -73,7 +47,7 @@ Widget _singleChildComplaint() {
   return Card(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     color: Colors.grey[100],
-    margin: EdgeInsets.symmetric(horizontal: 10),
+    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     child: ListTile(
       subtitle: Text(
         '12 Jan 2020',
@@ -101,7 +75,7 @@ Widget _singleChildComplaint2() {
   return Card(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     color: Colors.grey[100],
-    margin: EdgeInsets.symmetric(horizontal: 10),
+    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     child: ListTile(
       subtitle: Text(
         '31 Jan 2020',
@@ -127,29 +101,28 @@ Widget _singleChildComplaint2() {
 
 Widget _listHolder(BuildContext context) {
   return Center(
-    child: Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: Colors.white24)),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.4,
-        width: MediaQuery.of(context).size.width * 0.95,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.indigo[700],
-        ),
-        child: ListWheelScrollView(
-            //perspective: 0.001,
-            diameterRatio: 2,
-            offAxisFraction: 0.1,
-            itemExtent: 80,
-            children: [
-              _singleChildComplaint(),
-              _singleChildComplaint2(),
-              _singleChildComplaint(),
-              _singleChildComplaint2()
-            ]),
+    child: Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width * 0.95,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.indigo[900],
       ),
+      child: ListView(
+          //perspective: 0.001,
+//          diameterRatio: 2,
+//          offAxisFraction: 0.1,
+          itemExtent: 80,
+          children: [
+            _singleChildComplaint(),
+            _singleChildComplaint2(),
+            _singleChildComplaint(),
+            _singleChildComplaint2(),
+            _singleChildComplaint(),
+            _singleChildComplaint2(),
+            _singleChildComplaint(),
+            _singleChildComplaint2()
+          ]),
     ),
   );
 }
@@ -157,13 +130,13 @@ Widget _listHolder(BuildContext context) {
 Widget _createComplaintWidget(BuildContext context) {
   return Card(
     elevation: 30,
-    margin: EdgeInsets.symmetric(horizontal: 60),
+    margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
     shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.white),
         borderRadius: BorderRadius.circular(30)),
     child: Container(
-      height: MediaQuery.of(context).size.height * 0.2,
-      width: MediaQuery.of(context).size.width * 0.5,
+      height: MediaQuery.of(context).size.height * 0.15,
+      width: MediaQuery.of(context).size.width * 0.2,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30), color: Colors.indigo[700]),
       child: Column(
@@ -203,7 +176,7 @@ Widget _createComplaintWidget(BuildContext context) {
 Widget _appBarLayout() {
   //This custom appBar replaces the Flutter App Bar
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 30),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -216,6 +189,21 @@ Widget _appBarLayout() {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1)),
         ),
+        FloatingActionButton(
+          elevation: 10,
+          mini: false,
+          splashColor: Colors.indigo,
+          tooltip: 'Add a new complaint',
+          onPressed: () {
+            print('I want to add a new complaint');
+          },
+          backgroundColor: Colors.indigo[900],
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 30,
+          ),
+        )
       ],
     ),
   );
