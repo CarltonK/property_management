@@ -32,7 +32,7 @@ class _TenantHomeState extends State<TenantHome> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: Colors.indigo[900]
+                  color: Colors.green[900]
               ),
             ),
             Container(
@@ -68,7 +68,7 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
     padding: EdgeInsets.all(30),
     width: double.infinity,
     decoration: BoxDecoration(
-        color: Colors.indigo[900],
+        color: Colors.green[900],
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40), topRight: Radius.circular(40))),
     child: Column(
@@ -177,7 +177,7 @@ Widget _userFunctions(BuildContext context, List<Payment> payments) {
                             margin:
                                 EdgeInsets.only(top: 30, right: 20, left: 20),
                             decoration: BoxDecoration(
-                                color: Colors.indigo,
+                                color: Colors.green[900],
                                 borderRadius: BorderRadius.circular(16)),
                             child: FlatButton(
                                 onPressed: null,
@@ -208,11 +208,7 @@ Widget _landlordDetails(BuildContext context) {
     //This container shows the landlord details
     width: MediaQuery.of(context).size.width,
     decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [Colors.indigo[900], Colors.indigo[900]],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter),
-        color: Colors.indigo,
+        color: Colors.green[900],
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40), topRight: Radius.circular(40))),
     padding: EdgeInsets.all(30),
@@ -334,6 +330,7 @@ Widget _appBarLayout(context) {
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.white,
+                child: Icon(CupertinoIcons.person_solid, color: Colors.green[900],size: 60,),
               ),
             ),
           ),
@@ -341,12 +338,12 @@ Widget _appBarLayout(context) {
         FloatingActionButton(
           elevation: 10,
           mini: false,
-          splashColor: Colors.indigo,
+          splashColor: Colors.greenAccent[700],
           tooltip: 'Rent reminder',
           onPressed: () {
             print('I want to set a rent reminder');
           },
-          backgroundColor: Colors.indigo[900],
+          backgroundColor: Colors.green[900],
           child: Icon(
             Icons.alarm,
             color: Colors.white,

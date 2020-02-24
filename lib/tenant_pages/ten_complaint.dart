@@ -14,7 +14,7 @@ class TenantComplain extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: Colors.indigo[900]
+                  color: Colors.green[900]
               ),
             ),
             Container(
@@ -53,13 +53,13 @@ Widget _singleChildComplaint() {
         '12 Jan 2020',
         style: GoogleFonts.quicksand(
             textStyle:
-                TextStyle(color: Colors.indigo, fontWeight: FontWeight.w500)),
+                TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
       ),
       title: Text(
         'Broken hinges',
         style: GoogleFonts.quicksand(
             textStyle:
-                TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold)),
+                TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
       ),
       trailing: IconButton(
           icon: Icon(
@@ -81,13 +81,13 @@ Widget _singleChildComplaint2() {
         '31 Jan 2020',
         style: GoogleFonts.quicksand(
             textStyle:
-                TextStyle(color: Colors.indigo, fontWeight: FontWeight.w500)),
+                TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
       ),
       title: Text(
         'Faulty tap',
         style: GoogleFonts.quicksand(
             textStyle:
-                TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold)),
+                TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
       ),
       trailing: IconButton(
           icon: Icon(
@@ -106,7 +106,7 @@ Widget _listHolder(BuildContext context) {
       width: MediaQuery.of(context).size.width * 0.95,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.indigo[900],
+        color: Colors.green[900],
       ),
       child: ListView(
           //perspective: 0.001,
@@ -151,7 +151,7 @@ Widget _createComplaintWidget(BuildContext context) {
             backgroundColor: Colors.white,
             child: Icon(
               Icons.add,
-              color: Colors.indigo[800],
+              color: Colors.green[800],
               size: 30,
             ),
           ),
@@ -192,12 +192,12 @@ Widget _appBarLayout() {
         FloatingActionButton(
           elevation: 10,
           mini: false,
-          splashColor: Colors.indigo,
+          splashColor: Colors.greenAccent[700],
           tooltip: 'Add a new complaint',
           onPressed: () {
             print('I want to add a new complaint');
           },
-          backgroundColor: Colors.indigo[900],
+          backgroundColor: Colors.green[900],
           child: Icon(
             Icons.add,
             color: Colors.white,

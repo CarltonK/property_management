@@ -61,7 +61,7 @@ class _TenVacateState extends State<TenVacate> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.indigo[900]
+                    color: Colors.green[900]
                 ),
               ),
               Container(
@@ -122,6 +122,7 @@ class _TenVacateState extends State<TenVacate> {
                             child: DatePickerTimeline(
                               _pickVacateEarliest(),
                               height: 100,
+                              selectionColor: Colors.greenAccent[700],
                               onDateChange: (date) {
                                 print('$date');
                               },
@@ -172,7 +173,7 @@ class _TenVacateState extends State<TenVacate> {
           'SUBMIT',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
-                  color: Colors.indigo,
+                  color: Colors.green[900],
                   fontSize: 18,
                   letterSpacing: 0.5,
                   fontWeight: FontWeight.w500)),

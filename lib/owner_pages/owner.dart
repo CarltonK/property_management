@@ -47,7 +47,7 @@ class _OwnerBaseState extends State<OwnerBase> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.indigo[900]
+                    color: Colors.green[900]
                 ),
               ),
               Container(
@@ -63,12 +63,12 @@ class _OwnerBaseState extends State<OwnerBase> {
           height: 70,
           child: BottomNavigationBar(
             backgroundColor: Colors.white,
-            selectedItemColor: Colors.indigo,
+            selectedItemColor: Colors.green[900],
             items: [
               BottomNavigationBarItem(
                   icon: Icon(
                     Icons.home,
-                    color: Colors.indigo[900],
+                    color: Colors.green[900],
                     size: 30,
                   ),
                   title: Text(
@@ -81,7 +81,7 @@ class _OwnerBaseState extends State<OwnerBase> {
               BottomNavigationBarItem(
                   icon: Icon(
                     Icons.comment,
-                    color: Colors.indigo[900],
+                    color: Colors.green[900],
                     size: 30,
                   ),
                   title: Text('Complaints',style: GoogleFonts.quicksand(

@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/api/firebase_api.dart';
+import 'package:property_management/models/usermodel.dart';
 
 class Registration extends StatefulWidget {
   @override
@@ -9,6 +13,7 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
+  User _user;
   final _formKey = GlobalKey<FormState>();
 
   final _focuslname = FocusNode();
@@ -80,9 +85,9 @@ class _RegistrationState extends State<Registration> {
             'SIGN IN',
             style: GoogleFonts.quicksand(
                 textStyle: TextStyle(
-                    color: Colors.indigo,
+                    color: Colors.green[900],
                     fontSize: 20,
-                    fontWeight: FontWeight.w500)),
+                    fontWeight: FontWeight.w600)),
           ),
         ),
       ),
@@ -507,11 +512,152 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
+  bool isLoading = true;
+  dynamic result;
+  bool callResponse = false;
+
+  API _api = API();
+
+  Future<bool> serverCall() async {
+    result = await _api.createUserEmailPass(_user);
+    print('This is the result: $result');
+
+    if (result == 'Your password is weak. Please choose another') {
+      callResponse = false;
+      return false;
+    }
+    else if (result == "Invalid Email. Please enter the correct email") {
+      callResponse = false;
+      return false;
+    }
+    else if (result == "An account with the same email exists") {
+      callResponse = false;
+      return false;
+    }
+    else {
+      callResponse = true;
+      return true;
+    }
+  }
   void _registerBtnPressed() {
     print('Register btn pressed');
 
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      //Populate the user fields
+      _user = User(
+        firstName: _fname,
+        lastName: _lname,
+        email: _email,
+        phone: _phone,
+        natId: _natId,
+        password: _pass
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      //Display appropriate response according to results of above feature
+      serverCall()
+          .catchError((error) {
+        print('This is the error $error');
+        //Disable the circular progress dialog
+        setState(() {
+          isLoading = true;
+        });
+        //Show an action sheet with error
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  '$error',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                          textStyle:
+                          TextStyle(color: Colors.red, fontSize: 25)),
+                    )));
+          },
+        );
+      })
+      .whenComplete(() {
+        if (callResponse) {
+          print('Successful response ${result}');
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                title: Text(
+                  'Thank you for joining us ${_user.firstName}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+              );
+            },
+          );
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+          //Timed Function
+          Timer(Duration(seconds: 2), () {
+            Navigator.of(context).popAndPushNamed('/login');
+          });
+        }
+        else {
+          print('Failed response: ${result}');
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+          //Show an action sheet with result
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                  title: Text(
+                    '${result}',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        )),
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle:
+                            TextStyle(color: Colors.red, fontSize: 25)),
+                      )));
+            },
+          );
+        }
+      });
     }
   }
 
@@ -519,7 +665,8 @@ class _RegistrationState extends State<Registration> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       width: double.infinity,
-      child: RaisedButton(
+      child: isLoading
+          ? RaisedButton(
         color: Colors.white,
         onPressed: _registerBtnPressed,
         padding: EdgeInsets.all(15.0),
@@ -528,11 +675,17 @@ class _RegistrationState extends State<Registration> {
           'REGISTER',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
-                  color: Colors.indigo,
+                  color: Colors.green[900],
                   fontSize: 18,
                   letterSpacing: 0.5,
-                  fontWeight: FontWeight.w500)),
+                  fontWeight: FontWeight.w600)),
         ),
+      )
+      : Center(
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        strokeWidth: 3,
+      ),
       ),
     );
   }
@@ -541,7 +694,7 @@ class _RegistrationState extends State<Registration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo[900],
+        backgroundColor: Colors.green[900],
         leading: IconButton(
             icon: Icon(
               CupertinoIcons.back,
@@ -561,7 +714,7 @@ class _RegistrationState extends State<Registration> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.indigo[900]
+                    color: Colors.green[900]
                 ),
               ),
               Container(

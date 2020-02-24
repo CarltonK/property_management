@@ -8,7 +8,7 @@ class TenantProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo[900],
+        backgroundColor: Colors.green[900],
         elevation: 0.0,
         leading: IconButton(
             icon: Icon(
@@ -39,7 +39,7 @@ class TenantProfile extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: Colors.indigo[900]
+                  color: Colors.green[900]
               ),
             ),
             Container(
@@ -56,7 +56,7 @@ class TenantProfile extends StatelessWidget {
                     child: Hero(
                       tag: 'tenant',
                       child: CircleAvatar(
-                        backgroundColor: Colors.indigo[100],
+                        backgroundColor: Colors.white,
                         radius: 100,
                       ),
                     ),
@@ -89,7 +89,7 @@ class TenantProfile extends StatelessWidget {
                       children: <Widget>[
                         Card(
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.indigo, width: 1.5),
+                            side: BorderSide(color: Colors.green[500], width: 1.5),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 5,
@@ -127,7 +127,7 @@ class TenantProfile extends StatelessWidget {
                         ),
                         Card(
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.indigo, width: 1.5),
+                            side: BorderSide(color: Colors.green[500], width: 1.5),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 5,

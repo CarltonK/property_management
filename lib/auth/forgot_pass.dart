@@ -95,10 +95,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           'RESET PASSWORD',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
-                  color: Colors.indigo,
+                  color: Colors.green[900],
                   fontSize: 18,
                   letterSpacing: 0.5,
-                  fontWeight: FontWeight.w500)),
+                  fontWeight: FontWeight.w600)),
         ),
       ),
     );
@@ -108,7 +108,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo[900],
+        backgroundColor: Colors.green[900],
         leading: IconButton(
             icon: Icon(
               CupertinoIcons.back,
@@ -129,7 +129,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.indigo[900]
+                    color: Colors.green[900]
                 ),
               ),
               Container(

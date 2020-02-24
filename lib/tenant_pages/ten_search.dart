@@ -20,13 +20,13 @@ class _TenSearchState extends State<TenSearch> {
           '31 Jan 2020',
           style: GoogleFonts.quicksand(
               textStyle:
-                  TextStyle(color: Colors.indigo, fontWeight: FontWeight.w500)),
+                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
         ),
         title: Text(
           'Faulty tap',
           style: GoogleFonts.quicksand(
               textStyle:
-                  TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold)),
+                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
         ),
         trailing: IconButton(
             icon: Icon(
@@ -51,7 +51,7 @@ class _TenSearchState extends State<TenSearch> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.indigo[900]
+                    color: Colors.green[900]
                 ),
               ),
               Container(
@@ -101,6 +101,7 @@ class _TenSearchState extends State<TenSearch> {
 
 Widget _filterChips() {
   return Container(
+    margin: EdgeInsets.only(top: 10),
     height: 50,
     padding: EdgeInsets.symmetric(horizontal: 20),
     child: ListView(
@@ -175,12 +176,12 @@ Widget _appBarLayout() {
         FloatingActionButton(
           elevation: 10,
           mini: false,
-          splashColor: Colors.indigo,
+          splashColor: Colors.greenAccent[700],
           tooltip: 'Adjust filters',
           onPressed: () {
             print('I want to adjust filters');
           },
-          backgroundColor: Colors.indigo[900],
+          backgroundColor: Colors.green[900],
           child: Icon(
             Icons.list,
             color: Colors.white,

@@ -55,7 +55,7 @@ class _TenantBaseState extends State<TenantBase> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.indigo[900]
+                    color: Colors.green[900]
                 ),
               ),
               Container(
@@ -71,12 +71,12 @@ class _TenantBaseState extends State<TenantBase> {
           height: 70,
           child: BottomNavigationBar(
             backgroundColor: Colors.white,
-              selectedItemColor: Colors.indigo,
+              selectedItemColor: Colors.green[900],
               items: [
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.home,
-                      color: Colors.indigo[900],
+                      color: Colors.green[900],
                       size: 30,
                     ),
                 title: Text(
@@ -89,7 +89,7 @@ class _TenantBaseState extends State<TenantBase> {
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.search,
-                      color: Colors.indigo[900],
+                      color: Colors.green[900],
                       size: 30,
                     ),
                     title: Text('Search',
@@ -101,7 +101,7 @@ class _TenantBaseState extends State<TenantBase> {
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.exit_to_app,
-                      color: Colors.indigo[900],
+                      color: Colors.green[900],
                       size: 30,
                     ),
                     title: Text('Vacate',style: GoogleFonts.quicksand(
@@ -112,7 +112,7 @@ class _TenantBaseState extends State<TenantBase> {
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.comment,
-                      color: Colors.indigo[900],
+                      color: Colors.green[900],
                       size: 30,
                     ),
                     title: Text('Complaints',style: GoogleFonts.quicksand(

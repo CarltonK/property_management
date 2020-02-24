@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
       title: 'Property Management',
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (context) => OwnerBase(),
+        //Default route
+        '/': (context) => Login(),
         //Authentication
         '/register': (context) => Registration(),
         '/reset': (context) => ForgotPassword(),
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),
         primarySwatch: Colors.blue,
+        dividerColor: Colors.white,
+        unselectedWidgetColor: Colors.white
       ),
     );
   }

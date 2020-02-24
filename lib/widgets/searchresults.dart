@@ -15,12 +15,12 @@ class _SearchResultsState extends State<SearchResults> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
         side: BorderSide(
-          color: Colors.white30
+          color: Colors.white
         )
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.indigo[900],
+          color: Colors.green[900],
           borderRadius: BorderRadius.circular(10),
         ),
         height: 140,
