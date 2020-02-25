@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -207,7 +208,9 @@ class _LoginState extends State<Login> {
 
   void getUserBase(String uid) async {
     //Define constants
+    //This is the name of the collection
     final String _collection = 'users';
+    //Create a variable to store Firestore instance
     final Firestore _fireStore = Firestore.instance;
 
     var document = await _fireStore
@@ -215,8 +218,8 @@ class _LoginState extends State<Login> {
     var returnDoc = document.get();
     //Show the return value - A DocumentSnapshot;
     print('This is the return ${returnDoc}');
-    //Extract values
     returnDoc.then((DocumentSnapshot) {
+      //Extract values
      String userdesignation = DocumentSnapshot.data["designation"];
      if (userdesignation == "Tenant") {
        //Timed Function
