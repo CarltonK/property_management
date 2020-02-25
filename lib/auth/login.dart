@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -205,6 +205,34 @@ class _LoginState extends State<Login> {
     }
   }
 
+  void getUserBase(String uid) async {
+    //Define constants
+    final String _collection = 'users';
+    final Firestore _fireStore = Firestore.instance;
+
+    var document = await _fireStore
+        .collection(_collection).document(uid);
+    var returnDoc = document.get();
+    //Show the return value - A DocumentSnapshot;
+    print('This is the return ${returnDoc}');
+    //Extract values
+    returnDoc.then((DocumentSnapshot) {
+     String userdesignation = DocumentSnapshot.data["designation"];
+     if (userdesignation == "Tenant") {
+       //Timed Function
+          Timer(Duration(milliseconds: 500), () {
+            Navigator.of(context).popAndPushNamed('/tenant-home');
+          });
+     }
+     else {
+       //Timed Function
+       Timer(Duration(milliseconds: 500), () {
+         Navigator.of(context).popAndPushNamed('/owner_home');
+       });
+     }
+    });
+  }
+
   void _loginBtnPressed() {
     print('Login btn pressed');
 
@@ -219,7 +247,6 @@ class _LoginState extends State<Login> {
       setState(() {
         isLoading = false;
       });
-      //Navigator.of(context).pushNamed('/tenant-home');
       //Display appropriate response according to results of above feature
       serverCall()
           .catchError((error) {
@@ -279,10 +306,12 @@ class _LoginState extends State<Login> {
           setState(() {
             isLoading = true;
           });
-          //Timed Function
-          Timer(Duration(seconds: 1), () {
-            Navigator.of(context).popAndPushNamed('/tenant-home');
-          });
+          //This is where we redirect the user based on their designation
+          //Pass the user id as the parameter
+          String userid = '${result.uid}';
+          print('This is the user id: $userid');
+          //Query user designation based on results of the query containing uid
+          getUserBase(userid);
         }
         else {
           print('Failed response: ${result}');
