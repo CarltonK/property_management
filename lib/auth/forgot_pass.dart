@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/api/firebase_api.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -74,11 +77,142 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
+  bool isLoading = true;
+  dynamic result;
+  bool callResponse = false;
+
+  API _api = API();
+
+  Future<bool> serverCall() async {
+    result = await _api.resetPass(_email);
+    print('This is the result: $result');
+
+    if (result == "Please register first") {
+      callResponse = false;
+      return false;
+    }
+    else if (result == "Invalid Email. Please enter the correct email") {
+      callResponse = false;
+      return false;
+    }
+    else {
+      callResponse = true;
+      return true;
+    }
+  }
+
   void _resetBtnPressed() {
     print('Reset btn pressed');
 
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      serverCall()
+          .catchError((error) {
+        print('This is the error $error');
+        //Disable the circular progress dialog
+        setState(() {
+          isLoading = true;
+        });
+
+        //Show an action sheet with error
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  '$error',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                          textStyle:
+                          TextStyle(color: Colors.red, fontSize: 25)),
+                    )));
+          },
+        );
+      })
+      .whenComplete(() {
+        if (callResponse) {
+          print('Successful response ${result}');
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                title: Text(
+                  'Password reset link sent to your email',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+              );
+            },
+          );
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+          //Timed Function
+          Timer(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+          });
+          Timer(Duration(seconds: 3), () {
+            Navigator.of(context).pop();
+          });
+        }
+        else {
+          print('Failed response: ${result}');
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+          //Show an action sheet with result
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                  title: Text(
+                    '${result}',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        )),
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle:
+                            TextStyle(color: Colors.red, fontSize: 25)),
+                      )));
+            },
+          );
+        }
+      });
     }
   }
 
@@ -86,7 +220,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       width: double.infinity,
-      child: RaisedButton(
+      child: isLoading
+          ? RaisedButton(
         color: Colors.white,
         onPressed: _resetBtnPressed,
         padding: EdgeInsets.all(15.0),
@@ -99,6 +234,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   fontSize: 18,
                   letterSpacing: 0.5,
                   fontWeight: FontWeight.w600)),
+        ),
+      )
+      : Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          strokeWidth: 3,
         ),
       ),
     );

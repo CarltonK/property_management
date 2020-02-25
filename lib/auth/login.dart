@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/api/firebase_api.dart';
+import 'package:property_management/models/usermodel.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -13,6 +17,7 @@ class _LoginState extends State<Login> {
   final _focusPass = FocusNode();
 
   String _email, _password;
+  User _user;
 
   void _emailHandler(String email) {
     _email = email;
@@ -164,13 +169,156 @@ class _LoginState extends State<Login> {
     );
   }
 
+  bool isLoading = true;
+  dynamic result;
+  bool callResponse = false;
+
+  API _api = API();
+
+  Future<bool> serverCall() async {
+    result = await _api.signInEmailPass(_user);
+    print('This is the result: $result');
+
+    if (result == 'Invalid credentials. Please try again') {
+      callResponse = false;
+      return false;
+    }
+    else if (result == "Invalid Email. Please enter the correct email") {
+      callResponse = false;
+      return false;
+    }
+    else if (result == "Please register first") {
+      callResponse = false;
+      return false;
+    }
+    else if (result == "Your account has been disabled") {
+      callResponse = false;
+      return false;
+    }
+    else if (result == "Too many requests. Try again in 2 minutes") {
+      callResponse = false;
+      return false;
+    }
+    else {
+      callResponse = true;
+      return true;
+    }
+  }
+
   void _loginBtnPressed() {
     print('Login btn pressed');
 
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      Navigator.of(context).pushNamed('/tenant-home');
+      _user = User(
+        email: _email,
+        password: _password
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+      //Navigator.of(context).pushNamed('/tenant-home');
+      //Display appropriate response according to results of above feature
+      serverCall()
+          .catchError((error) {
+        print('This is the error $error');
+        //Disable the circular progress dialog
+        setState(() {
+          isLoading = true;
+        });
+        //Show an action sheet with error
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  '$error',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                          textStyle:
+                          TextStyle(color: Colors.red, fontSize: 25)),
+                    )));
+          },
+        );
+      })
+          .whenComplete(() {
+        if (callResponse) {
+          print('Successful response ${result}');
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                title: Text(
+                  'Welcome',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+              );
+            },
+          );
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+          //Timed Function
+          Timer(Duration(seconds: 1), () {
+            Navigator.of(context).popAndPushNamed('/tenant-home');
+          });
+        }
+        else {
+          print('Failed response: ${result}');
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+          //Show an action sheet with result
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                  title: Text(
+                    '${result}',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        )),
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle:
+                            TextStyle(color: Colors.red, fontSize: 25)),
+                      )));
+            },
+          );
+        }
+      });
     }
   }
 
@@ -178,7 +326,8 @@ class _LoginState extends State<Login> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       width: double.infinity,
-      child: RaisedButton(
+      child: isLoading
+          ? RaisedButton(
         color: Colors.white,
         onPressed: _loginBtnPressed,
         padding: EdgeInsets.all(15.0),
@@ -191,6 +340,12 @@ class _LoginState extends State<Login> {
                   fontSize: 18,
                   letterSpacing: 0.5,
                   fontWeight: FontWeight.w600)),
+        ),
+      )
+      : Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          strokeWidth: 3,
         ),
       ),
     );

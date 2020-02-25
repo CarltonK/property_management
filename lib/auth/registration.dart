@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +14,9 @@ class Registration extends StatefulWidget {
 class _RegistrationState extends State<Registration> {
   User _user;
   final _formKey = GlobalKey<FormState>();
+
+  //Save Registration Date
+  var now = DateTime.now();
 
   final _focuslname = FocusNode();
   final _focusemail = FocusNode();
@@ -447,6 +449,73 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
+  //Group value
+  String id = "Tenant";
+
+  Widget _designationSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'I am a: ',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  letterSpacing: 0.5)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: <Widget>[
+            Expanded(
+                child: Container(
+                  child: RadioListTile(
+                      value: "Tenant",
+                      groupValue: id,
+                      onChanged: (value) {
+                        setState(() {
+                          id = value;
+                          print(id);
+                        });
+                      },
+                  title: Text(
+                      'Tenant',
+                      style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18
+                        )
+                      ),),),
+                )),
+            Expanded(
+                child: Container(
+                    child: RadioListTile(
+                        value: "Landlord",
+                        groupValue: id,
+                        onChanged: (value) {
+                          setState(() {
+                            id = value;
+                            print(id);
+                          });
+                        },
+                        title: Text(
+                          'Landlord',
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18
+                              )
+                          ),))
+                )),
+          ],
+        )
+      ],
+    );
+  }
+
   Widget _registerPassword2() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -552,6 +621,8 @@ class _RegistrationState extends State<Registration> {
         email: _email,
         phone: _phone,
         natId: _natId,
+        registerDate: now.toUtc(),
+        designation: id,
         password: _pass
       );
 
@@ -620,7 +691,10 @@ class _RegistrationState extends State<Registration> {
           });
           //Timed Function
           Timer(Duration(seconds: 2), () {
-            Navigator.of(context).popAndPushNamed('/login');
+            Navigator.of(context).pop();
+          });
+          Timer(Duration(seconds: 3), () {
+            Navigator.of(context).pop();
           });
         }
         else {
@@ -751,6 +825,10 @@ class _RegistrationState extends State<Registration> {
                         ),
                         SizedBox(
                           height: 50,
+                        ),
+                        _designationSelector(),
+                        SizedBox(
+                          height: 20,
                         ),
                         _registerFirstName(),
                         SizedBox(

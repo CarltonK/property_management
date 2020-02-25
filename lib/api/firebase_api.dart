@@ -35,7 +35,7 @@ class API with ChangeNotifier{
           email: user.email,
           password: user.password);
       currentUser = result.user;
-      print('Positive Response: $currentUser');
+      print('Positive Response: ${currentUser}');
       notifyListeners();
       return Future.value(currentUser);
     }
@@ -58,7 +58,7 @@ class API with ChangeNotifier{
         print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_TOO_MANY_REQUESTS")) {
-        response = 'Too many requests. Try again in 10 minutes';
+        response = 'Too many requests. Try again in 2 minutes';
         print('Negative Response: $response');
       }
       return response;
@@ -75,7 +75,7 @@ class API with ChangeNotifier{
       //The User has registered successfully
       print('Positive Registration Response: ${currentUser.uid}');
       //Try adding the user to the Firestore
-      saveUser(result.user.uid);
+      saveUser(user,result.user.uid);
       //The user has saved successfully
       print('Positive Save Response: ${currentUser.toString()}');
       return currentUser;
@@ -98,18 +98,86 @@ class API with ChangeNotifier{
     }
   }
 
+  //Password reset
+  Future resetPass(String email) async {
+    var response;
+    try {
+      await _auth.sendPasswordResetEmail(
+          email: email);
+      response = true;
+      return response;
+    }
+    catch (e) {
+      if (e.toString().contains("ERROR_INVALID_EMAIL")) {
+        response = 'Invalid Email. Please enter the correct email';
+        print('Negative Response: $response');
+      }
+      if (e.toString().contains("ERROR_USER_NOT_FOUND")) {
+        response = 'Please register first';
+        print('Negative Response: $response');
+      }
+      return response;
+    }
+  }
+
   //Save the User as a document in the "users" collection
-  void saveUser(String uid) {
+  void saveUser(User user, String uid) {
+    //Retrieve fields
+    String email = user.email;
+    String firstName =  user.firstName;
+    String lastName =  user.lastName;
+    String phone = user.phone;
+    String natId = user.natId;
+    String designation = user.designation;
+    DateTime registerDate = user.registerDate;
+    
+    if (designation == "Tenant") {
+      Firestore.instance
+          .collection("tenants")
+          .document(uid)
+          .setData({
+        "email":email,
+        "firstName": firstName,
+        "lastName": lastName,
+        "phone": phone,
+        "natId": natId,
+        "designation": designation,
+        "registerDate": registerDate
+      });
+    }
+    else {
+      Firestore.instance
+          .collection("landlords")
+          .document(uid)
+          .setData({
+        "email":email,
+        "firstName": firstName,
+        "lastName": lastName,
+        "phone": phone,
+        "natId": natId,
+        "designation": designation,
+        "registerDate": registerDate
+      });
+    }
+
     try {
       Firestore.instance
           .collection("users")
-          .document(uid)
-          .setData({
-        "userId": uid
-      });
+          .document(uid).setData(
+        {
+          "email":email,
+          "firstName": firstName,
+          "lastName": lastName,
+          "phone": phone,
+          "natId": natId,
+          "designation": designation,
+          "registerDate": registerDate
+        }
+      );
       print("The user was successfully saved");
     }
     catch (e) {
+      print("The user was not successfully saved");
       print("This is the error ${e.toString()}");
     }
   }
