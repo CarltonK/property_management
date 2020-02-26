@@ -161,7 +161,9 @@ class _AddComplaintState extends State<AddComplaint> {
       await _fireStore
           .collection(_collectionUser)
           .document(data["uid"])
-          .updateData({"complaints_history": entryData});
+          .collection("complaints_history")
+          .document()
+          .setData(entryData);
       //Add data to the complaints collection
       await _fireStore
           .collection(_collectionComplaints)
