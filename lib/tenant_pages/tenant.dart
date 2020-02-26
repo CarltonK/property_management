@@ -6,6 +6,7 @@ import 'package:property_management/tenant_pages/ten_complaint.dart';
 import 'package:property_management/tenant_pages/ten_search.dart';
 import 'package:property_management/tenant_pages/ten_vacate.dart';
 import 'package:property_management/tenant_pages/tenant_home.dart';
+import 'package:property_management/tenant_pages/tenant_settings.dart';
 
 class TenantBase extends StatefulWidget {
   @override
@@ -42,10 +43,14 @@ class _TenantBaseState extends State<TenantBase> {
     TenSearch(),
     TenVacate(),
     TenantComplain(),
+    TenantSettings()
   ];
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
+    print('$data');
+
     return Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
@@ -116,6 +121,17 @@ class _TenantBaseState extends State<TenantBase> {
                       size: 30,
                     ),
                     title: Text('Complaints',style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w500
+                        )
+                    ))),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.settings,
+                      color: Colors.green[900],
+                      size: 30,
+                    ),
+                    title: Text('Settings',style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                             fontWeight: FontWeight.w500
                         )

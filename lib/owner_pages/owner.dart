@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/owner_pages/owner_complaint.dart';
 import 'package:property_management/owner_pages/owner_home.dart';
+import 'package:property_management/owner_pages/owner_settings.dart';
 
 class OwnerBase extends StatefulWidget {
   @override
@@ -12,6 +13,8 @@ class OwnerBase extends StatefulWidget {
 class _OwnerBaseState extends State<OwnerBase> {
 
   int _selectedIndex = 0;
+  static Map<String, dynamic> data;
+  static String uid;
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _OwnerBaseState extends State<OwnerBase> {
   List<Widget> _ownerTenants = [
     OwnerHome(),
     OwnerComplaint(),
+    OwnerSettings()
   ];
 
   @override
@@ -85,6 +89,17 @@ class _OwnerBaseState extends State<OwnerBase> {
                     size: 30,
                   ),
                   title: Text('Complaints',style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w500
+                      )
+                  ))),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.green[900],
+                    size: 30,
+                  ),
+                  title: Text('Settings',style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
                           fontWeight: FontWeight.w500
                       )

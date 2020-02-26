@@ -221,16 +221,20 @@ class _LoginState extends State<Login> {
     returnDoc.then((DocumentSnapshot) {
       //Extract values
      String userdesignation = DocumentSnapshot.data["designation"];
+     //Return the data for tenant
+     Map<String, dynamic> userData = DocumentSnapshot.data;
+     //Add the uid to the Map
+     userData["uid"] = uid;
      if (userdesignation == "Tenant") {
        //Timed Function
-          Timer(Duration(milliseconds: 500), () {
-            Navigator.of(context).popAndPushNamed('/tenant-home');
+          Timer(Duration(milliseconds: 200), () {
+            Navigator.of(context).popAndPushNamed('/tenant-home', arguments: userData);
           });
      }
      else {
        //Timed Function
-       Timer(Duration(milliseconds: 500), () {
-         Navigator.of(context).popAndPushNamed('/owner_home');
+       Timer(Duration(milliseconds: 200), () {
+         Navigator.of(context).popAndPushNamed('/owner_home', arguments: userData);
        });
      }
     });
@@ -301,6 +305,11 @@ class _LoginState extends State<Login> {
                         fontSize: 20,
                         color: Colors.black,
                       )),
+                ),
+                message: Center(
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.white,
+                  ),
                 ),
               );
             },
@@ -431,7 +440,10 @@ class _LoginState extends State<Login> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         child: GestureDetector(
           onTap: () {
-            FocusScope.of(context).unfocus();
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
           },
           child: Stack(
             children: <Widget>[

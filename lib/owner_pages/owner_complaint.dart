@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/widgets/view_complaintsWidget.dart';
 
 class OwnerComplaint extends StatefulWidget {
   @override
@@ -21,62 +22,12 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
     );
   }
 
-  Widget _singleChildComplaint() {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.grey[100],
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: ListTile(
-        leading: Text(
-          '101',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.green[900],
-                  fontSize: 20
-              )
-          ),
-        ),
-        isThreeLine: true,
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Broken door hinge',
-              style: GoogleFonts.quicksand(
-                  textStyle:
-                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
-            ),
-            Text(
-              '30 Dec 2019',
-              style: GoogleFonts.quicksand(
-                  textStyle:
-                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
-            ),
-          ],
-        ),
-        title: Text(
-          'Wayne Rooney',
-          style: GoogleFonts.quicksand(
-              textStyle:
-              TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
-        ),
-        trailing: Column(
-          children: <Widget>[
-            Text(
-              'Done',
-              style: GoogleFonts.quicksand(
-                  textStyle:
-                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
-            ),
-            Icon(Icons.done),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+
+    Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
+    print('Complaints Page Data: $data');
+
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -90,7 +41,7 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+              margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(
@@ -99,15 +50,7 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _appBarLayout(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _singleChildComplaint(),
-                    _singleChildComplaint(),
-                    _singleChildComplaint(),
-                    _singleChildComplaint(),
-                    _singleChildComplaint(),
-                    _singleChildComplaint()
+                  ViewComplaintsWidget(code: data["landlord_code"])
                   ],
                 ),
               ),

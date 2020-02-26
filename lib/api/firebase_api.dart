@@ -130,6 +130,7 @@ class API with ChangeNotifier{
     String natId = user.natId;
     String designation = user.designation;
     DateTime registerDate = user.registerDate;
+    int landlordCode = user.lordCode;
     
     if (designation == "Tenant") {
       Firestore.instance
@@ -142,7 +143,8 @@ class API with ChangeNotifier{
         "phone": phone,
         "natId": natId,
         "designation": designation,
-        "registerDate": registerDate
+        "registerDate": registerDate,
+        "landlord_code": landlordCode
       });
     }
     else {
@@ -156,7 +158,8 @@ class API with ChangeNotifier{
         "phone": phone,
         "natId": natId,
         "designation": designation,
-        "registerDate": registerDate
+        "registerDate": registerDate,
+        "landlord_code": landlordCode
       });
     }
 
@@ -171,7 +174,8 @@ class API with ChangeNotifier{
           "phone": phone,
           "natId": natId,
           "designation": designation,
-          "registerDate": registerDate
+          "registerDate": registerDate,
+          "landlord_code": landlordCode,
         }
       );
       print("The user was successfully saved");

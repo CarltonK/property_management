@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -581,6 +582,12 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
+  //Generate a timestamp that will be the Landlords unique code
+  int lordCode() {
+    int code = DateTime.now().microsecondsSinceEpoch;
+    return code;
+  }
+
   bool isLoading = true;
   dynamic result;
   bool callResponse = false;
@@ -614,17 +621,33 @@ class _RegistrationState extends State<Registration> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      //Populate the user fields
-      _user = User(
-        firstName: _fname,
-        lastName: _lname,
-        email: _email,
-        phone: _phone,
-        natId: _natId,
-        registerDate: now.toUtc(),
-        designation: id,
-        password: _pass
-      );
+      //Populate the user fields based on designation
+      if (id == "Tenant") {
+        _user = User(
+            firstName: _fname,
+            lastName: _lname,
+            email: _email,
+            phone: _phone,
+            natId: _natId,
+            registerDate: now.toUtc(),
+            designation: id,
+            password: _pass,
+            lordCode: 0
+        );
+      }
+      if (id == "Landlord") {
+        _user = User(
+            firstName: _fname,
+            lastName: _lname,
+            email: _email,
+            phone: _phone,
+            natId: _natId,
+            registerDate: now.toUtc(),
+            designation: id,
+            password: _pass,
+            lordCode: lordCode()
+        );
+      }
 
       setState(() {
         isLoading = false;
@@ -781,7 +804,12 @@ class _RegistrationState extends State<Registration> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
           child: Stack(
             children: <Widget>[
               Container(

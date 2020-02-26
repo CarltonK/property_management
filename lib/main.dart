@@ -3,6 +3,7 @@ import 'package:property_management/auth/forgot_pass.dart';
 import 'package:property_management/auth/login.dart';
 import 'package:property_management/auth/registration.dart';
 import 'package:property_management/owner_pages/owner.dart';
+import 'package:property_management/tenant_pages/add_complaint.dart';
 import 'package:property_management/tenant_pages/tenant.dart';
 import 'package:property_management/tenant_pages/tenant_prof.dart';
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         //Tenant
         '/tenant-home': (context) => TenantBase(),
         '/tenant-profile': (context) => TenantProfile(),
+        '/add-complaint': (context) => AddComplaint(),
         //Owner
         '/owner_home': (context) => OwnerBase()
       },

@@ -3,8 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TenantComplain extends StatelessWidget {
+  Map<String, dynamic> tenantdata;
   @override
   Widget build(BuildContext context) {
+    tenantdata = ModalRoute.of(context).settings.arguments;
+    print('Complaints Page Data: $tenantdata');
+
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -27,7 +31,7 @@ class TenantComplain extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _appBarLayout(),
+                    _appBarLayout(context, tenantdata),
                     SizedBox(
                       height: 20,
                     ),
@@ -127,53 +131,7 @@ Widget _listHolder(BuildContext context) {
   );
 }
 
-Widget _createComplaintWidget(BuildContext context) {
-  return Card(
-    elevation: 30,
-    margin: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-    shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.circular(30)),
-    child: Container(
-      height: MediaQuery.of(context).size.height * 0.15,
-      width: MediaQuery.of(context).size.width * 0.2,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30), color: Colors.indigo[700]),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          FloatingActionButton(
-            elevation: 10,
-            splashColor: Colors.indigo,
-            onPressed: () {
-              print('I want to add a new complaint');
-            },
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.add,
-              color: Colors.green[800],
-              size: 30,
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            'Add New',
-            style: GoogleFonts.muli(
-                textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: .5)),
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-Widget _appBarLayout() {
+Widget _appBarLayout(BuildContext context, Map<String, dynamic> data) {
   //This custom appBar replaces the Flutter App Bar
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -196,6 +154,7 @@ Widget _appBarLayout() {
           tooltip: 'Add a new complaint',
           onPressed: () {
             print('I want to add a new complaint');
+            Navigator.of(context).pushNamed('/add-complaint', arguments: data);
           },
           backgroundColor: Colors.green[900],
           child: Icon(
