@@ -21,12 +21,20 @@ class _LoginState extends State<Login> {
   User _user;
 
   void _emailHandler(String email) {
-    _email = email;
+    _email = email.trim();
     print('Email: $_email');
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    //Dispose of the FocusNodes
+    _focusPass.dispose();
+  }
+
   void _passwordHandler(String pass) {
-    _password = pass;
+    _password = pass.trim();
     print('Password: $_password');
   }
 
@@ -47,6 +55,7 @@ class _LoginState extends State<Login> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
@@ -103,6 +112,7 @@ class _LoginState extends State<Login> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           obscureText: true,
@@ -227,13 +237,13 @@ class _LoginState extends State<Login> {
      userData["uid"] = uid;
      if (userdesignation == "Tenant") {
        //Timed Function
-          Timer(Duration(milliseconds: 200), () {
+          Timer(Duration(milliseconds: 100), () {
             Navigator.of(context).popAndPushNamed('/tenant-home', arguments: userData);
           });
      }
      else {
        //Timed Function
-       Timer(Duration(milliseconds: 200), () {
+       Timer(Duration(milliseconds: 100), () {
          Navigator.of(context).popAndPushNamed('/owner_home', arguments: userData);
        });
      }
@@ -439,12 +449,7 @@ class _LoginState extends State<Login> {
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         child: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
               Container(

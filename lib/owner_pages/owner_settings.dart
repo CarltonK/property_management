@@ -43,7 +43,7 @@ class OwnerSettings extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Landlord code: ',
+                  'Code: ',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
                           color: Colors.white,

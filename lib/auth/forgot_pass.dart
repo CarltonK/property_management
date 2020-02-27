@@ -17,7 +17,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
 
   void _emailHandler(String email) {
-    _email = email;
+    _email = email.trim();
     print('Email: $_email');
   }
 
@@ -114,6 +114,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       serverCall()
           .catchError((error) {
         print('This is the error $error');
+        FocusScope.of(context).unfocus();
         //Disable the circular progress dialog
         setState(() {
           isLoading = true;
@@ -149,13 +150,23 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       })
       .whenComplete(() {
         if (callResponse) {
+          FocusScope.of(context).unfocus();
           print('Successful response ${result}');
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                 title: Text(
-                  'Password reset link sent to your email',
+                  'Your request has been received',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                message: Text(
+                  'A password reset link has been sent to your email',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
                         fontWeight: FontWeight.w600,
@@ -179,6 +190,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           });
         }
         else {
+          FocusScope.of(context).unfocus();
           print('Failed response: ${result}');
           //Disable the circular progress dialog
           setState(() {
@@ -207,7 +219,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         'CANCEL',
                         style: GoogleFonts.muli(
                             textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25)),
+                            TextStyle(color: Colors.red, fontSize: 25,fontWeight: FontWeight.bold)),
                       )));
             },
           );

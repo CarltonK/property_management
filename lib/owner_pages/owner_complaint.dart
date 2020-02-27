@@ -50,6 +50,9 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _appBarLayout(),
+                  SizedBox(
+                    height: 20,
+                  ),
                   ViewComplaintsWidget(code: data["landlord_code"])
                   ],
                 ),

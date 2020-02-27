@@ -84,7 +84,6 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                         )),
                   );
                 }
-                //print('${snapshot.data[0].data["landlord_code"]}');
                 return ListView.separated(
                   separatorBuilder: (context, index) => Divider(
                     color: Colors.white,

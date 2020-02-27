@@ -21,14 +21,15 @@ class _AddComplaintState extends State<AddComplaint> {
   int code;
 
   void _hseHandler(String value) {
-    _hse = value;
+    _hse = value.trim();
     print('House Number: $_hse');
   }
 
   void _msgHandler(String value) {
-    _message = value;
+    _message = value.trim();
     print('Message: $_message');
   }
+
 
   Widget _tenanthseNum() {
     return Column(
@@ -47,6 +48,7 @@ class _AddComplaintState extends State<AddComplaint> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
@@ -104,6 +106,7 @@ class _AddComplaintState extends State<AddComplaint> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
@@ -138,6 +141,9 @@ class _AddComplaintState extends State<AddComplaint> {
               return 'Message is required';
             }
             return null;
+          },
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).unfocus();
           },
           textInputAction: TextInputAction.done,
           onSaved: _msgHandler,
@@ -201,6 +207,7 @@ class _AddComplaintState extends State<AddComplaint> {
       _postComplaint(newData)
           .whenComplete(() {
         if (callResponse == true) {
+          FocusScope.of(context).unfocus();
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
@@ -217,13 +224,12 @@ class _AddComplaintState extends State<AddComplaint> {
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
                       },
                       child: Text(
                         'CANCEL',
                         style: GoogleFonts.quicksand(
                             textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25)),
+                            TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
                       ))
               );
             },
@@ -232,6 +238,13 @@ class _AddComplaintState extends State<AddComplaint> {
           setState(() {
             isLoading = true;
           });
+          //Timed Function
+          Timer(Duration(seconds: 1), () {
+            Navigator.of(context).pop();
+          });
+          Timer(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+            });
         }
         else {
           showCupertinoModalPopup(
@@ -239,7 +252,7 @@ class _AddComplaintState extends State<AddComplaint> {
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                   title: Text(
-                    'Your complaint could not be posted. Try again later',
+                    'Your complaint could not be posted',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.w600,
@@ -247,16 +260,24 @@ class _AddComplaintState extends State<AddComplaint> {
                           color: Colors.black,
                         )),
                   ),
+                  message: Text(
+                    'Ensure you have entered the code you received from your landlord',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                          color: Colors.black,
+                        )),
+                  ),
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
                       },
                       child: Text(
                         'CANCEL',
                         style: GoogleFonts.quicksand(
                             textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25)),
+                            TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
                       ))
               );
             },
@@ -302,6 +323,13 @@ class _AddComplaintState extends State<AddComplaint> {
   Map<String, dynamic> data;
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _focusmessage.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
     print('Add Complaint Page Data: $data');
@@ -314,12 +342,7 @@ class _AddComplaintState extends State<AddComplaint> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
               Container(

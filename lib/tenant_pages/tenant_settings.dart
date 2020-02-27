@@ -65,7 +65,7 @@ class _TenantSettingsState extends State<TenantSettings> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Landlord code: ',
+                  'Code: ',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
                         color: Colors.white,
@@ -102,7 +102,7 @@ class _TenantSettingsState extends State<TenantSettings> {
 
 
   void _codeHandler(String value) {
-    codeStr = value;
+    codeStr = value.trim();
     code = int.parse(codeStr);
     print('Code: $code');
   }
@@ -124,6 +124,7 @@ class _TenantSettingsState extends State<TenantSettings> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
@@ -160,6 +161,9 @@ class _TenantSettingsState extends State<TenantSettings> {
               return 'Code is required';
             }
             return null;
+          },
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).unfocus();
           },
           textInputAction: TextInputAction.done,
           onSaved: _codeHandler,
@@ -431,17 +435,20 @@ class _TenantSettingsState extends State<TenantSettings> {
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-              height: MediaQuery.of(context).size.height,
+              height: double.infinity,
               width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _appBarLayout(),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  _linkToLandlord()
-                ],
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _appBarLayout(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _linkToLandlord()
+                  ],
+                ),
               ),
             )
           ],

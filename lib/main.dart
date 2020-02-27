@@ -31,11 +31,10 @@ class MyApp extends StatelessWidget {
         '/owner_home': (context) => OwnerBase()
       },
       theme: ThemeData(
-        appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),
-        primarySwatch: Colors.blue,
-        dividerColor: Colors.white,
-        unselectedWidgetColor: Colors.white
-      ),
+          appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),
+          primarySwatch: Colors.blue,
+          dividerColor: Colors.white,
+          unselectedWidgetColor: Colors.white),
     );
   }
 }

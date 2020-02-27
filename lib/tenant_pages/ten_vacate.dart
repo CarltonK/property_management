@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,9 @@ class TenVacate extends StatefulWidget {
 
 class _TenVacateState extends State<TenVacate> {
   final _formKey = GlobalKey<FormState>();
+  DateTime _vacateDate;
+  int _code;
+  Map<String, dynamic> data;
 
   Widget _appBarLayout() {
     //This custom appBar replaces the Flutter App Bar
@@ -33,23 +37,18 @@ class _TenVacateState extends State<TenVacate> {
     );
   }
 
-  DateTime _pickVacateEarliest() {
-    var now = DateTime.now();
-    print('Now: $now');
-    var timein1Month = now.add(Duration(days: 30));
-    print('1 month from now: $timein1Month');
-    return timein1Month;
-  }
-
   String _reason;
 
   void _confirmReasonHandler(String value) {
-    _reason = value;
+    _reason = value.trim();
     print('Reason: $_reason');
   }
 
   @override
   Widget build(BuildContext context) {
+    data = ModalRoute.of(context).settings.arguments;
+    _code = data["landlord_code"];
+
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -60,9 +59,7 @@ class _TenVacateState extends State<TenVacate> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.green[900]
-                ),
+                decoration: BoxDecoration(color: Colors.green[900]),
               ),
               Container(
                   padding: EdgeInsets.only(top: 30),
@@ -120,11 +117,12 @@ class _TenVacateState extends State<TenVacate> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: DatePickerTimeline(
-                              _pickVacateEarliest(),
+                              DateTime.now(),
                               height: 100,
                               selectionColor: Colors.greenAccent[700],
                               onDateChange: (date) {
-                                print('$date');
+                                _vacateDate = date;
+                                print('$_vacateDate');
                               },
                               daysCount: 90,
                               dateTextStyle: GoogleFonts.quicksand(
@@ -164,21 +162,29 @@ class _TenVacateState extends State<TenVacate> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       width: double.infinity,
-      child: RaisedButton(
-        color: Colors.white,
-        onPressed: _submitBtnPressed,
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Text(
-          'SUBMIT',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.green[900],
-                  fontSize: 18,
-                  letterSpacing: 0.5,
-                  fontWeight: FontWeight.w500)),
-        ),
-      ),
+      child: isLoading
+          ? RaisedButton(
+              color: Colors.white,
+              onPressed: _submitBtnPressed,
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Text(
+                'SUBMIT',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                        color: Colors.green[900],
+                        fontSize: 18,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.w500)),
+              ),
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
     );
   }
 
@@ -223,11 +229,181 @@ class _TenVacateState extends State<TenVacate> {
     );
   }
 
+  bool isLoading = true;
+  dynamic result;
+  bool callResponse = false;
+
+  Future serverCall(Map<String, dynamic> vacateData) async {
+    try {
+      await Firestore.instance
+          .collection("vacations")
+          .document()
+          .setData(vacateData);
+      callResponse = true;
+      return true;
+    }
+    catch (e) {
+      result = e;
+      callResponse = false;
+      return false;
+    }
+  }
+
   void _submitBtnPressed() {
+    FocusScope.of(context).unfocus();
     print('Submit btn pressed');
 
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (_vacateDate == null) {
+        //Cancel the Circular Dialog
+        setState(() {
+          isLoading = true;
+        });
+        //Show an action sheet with error
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  'Please select a date to vacate',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.quicksand(
+                          textStyle:
+                          TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
+                    )));
+          },
+        );
+      }
+      //Set the data
+      Map<String, dynamic> data = {
+        "date": _vacateDate,
+        "reason": _reason,
+        "landlord_code": _code
+      };
+
+      serverCall(data)
+          .catchError((error) {
+        print('This is the error $error');
+        //Disable the circular progress dialog
+        setState(() {
+          isLoading = true;
+        });
+        //Show an action sheet with error
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  '$error',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                          textStyle:
+                          TextStyle(color: Colors.red, fontSize: 25)),
+                    )));
+          },
+        );
+      }).whenComplete(() {
+        if (callResponse) {
+          print('Successful response ${result}');
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                title: Text(
+                  'You request has been received',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle:
+                            TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
+                      ))
+              );
+            },
+          );
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+        }
+        else {
+          print('Failed response: ${result}');
+          //Disable the circular progress dialog
+          setState(() {
+            isLoading = true;
+          });
+          //Show an action sheet with result
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                  title: Text(
+                    '${result}',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        )),
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle:
+                            TextStyle(color: Colors.red, fontSize: 25)),
+                      )));
+            },
+          );
+        }
+      });
     }
   }
 }

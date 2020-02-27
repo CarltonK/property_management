@@ -75,9 +75,7 @@ class API with ChangeNotifier{
       //The User has registered successfully
       print('Positive Registration Response: ${currentUser.uid}');
       //Try adding the user to the Firestore
-      saveUser(user,result.user.uid);
-      //The user has saved successfully
-      print('Positive Save Response: ${currentUser.toString()}');
+      await saveUser(user,result.user.uid);
       return currentUser;
     }
     catch (e) {
@@ -121,7 +119,7 @@ class API with ChangeNotifier{
   }
 
   //Save the User as a document in the "users" collection
-  void saveUser(User user, String uid) {
+  Future saveUser(User user, String uid) async {
     //Retrieve fields
     String email = user.email;
     String firstName =  user.firstName;
@@ -131,40 +129,9 @@ class API with ChangeNotifier{
     String designation = user.designation;
     DateTime registerDate = user.registerDate;
     int landlordCode = user.lordCode;
-    
-    if (designation == "Tenant") {
-      Firestore.instance
-          .collection("tenants")
-          .document(uid)
-          .setData({
-        "email":email,
-        "firstName": firstName,
-        "lastName": lastName,
-        "phone": phone,
-        "natId": natId,
-        "designation": designation,
-        "registerDate": registerDate,
-        "landlord_code": landlordCode
-      });
-    }
-    else {
-      Firestore.instance
-          .collection("landlords")
-          .document(uid)
-          .setData({
-        "email":email,
-        "firstName": firstName,
-        "lastName": lastName,
-        "phone": phone,
-        "natId": natId,
-        "designation": designation,
-        "registerDate": registerDate,
-        "landlord_code": landlordCode
-      });
-    }
 
     try {
-      Firestore.instance
+      await Firestore.instance
           .collection("users")
           .document(uid).setData(
         {
@@ -178,7 +145,41 @@ class API with ChangeNotifier{
           "landlord_code": landlordCode,
         }
       );
+
       print("The user was successfully saved");
+
+      if (designation == "Tenant") {
+        await Firestore.instance
+            .collection("tenants")
+            .document(uid)
+            .setData({
+          "email":email,
+          "firstName": firstName,
+          "lastName": lastName,
+          "phone": phone,
+          "natId": natId,
+          "designation": designation,
+          "registerDate": registerDate,
+          "landlord_code": landlordCode
+        });
+        print("The tenant was successfully saved");
+      }
+      else {
+        await Firestore.instance
+            .collection("landlords")
+            .document(uid)
+            .setData({
+          "email":email,
+          "firstName": firstName,
+          "lastName": lastName,
+          "phone": phone,
+          "natId": natId,
+          "designation": designation,
+          "registerDate": registerDate,
+          "landlord_code": landlordCode
+        });
+        print("The landlord was successfully saved");
+      }
     }
     catch (e) {
       print("The user was not successfully saved");

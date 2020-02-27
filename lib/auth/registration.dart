@@ -32,37 +32,53 @@ class _RegistrationState extends State<Registration> {
   final TextEditingController _confirmPass = TextEditingController();
 
   void _emailHandler(String email) {
-    _email = email;
+    _email = email.trim();
     print('Email: $_email');
   }
 
   void _phoneHandler(String phone) {
-    _phone = phone;
+    _phone = phone.trim();
     print('Phone: $_phone');
   }
 
   void _firstNameHandler(String name1) {
-    _fname = name1;
+    _fname = name1.trim();
     print('First Name: $_fname');
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    //Dispose the FocusNodes
+    _focuslname.dispose();
+    _focusemail.dispose();
+    _focusphone.dispose();
+    _focusnatid.dispose();
+    _focuspass.dispose();
+    _focuscpass.dispose();
+    //Dispose the TextEditingControllers
+    _passwording.dispose();
+    _confirmPass.dispose();
+  }
+
   void _lastNameHandler(String name2) {
-    _lname = name2;
+    _lname = name2.trim();
     print('Last Name: $_lname');
   }
 
   void _natIdHandler(String id) {
-    _natId = id;
+    _natId = id.trim();
     print('National ID: $_natId');
   }
 
   void _passHandler(String password) {
-    _pass = password;
+    _pass = password.trim();
     print('Password(1): $_pass');
   }
 
   void _confirmPassHandler(String confirmation) {
-    _cpass = confirmation;
+    _cpass = confirmation.trim();
     print('Password(2): $_cpass');
   }
 
@@ -114,6 +130,7 @@ class _RegistrationState extends State<Registration> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
@@ -172,6 +189,7 @@ class _RegistrationState extends State<Registration> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           focusNode: _focuslname,
@@ -231,6 +249,7 @@ class _RegistrationState extends State<Registration> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           focusNode: _focusemail,
@@ -288,6 +307,7 @@ class _RegistrationState extends State<Registration> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           focusNode: _focusphone,
@@ -348,6 +368,7 @@ class _RegistrationState extends State<Registration> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           focusNode: _focusnatid,
@@ -366,7 +387,7 @@ class _RegistrationState extends State<Registration> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Enter your identification number)',
+              labelText: 'Please enter your ID',
               labelStyle: GoogleFonts.quicksand(textStyle: TextStyle(
                 color: Colors.white
               )),
@@ -405,6 +426,7 @@ class _RegistrationState extends State<Registration> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           controller: _passwording,
@@ -479,7 +501,6 @@ class _RegistrationState extends State<Registration> {
                       onChanged: (value) {
                         setState(() {
                           id = value;
-                          print(id);
                         });
                       },
                   title: Text(
@@ -499,7 +520,6 @@ class _RegistrationState extends State<Registration> {
                         onChanged: (value) {
                           setState(() {
                             id = value;
-                            print(id);
                           });
                         },
                         title: Text(
@@ -534,6 +554,7 @@ class _RegistrationState extends State<Registration> {
           height: 10,
         ),
         TextFormField(
+          autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           controller: _confirmPass,
@@ -616,8 +637,6 @@ class _RegistrationState extends State<Registration> {
     }
   }
   void _registerBtnPressed() {
-    print('Register btn pressed');
-
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
@@ -629,7 +648,7 @@ class _RegistrationState extends State<Registration> {
             email: _email,
             phone: _phone,
             natId: _natId,
-            registerDate: now.toUtc(),
+            registerDate: now.toLocal(),
             designation: id,
             password: _pass,
             lordCode: 0
@@ -642,7 +661,7 @@ class _RegistrationState extends State<Registration> {
             email: _email,
             phone: _phone,
             natId: _natId,
-            registerDate: now.toUtc(),
+            registerDate: now.toLocal(),
             designation: id,
             password: _pass,
             lordCode: lordCode()
@@ -678,13 +697,12 @@ class _RegistrationState extends State<Registration> {
                 cancelButton: CupertinoActionSheetAction(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      FocusScope.of(context).unfocus();
                     },
                     child: Text(
                       'CANCEL',
                       style: GoogleFonts.muli(
                           textStyle:
-                          TextStyle(color: Colors.red, fontSize: 25)),
+                          TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
                     )));
           },
         );
@@ -743,13 +761,12 @@ class _RegistrationState extends State<Registration> {
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
                       },
                       child: Text(
                         'CANCEL',
                         style: GoogleFonts.muli(
                             textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25)),
+                            TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
                       )));
             },
           );
@@ -804,12 +821,7 @@ class _RegistrationState extends State<Registration> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
               Container(
