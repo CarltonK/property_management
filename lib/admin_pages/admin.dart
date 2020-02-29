@@ -32,6 +32,16 @@ class _AdminState extends State<Admin> {
       appBar: AppBar(
         backgroundColor: Colors.green[900],
         elevation: 0.0,
+        title: Text(
+          'Admin Portal',
+          style: GoogleFonts.quicksand(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              letterSpacing: 1
+            )
+          ),
+        ),
         leading: IconButton(
             icon: Icon(CupertinoIcons.back),
             onPressed: () => Navigator.of(context).pop()),

@@ -8,6 +8,7 @@ import 'package:property_management/owner_pages/owner.dart';
 import 'package:property_management/tenant_pages/add_complaint.dart';
 import 'package:property_management/tenant_pages/tenant.dart';
 import 'package:property_management/tenant_pages/tenant_prof.dart';
+import 'package:property_management/welcome.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         //Default route
-        '/': (context) => Login(),
+        '/': (context) => Welcome(),
         //Authentication
         '/register': (context) => Registration(),
         '/reset': (context) => ForgotPassword(),
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/owner_home': (context) => OwnerBase(),
         //Admin
         '/admin': (context) => Admin(),
-        '/add': (context) => AddLandlord()
+        '/add': (context) => AddLandlord(),
       },
       theme: ThemeData(
           appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),

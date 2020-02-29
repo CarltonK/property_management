@@ -8,6 +8,8 @@ class AdminStats extends StatefulWidget {
 class _AdminStatsState extends State<AdminStats> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      backgroundColor: Colors.green[900],
+    );
   }
 }

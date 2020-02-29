@@ -30,8 +30,6 @@ class _LoginState extends State<Login> {
     super.dispose();
     //Dispose of the FocusNode
     _focusPass.dispose();
-    //Reset the Form
-    _formKey.currentState.reset();
   }
 
   void _passwordHandler(String pass) {
@@ -435,7 +433,7 @@ class _LoginState extends State<Login> {
               CupertinoIcons.back,
               color: Colors.white,
             ),
-            onPressed: null),
+            onPressed: () => Navigator.of(context).pop(),),
         actions: <Widget>[_signUpWidget()],
         elevation: 0.0,
       ),

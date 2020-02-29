@@ -43,16 +43,38 @@ class _AdminHomeState extends State<AdminHome> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    ' Member since $date',
-                    style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(color: Colors.white)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '${data["email"]}',
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(color: Colors.white)),
+                      ),
+                      Text(
+                        '${data["phone"]}',
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(color: Colors.white)),
+                      ),
+                      Text(
+                        'Member since $date',
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(color: Colors.white)),
+                      ),
+                    ],
                   ),
                   RaisedButton(
                       onPressed: () async {
                         var docId = data.documentID;
+                        //Delete the document in "landlords"
                         await Firestore.instance
                               .collection("landlords").document(docId).delete();
+                        //Delete the document in "users"
+                        await Firestore.instance
+                              .collection("users").document(docId).delete();
+                        //Delete the document in "apartments"
+                        await Firestore.instance
+                              .collection("apartments").document(data["landlord_code"].toString()).delete();
                       },
                       color: Colors.white,
                       child: Center(
