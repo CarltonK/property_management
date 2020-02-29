@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:property_management/admin_pages/add_landlord.dart';
+import 'package:property_management/admin_pages/admin.dart';
 import 'package:property_management/auth/forgot_pass.dart';
 import 'package:property_management/auth/login.dart';
 import 'package:property_management/auth/registration.dart';
@@ -28,7 +30,10 @@ class MyApp extends StatelessWidget {
         '/tenant-profile': (context) => TenantProfile(),
         '/add-complaint': (context) => AddComplaint(),
         //Owner
-        '/owner_home': (context) => OwnerBase()
+        '/owner_home': (context) => OwnerBase(),
+        //Admin
+        '/admin': (context) => Admin(),
+        '/add': (context) => AddLandlord()
       },
       theme: ThemeData(
           appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),

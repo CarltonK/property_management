@@ -42,24 +42,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
               errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.white
-                ),
+                textStyle: TextStyle(color: Colors.white),
               ),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.white
-                )
-              ),
+                  borderSide: BorderSide(color: Colors.white)),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.indigo, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
               labelText: 'Please enter your email',
-              labelStyle: GoogleFonts.quicksand(textStyle: TextStyle(
-                color: Colors.white
+              labelStyle: GoogleFonts.quicksand(
+                  textStyle: TextStyle(color: Colors.white)),
+              icon: Icon(
+                Icons.email,
+                color: Colors.white,
               )),
-              icon: Icon(Icons.email, color: Colors.white,)),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value.isEmpty) {
@@ -90,12 +87,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     if (result == "Please register first") {
       callResponse = false;
       return false;
-    }
-    else if (result == "Invalid Email. Please enter the correct email") {
+    } else if (result == "Invalid Email. Please enter the correct email") {
       callResponse = false;
       return false;
-    }
-    else {
+    } else {
       callResponse = true;
       return true;
     }
@@ -111,8 +106,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         isLoading = false;
       });
 
-      serverCall()
-          .catchError((error) {
+      serverCall().catchError((error) {
         print('This is the error $error');
         FocusScope.of(context).unfocus();
         //Disable the circular progress dialog
@@ -129,10 +123,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   '$error',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
                 cancelButton: CupertinoActionSheetAction(
                     onPressed: () {
@@ -143,12 +137,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       'CANCEL',
                       style: GoogleFonts.muli(
                           textStyle:
-                          TextStyle(color: Colors.red, fontSize: 25)),
+                              TextStyle(color: Colors.red, fontSize: 25)),
                     )));
           },
         );
-      })
-      .whenComplete(() {
+      }).whenComplete(() {
         if (callResponse) {
           FocusScope.of(context).unfocus();
           print('Successful response ${result}');
@@ -160,19 +153,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   'Your request has been received',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
                 message: Text(
                   'A password reset link has been sent to your email',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
               );
             },
@@ -188,8 +181,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           Timer(Duration(seconds: 3), () {
             Navigator.of(context).pop();
           });
-        }
-        else {
+        } else {
           FocusScope.of(context).unfocus();
           print('Failed response: ${result}');
           //Disable the circular progress dialog
@@ -205,10 +197,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     '${result}',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        )),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
                   ),
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
@@ -218,8 +210,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: Text(
                         'CANCEL',
                         style: GoogleFonts.muli(
-                            textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25,fontWeight: FontWeight.bold)),
+                            textStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold)),
                       )));
             },
           );
@@ -234,26 +228,27 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       width: double.infinity,
       child: isLoading
           ? RaisedButton(
-        color: Colors.white,
-        onPressed: _resetBtnPressed,
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Text(
-          'RESET PASSWORD',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.green[900],
-                  fontSize: 18,
-                  letterSpacing: 0.5,
-                  fontWeight: FontWeight.w600)),
-        ),
-      )
-      : Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-          strokeWidth: 3,
-        ),
-      ),
+              color: Colors.white,
+              onPressed: _resetBtnPressed,
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Text(
+                'RESET PASSWORD',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                        color: Colors.green[900],
+                        fontSize: 18,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.w600)),
+              ),
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
     );
   }
 
@@ -284,9 +279,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.green[900]
-                ),
+                decoration: BoxDecoration(color: Colors.green[900]),
               ),
               Container(
                 height: double.infinity,

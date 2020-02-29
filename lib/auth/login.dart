@@ -21,16 +21,17 @@ class _LoginState extends State<Login> {
   User _user;
 
   void _emailHandler(String email) {
-    _email = email.trim();
+    _email = email.toLowerCase().trim();
     print('Email: $_email');
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    //Dispose of the FocusNodes
+    //Dispose of the FocusNode
     _focusPass.dispose();
+    //Reset the Form
+    _formKey.currentState.reset();
   }
 
   void _passwordHandler(String pass) {
@@ -60,24 +61,21 @@ class _LoginState extends State<Login> {
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
               errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.white
-                ),
+                textStyle: TextStyle(color: Colors.white),
               ),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.white
-                )
-              ),
+                  borderSide: BorderSide(color: Colors.white)),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
               labelText: 'Please enter your email',
-              labelStyle: GoogleFonts.quicksand(textStyle: TextStyle(
-                color: Colors.white
+              labelStyle: GoogleFonts.quicksand(
+                  textStyle: TextStyle(color: Colors.white)),
+              icon: Icon(
+                Icons.email,
+                color: Colors.white,
               )),
-              icon: Icon(Icons.email, color: Colors.white,)),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value.isEmpty) {
@@ -119,24 +117,21 @@ class _LoginState extends State<Login> {
           focusNode: _focusPass,
           decoration: InputDecoration(
               errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                  color: Colors.white
-                ),
+                textStyle: TextStyle(color: Colors.white),
               ),
               enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.white
-                  )
-              ),
+                  borderSide: BorderSide(color: Colors.white)),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
               labelText: 'Please enter your password',
-              labelStyle: GoogleFonts.quicksand(textStyle: TextStyle(
-                color: Colors.white
+              labelStyle: GoogleFonts.quicksand(
+                  textStyle: TextStyle(color: Colors.white)),
+              icon: Icon(
+                Icons.vpn_key,
+                color: Colors.white,
               )),
-              icon: Icon(Icons.vpn_key, color: Colors.white,)),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
             if (value.isEmpty) {
@@ -193,60 +188,62 @@ class _LoginState extends State<Login> {
     if (result == 'Invalid credentials. Please try again') {
       callResponse = false;
       return false;
-    }
-    else if (result == "Invalid Email. Please enter the correct email") {
+    } else if (result == "The email format entered is invalid") {
       callResponse = false;
       return false;
-    }
-    else if (result == "Please register first") {
+    } else if (result == "Please register first") {
       callResponse = false;
       return false;
-    }
-    else if (result == "Your account has been disabled") {
+    } else if (result == "Your account has been disabled") {
       callResponse = false;
       return false;
-    }
-    else if (result == "Too many requests. Try again in 2 minutes") {
+    } else if (result == "Too many requests. Try again in 2 minutes") {
       callResponse = false;
       return false;
-    }
-    else {
+    } else {
       callResponse = true;
       return true;
     }
   }
 
-  void getUserBase(String uid) async {
-    //Define constants
-    //This is the name of the collection
+  Future getUserBase(String uid) async {
+    //This is the name of the collection we will be reading
     final String _collection = 'users';
     //Create a variable to store Firestore instance
     final Firestore _fireStore = Firestore.instance;
-
-    var document = await _fireStore
-        .collection(_collection).document(uid);
+    var document = await _fireStore.collection(_collection).document(uid);
     var returnDoc = document.get();
     //Show the return value - A DocumentSnapshot;
-    print('This is the return ${returnDoc}');
+    //print('This is the return ${returnDoc}');
     returnDoc.then((DocumentSnapshot) {
       //Extract values
-     String userdesignation = DocumentSnapshot.data["designation"];
-     //Return the data for tenant
-     Map<String, dynamic> userData = DocumentSnapshot.data;
-     //Add the uid to the Map
-     userData["uid"] = uid;
-     if (userdesignation == "Tenant") {
-       //Timed Function
-          Timer(Duration(milliseconds: 100), () {
-            Navigator.of(context).popAndPushNamed('/tenant-home', arguments: userData);
-          });
-     }
-     else {
-       //Timed Function
-       Timer(Duration(milliseconds: 100), () {
-         Navigator.of(context).popAndPushNamed('/owner_home', arguments: userData);
-       });
-     }
+      String userdesignation = DocumentSnapshot.data["designation"];
+      //Return the data for user
+      Map<String, dynamic> userData = DocumentSnapshot.data;
+      //Add the uid to the Map
+      userData["uid"] = uid;
+      //Show different home pages based on designation
+      if (userdesignation == "Tenant") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context)
+              .popAndPushNamed('/tenant-home', arguments: userData);
+        });
+      } 
+      else if (userdesignation == "Admin") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context)
+              .popAndPushNamed('/admin', arguments: userData);
+        });
+      }
+      else {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context)
+              .popAndPushNamed('/owner_home', arguments: userData);
+        });
+      }
     });
   }
 
@@ -256,17 +253,13 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      _user = User(
-        email: _email,
-        password: _password
-      );
+      _user = User(email: _email, password: _password);
 
       setState(() {
         isLoading = false;
       });
       //Display appropriate response according to results of above feature
-      serverCall()
-          .catchError((error) {
+      serverCall().catchError((error) {
         print('This is the error $error');
         //Disable the circular progress dialog
         setState(() {
@@ -281,10 +274,10 @@ class _LoginState extends State<Login> {
                   '$error',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
                 cancelButton: CupertinoActionSheetAction(
                     onPressed: () {
@@ -295,14 +288,13 @@ class _LoginState extends State<Login> {
                       'CANCEL',
                       style: GoogleFonts.muli(
                           textStyle:
-                          TextStyle(color: Colors.red, fontSize: 25)),
+                              TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
                     )));
           },
         );
-      })
-          .whenComplete(() {
+      }).whenComplete(() {
         if (callResponse) {
-          print('Successful response ${result}');
+          //print('Successful response ${result}');
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
@@ -311,10 +303,10 @@ class _LoginState extends State<Login> {
                   'Welcome',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
                 message: Center(
                   child: LinearProgressIndicator(
@@ -331,12 +323,11 @@ class _LoginState extends State<Login> {
           //This is where we redirect the user based on their designation
           //Pass the user id as the parameter
           String userid = '${result.uid}';
-          print('This is the user id: $userid');
+          //print('This is the user id: $userid');
           //Query user designation based on results of the query containing uid
           getUserBase(userid);
-        }
-        else {
-          print('Failed response: ${result}');
+        } else {
+          //print('Failed response: ${result}');
           //Disable the circular progress dialog
           setState(() {
             isLoading = true;
@@ -350,10 +341,10 @@ class _LoginState extends State<Login> {
                     '${result}',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        )),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
                   ),
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
@@ -364,7 +355,7 @@ class _LoginState extends State<Login> {
                         'CANCEL',
                         style: GoogleFonts.muli(
                             textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25)),
+                                TextStyle(color: Colors.red, fontSize: 25)),
                       )));
             },
           );
@@ -379,26 +370,27 @@ class _LoginState extends State<Login> {
       width: double.infinity,
       child: isLoading
           ? RaisedButton(
-        color: Colors.white,
-        onPressed: _loginBtnPressed,
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Text(
-          'LOGIN',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.green[900],
-                  fontSize: 18,
-                  letterSpacing: 0.5,
-                  fontWeight: FontWeight.w600)),
-        ),
-      )
-      : Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-          strokeWidth: 3,
-        ),
-      ),
+              color: Colors.white,
+              onPressed: _loginBtnPressed,
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Text(
+                'LOGIN',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                        color: Colors.green[900],
+                        fontSize: 20,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.bold)),
+              ),
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
     );
   }
 
@@ -411,7 +403,7 @@ class _LoginState extends State<Login> {
         print('I want to create an account');
         Navigator.of(context).pushNamed('/register');
       },
-      splashColor: Colors.grey,
+      splashColor: Colors.white,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.3,
         margin: EdgeInsets.symmetric(vertical: 4),
@@ -426,7 +418,7 @@ class _LoginState extends State<Login> {
                 textStyle: TextStyle(
                     color: Colors.green[900],
                     fontSize: 20,
-                    fontWeight: FontWeight.w600)),
+                    fontWeight: FontWeight.bold)),
           ),
         ),
       ),
@@ -455,9 +447,7 @@ class _LoginState extends State<Login> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.green[900]
-                ),
+                decoration: BoxDecoration(color: Colors.green[900]),
               ),
               Container(
                 height: double.infinity,

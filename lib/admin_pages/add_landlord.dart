@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,110 +8,85 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/usermodel.dart';
 
-class Registration extends StatefulWidget {
+class AddLandlord extends StatefulWidget {
   @override
-  _RegistrationState createState() => _RegistrationState();
+  _AddLandlordState createState() => _AddLandlordState();
 }
 
-class _RegistrationState extends State<Registration> {
-  User _user;
+class _AddLandlordState extends State<AddLandlord> {
+  bool isLoading = true;
+  dynamic result;
+  bool callResponse = false;
+
   final _formKey = GlobalKey<FormState>();
 
-  //Save Registration Date
-  var now = DateTime.now();
-
   final _focuslname = FocusNode();
+  final _focusnatid = FocusNode();
+  final _focuspaybill = FocusNode();
+  final _focusapartment = FocusNode();
   final _focusemail = FocusNode();
   final _focusphone = FocusNode();
-  final _focusnatid = FocusNode();
-  final _focuspass = FocusNode();
-  final _focuscpass = FocusNode();
-
-  String _fname, _lname, _email, _phone, _natId, _pass, _cpass;
-
-  final TextEditingController _passwording = TextEditingController();
-  final TextEditingController _confirmPass = TextEditingController();
-
-  void _emailHandler(String email) {
-    _email = email.trim();
-    print('Email: $_email');
-  }
-
-  void _phoneHandler(String phone) {
-    _phone = phone.trim();
-    print('Phone: $_phone');
-  }
-
-  void _firstNameHandler(String name1) {
-    _fname = name1.trim();
-    print('First Name: $_fname');
-  }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    //Dispose the FocusNodes
     _focuslname.dispose();
     _focusemail.dispose();
+    _focuspaybill.dispose();
+    _focusapartment.dispose();
     _focusphone.dispose();
     _focusnatid.dispose();
-    _focuspass.dispose();
-    _focuscpass.dispose();
-    //Dispose the TextEditingControllers
-    _passwording.dispose();
-    _confirmPass.dispose();
   }
 
-  void _lastNameHandler(String name2) {
-    _lname = name2.trim();
-    print('Last Name: $_lname');
+  String _firstName,
+      _lastName,
+      _natId,
+      _phone,
+      _paybill = '',
+      _apartmentName,
+      _email;
+  int _lordCode;
+  User _user;
+
+  void _emailHandler(String value) {
+    _email = value.toLowerCase().trim();
+    print('Email: $_email');
   }
 
-  void _natIdHandler(String id) {
-    _natId = id.trim();
+  void _firstNameHandler(String value) {
+    _firstName = value.trim();
+    print('First Name: $_firstName');
+  }
+
+  void _lastNameHandler(String value) {
+    _lastName = value.trim();
+    print('Last Name: $_lastName');
+  }
+
+  void _nationalIdHandler(String value) {
+    _natId = value.trim();
     print('National ID: $_natId');
   }
 
-  void _passHandler(String password) {
-    _pass = password.trim();
-    print('Password(1): $_pass');
+  void _phoneHandler(String value) {
+    _phone = value.trim();
+    print('Phone: $_phone');
   }
 
-  void _confirmPassHandler(String confirmation) {
-    _cpass = confirmation.trim();
-    print('Password(2): $_cpass');
+  void _paybillHandler(String value) {
+    _paybill = value.trim();
+    print('Paybill: $_paybill');
   }
 
-  Widget _signInWidget() {
-    return InkWell(
-      customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
-      onTap: () {
-        print('I want to sign in');
-        Navigator.of(context).pop();
-      },
-      splashColor: Colors.grey,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.3,
-        margin: EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), bottomLeft: Radius.circular(30))),
-        child: Center(
-          child: Text(
-            'SIGN IN',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.green[900],
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600)),
-          ),
-        ),
-      ),
-    );
+  void _apartmentHandler(String value) {
+    _apartmentName = value.trim();
+    print('Apartment Name: $_apartmentName');
+  }
+
+  int lordCodeGenerator() {
+    var now = DateTime.now();
+    _lordCode = now.microsecondsSinceEpoch;
+    return _lordCode;
   }
 
   Widget _registerFirstName() {
@@ -153,7 +129,7 @@ class _RegistrationState extends State<Registration> {
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Name is required';
+              return 'First Name is required';
             }
             return null;
           },
@@ -208,7 +184,7 @@ class _RegistrationState extends State<Registration> {
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Name is required';
+              return 'Other Name(s) are required';
             }
             return null;
           },
@@ -340,7 +316,7 @@ class _RegistrationState extends State<Registration> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Identification',
+          'National ID',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
                   color: Colors.white,
@@ -376,26 +352,29 @@ class _RegistrationState extends State<Registration> {
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Identification number is required';
+              return 'ID number is required';
+            }
+            if (value.length < 7 || value.length > 8) {
+              return 'ID number should be 7 or 8 digits';
             }
             return null;
           },
           onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focuspass);
+            FocusScope.of(context).requestFocus(_focusapartment);
           },
           textInputAction: TextInputAction.next,
-          onSaved: _natIdHandler,
+          onSaved: _nationalIdHandler,
         )
       ],
     );
   }
 
-  Widget _registerPassword1() {
+  Widget _registerPaybill() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Password',
+          'Paybill (Optional)',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
                   color: Colors.white,
@@ -410,8 +389,7 @@ class _RegistrationState extends State<Registration> {
           autofocus: false,
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          controller: _passwording,
-          focusNode: _focuspass,
+          focusNode: _focuspaybill,
           decoration: InputDecoration(
               errorStyle: GoogleFonts.quicksand(
                 textStyle: TextStyle(color: Colors.white),
@@ -422,171 +400,116 @@ class _RegistrationState extends State<Registration> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your password',
+              labelText: 'Please enter your paybill number',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
-                Icons.vpn_key,
+                Icons.confirmation_number,
                 color: Colors.white,
               )),
-          obscureText: true,
-          keyboardType: TextInputType.visiblePassword,
+          keyboardType: TextInputType.number,
           validator: (value) {
-            if (value.isEmpty) {
-              return 'Password is required';
-            }
-            if (value.length < 6) {
-              return 'Password should be 6 or more characters';
-            }
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focuscpass);
-          },
-          textInputAction: TextInputAction.next,
-          onSaved: _passHandler,
-        )
-      ],
-    );
-  }
-
-  //Group value
-  String id = "Tenant";
-
-  Widget _designationSelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'I am a: ',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  letterSpacing: 0.5)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          children: <Widget>[
-            Expanded(
-                child: Container(
-              child: RadioListTile(
-                value: "Tenant",
-                groupValue: id,
-                onChanged: (value) {
-                  setState(() {
-                    id = value;
-                  });
-                },
-                title: Text(
-                  'Tenant',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-                ),
-              ),
-            )),
-            Expanded(
-                child: Container(
-                    child: RadioListTile(
-                        value: "Landlord",
-                        groupValue: id,
-                        onChanged: (value) {
-                          setState(() {
-                            id = value;
-                          });
-                        },
-                        title: Text(
-                          'Landlord',
-                          style: GoogleFonts.quicksand(
-                              textStyle:
-                                  TextStyle(color: Colors.white, fontSize: 18)),
-                        )))),
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _registerPassword2() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password confirmation',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          controller: _confirmPass,
-          focusNode: _focuscpass,
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your password again',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.vpn_key,
-                color: Colors.white,
-              )),
-          obscureText: true,
-          keyboardType: TextInputType.visiblePassword,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Password is required';
-            }
-            if (value.length < 6) {
-              return 'Password should be 6 or more characters';
-            }
-            if (value != _passwording.text) {
-              return 'Passwords do not match';
-            }
             return null;
           },
           onFieldSubmitted: (value) {
             FocusScope.of(context).unfocus();
           },
           textInputAction: TextInputAction.done,
-          onSaved: _confirmPassHandler,
+          onSaved: _paybillHandler,
         )
       ],
     );
   }
 
-  //Generate a timestamp that will be the Landlords unique code
-  int lordCode() {
-    int code = DateTime.now().microsecondsSinceEpoch;
-    return code;
+  Widget _registerApartment() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Apartment Name',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  letterSpacing: .2,
+                  fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          autofocus: false,
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+          focusNode: _focusapartment,
+          decoration: InputDecoration(
+              errorStyle: GoogleFonts.quicksand(
+                textStyle: TextStyle(color: Colors.white),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
+              errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red)),
+              labelText: 'Please enter the apartment name',
+              labelStyle: GoogleFonts.quicksand(
+                  textStyle: TextStyle(color: Colors.white)),
+              icon: Icon(
+                Icons.business,
+                color: Colors.white,
+              )),
+          keyboardType: TextInputType.text,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Apartment Name is required';
+            }
+            return null;
+          },
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).requestFocus(_focuspaybill);
+          },
+          textInputAction: TextInputAction.next,
+          onSaved: _apartmentHandler,
+        )
+      ],
+    );
   }
 
-  bool isLoading = true;
-  dynamic result;
-  bool callResponse = false;
+  Widget _registerBtn() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      width: double.infinity,
+      child: isLoading
+          ? RaisedButton(
+              color: Colors.white,
+              onPressed: _submitBtnPressed,
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Text(
+                'SUBMIT',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                        color: Colors.green[900],
+                        fontSize: 20,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.bold)),
+              ),
+            )
+          : Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
+    );
+  }
 
   API _api = API();
 
   Future<bool> serverCall() async {
-    result = await _api.createUserEmailPass(_user);
+    result = await _api.saveLandlord(_user);
     print('This is the result: $result');
 
     if (result == 'Your password is weak. Please choose another') {
@@ -604,41 +527,28 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-  void _registerBtnPressed() {
+  void _submitBtnPressed() {
+    //Validate the Form
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      //Populate the user fields based on designation
-      if (id == "Tenant") {
-        _user = User(
-            firstName: _fname,
-            lastName: _lname,
-            email: _email,
-            phone: _phone,
-            natId: _natId,
-            registerDate: now.toLocal(),
-            designation: id,
-            password: _pass,
-            lordCode: 0);
-      }
-      if (id == "Landlord") {
-        _user = User(
-            firstName: _fname,
-            lastName: _lname,
-            email: _email,
-            phone: _phone,
-            natId: _natId,
-            registerDate: now.toLocal(),
-            designation: id,
-            password: _pass,
-            lordCode: lordCode());
-      }
-
+      //Display the Circular Loading Indicator
       setState(() {
         isLoading = false;
       });
 
-      //Display appropriate response according to results of above feature
+      _user = User(
+          firstName: _firstName,
+          lastName: _lastName,
+          email: _email,
+          natId: _natId,
+          phone: _phone,
+          apartmentName: _apartmentName,
+          paybill: _paybill,
+          designation: "Landlord",
+          registerDate: DateTime.now().toLocal(),
+          lordCode: lordCodeGenerator());
+
       serverCall().catchError((error) {
         print('This is the error $error');
         //Disable the circular progress dialog
@@ -675,13 +585,13 @@ class _RegistrationState extends State<Registration> {
         );
       }).whenComplete(() {
         if (callResponse) {
-          print('Successful response ${result}');
+          print('Successful response $result');
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                 title: Text(
-                  'Thank you for joining us ${_user.firstName}',
+                  'The landlord/lady has been successfully added',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -704,7 +614,7 @@ class _RegistrationState extends State<Registration> {
             Navigator.of(context).pop();
           });
         } else {
-          print('Failed response: ${result}');
+          print('Failed response: $result');
           //Disable the circular progress dialog
           setState(() {
             isLoading = true;
@@ -715,7 +625,7 @@ class _RegistrationState extends State<Registration> {
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                   title: Text(
-                    '${result}',
+                    '$result',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -742,50 +652,21 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-  Widget _registerBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      width: double.infinity,
-      child: isLoading
-          ? RaisedButton(
-              color: Colors.white,
-              onPressed: _registerBtnPressed,
-              padding: EdgeInsets.all(15.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              child: Text(
-                'REGISTER',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.green[900],
-                        fontSize: 18,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.w600)),
-              ),
-            )
-          : Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.white,
-                strokeWidth: 3,
-              ),
-            ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        leading: IconButton(
-            icon: Icon(
-              CupertinoIcons.back,
-              color: Colors.white,
-            ),
-            onPressed: () => Navigator.pop(context)),
-        actions: <Widget>[_signInWidget()],
-        elevation: 0.0,
-      ),
+          backgroundColor: Colors.green[900],
+          elevation: 0.0,
+          title: Text(
+            'Create Landlord',
+            style: GoogleFonts.quicksand(
+                textStyle:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+          ),
+          leading: IconButton(
+              icon: Icon(CupertinoIcons.back),
+              onPressed: () => Navigator.of(context).pop())),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -795,72 +676,72 @@ class _RegistrationState extends State<Registration> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(color: Colors.green[900]),
+                color: Colors.green[900],
               ),
               Container(
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          'Hello',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  letterSpacing: 0.5)),
+                        Center(
+                          child: Text(
+                            'Personal Details',
+                            style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                    letterSpacing: 0.5)),
+                          ),
                         ),
                         SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Please fill in the form below to open a new account',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 20,
-                                  letterSpacing: 0.5)),
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        _designationSelector(),
-                        SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
                         _registerFirstName(),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         _registerOtherName(),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         _registerEmail(),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         _registerPhone(),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         _registerID(),
                         SizedBox(
-                          height: 30,
+                          height: 40,
                         ),
-                        _registerPassword1(),
+                        Center(
+                          child: Text(
+                            'Apartment Details',
+                            style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                    letterSpacing: 0.5)),
+                          ),
+                        ),
                         SizedBox(
                           height: 30,
                         ),
-                        _registerPassword2(),
+                        _registerApartment(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _registerPaybill(),
                         SizedBox(
                           height: 20,
                         ),

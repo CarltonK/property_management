@@ -46,7 +46,7 @@ class API with ChangeNotifier{
         print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_INVALID_EMAIL")) {
-        response = 'Invalid Email. Please enter the correct email';
+        response = 'The email format entered is invalid';
         print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_USER_NOT_FOUND")) {
@@ -58,7 +58,7 @@ class API with ChangeNotifier{
         print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_TOO_MANY_REQUESTS")) {
-        response = 'Too many requests. Try again in 2 minutes';
+        response = 'Too many requests. Please try again in 2 minutes';
         print('Negative Response: $response');
       }
       return response;
@@ -85,7 +85,7 @@ class API with ChangeNotifier{
         print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_INVALID_EMAIL")) {
-        response = 'Invalid Email. Please enter the correct email';
+        response = 'The email format entered is invalid';
         print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_EMAIL_ALREADY_IN_USE")) {
@@ -184,6 +184,88 @@ class API with ChangeNotifier{
     catch (e) {
       print("The user was not successfully saved");
       print("This is the error ${e.toString()}");
+    }
+  }
+
+  //Save Landlord
+  //This operation is done by the Admin
+  Future saveLandlord(User user) async {
+    //First create a user
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(
+          email: user.email,
+          password: "p@ssw.rd");
+      currentUser = result.user;
+      //The User has registered successfully
+      //Retrieve data from User object
+      String email = user.email;
+      String firstName =  user.firstName;
+      String lastName =  user.lastName;
+      String phone = user.phone;
+      String natId = user.natId;
+      String paybill = user.paybill;
+      String designation = user.designation;
+      DateTime registerDate = user.registerDate;
+      int landlordCode = user.lordCode;
+      String apartment = user.apartmentName;
+      //Add data to firebase collection "users"
+      await Firestore.instance
+          .collection("users")
+          .document(result.user.uid).setData(
+        {
+          "email":email,
+          "firstName": firstName,
+          "lastName": lastName,
+          "phone": phone,
+          "natId": natId,
+          "designation": designation,
+          "registerDate": registerDate,
+          "landlord_code": landlordCode,
+        }
+      );
+      //Add data to Firestore collection "landlords"
+      await Firestore.instance
+            .collection("landlords")
+            .document(result.user.uid)
+            .setData({
+              "email":email,
+              "firstName": firstName,
+              "lastName": lastName,
+              "phone": phone,
+              "natId": natId,
+              "designation": designation,
+              "registerDate": registerDate,
+              "landlord_code": landlordCode,
+              "apartment_name": apartment
+            });
+      //Add data to Firestore collection "apartments"
+      await Firestore.instance
+            .collection("apartments")
+            .document(landlordCode.toString())
+            .setData({
+              "apartment_name": apartment,
+              "add_date": DateTime.now().toLocal(),
+              "owner": firstName + " " + lastName,
+              "apartment_code": landlordCode,
+              "paybill": paybill
+            });
+      return currentUser;
+    }
+    catch (e) {
+      var response;
+      if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
+        response = 'Your password is weak. Please choose another';
+        print('Negative Response: $response');
+      }
+      if (e.toString().contains("ERROR_INVALID_EMAIL")) {
+        response = 'The email format entered is invalid';
+        print('Negative Response: $response');
+      }
+      if (e.toString().contains("ERROR_EMAIL_ALREADY_IN_USE")) {
+        response = 'An account with the same email exists';
+        print('Negative Response: $response');
+      }
+      return response;
     }
   }
 }

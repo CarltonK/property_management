@@ -14,8 +14,9 @@ class User {
   String phone;
   DateTime registerDate;
   DateTime reminder;
+  String apartmentName;
   String designation;
-  int paybill;
+  String paybill;
   int lordCode;
   Complaints complaints;
   String password;
@@ -33,6 +34,7 @@ class User {
     this.paybill,
     this.lordCode,
     this.complaints,
+    this.apartmentName,
     this.password,
     this.uid
 });
@@ -50,7 +52,8 @@ class User {
     complaints: Complaints.fromJson(json["complaints"]),
     password: json["password"],
     uid: json["uid"],
-    lordCode: json["lordCode"]
+    lordCode: json["lordCode"],
+    apartmentName: json["apartmentName"]
   );
 
   //Convert Dart object to JSON
@@ -67,7 +70,8 @@ class User {
     "complaints": complaints.toJson(),
     "password": password,
     "uid": uid,
-    "lordCode": lordCode
+    "lordCode": lordCode,
+    "apartmentName": apartmentName
   };
 
 }
