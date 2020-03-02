@@ -227,15 +227,12 @@ class _LoginState extends State<Login> {
           Navigator.of(context)
               .popAndPushNamed('/tenant-home', arguments: userData);
         });
-      } 
-      else if (userdesignation == "Admin") {
+      } else if (userdesignation == "Admin") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
-          Navigator.of(context)
-              .popAndPushNamed('/admin', arguments: userData);
+          Navigator.of(context).popAndPushNamed('/admin', arguments: userData);
         });
-      }
-      else {
+      } else {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context)
@@ -285,8 +282,10 @@ class _LoginState extends State<Login> {
                     child: Text(
                       'CANCEL',
                       style: GoogleFonts.muli(
-                          textStyle:
-                              TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
+                          textStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold)),
                     )));
           },
         );
@@ -429,11 +428,12 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         backgroundColor: Colors.green[900],
         leading: IconButton(
-            icon: Icon(
-              CupertinoIcons.back,
-              color: Colors.white,
-            ),
-            onPressed: () => Navigator.of(context).pop(),),
+          icon: Icon(
+            CupertinoIcons.back,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: <Widget>[_signUpWidget()],
         elevation: 0.0,
       ),

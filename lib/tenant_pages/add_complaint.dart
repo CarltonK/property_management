@@ -12,81 +12,14 @@ class AddComplaint extends StatefulWidget {
 }
 
 class _AddComplaintState extends State<AddComplaint> {
-
   final _formKey = GlobalKey<FormState>();
   final _focusmessage = FocusNode();
-  String _hse, _message;
-  String fname;
-  String lname;
+  String _message;
   int code;
-
-  void _hseHandler(String value) {
-    _hse = value.trim();
-    print('House Number: $_hse');
-  }
 
   void _msgHandler(String value) {
     _message = value.trim();
     print('Message: $_message');
-  }
-
-
-  Widget _tenanthseNum() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'House Number',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.white
-                ),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.white
-                  )
-              ),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your house number',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      color: Colors.white
-                  )
-              ),),
-          keyboardType: TextInputType.text,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'House Number is required';
-            }
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focusmessage);
-          },
-          textInputAction: TextInputAction.next,
-          onSaved: _hseHandler,
-        )
-      ],
-    );
   }
 
   Widget _tenantMessage() {
@@ -110,29 +43,22 @@ class _AddComplaintState extends State<AddComplaint> {
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.white
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.white
-                  ),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5),
-                  borderRadius: BorderRadius.circular(10)),
-              errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red),
-                  borderRadius: BorderRadius.circular(10)),
-              labelText: 'What is the issue you are facing?',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      color: Colors.white
-                  )
-              ),),
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(color: Colors.white),
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(10)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                borderRadius: BorderRadius.circular(10)),
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10)),
+            labelText: 'What is the issue you are facing?',
+            labelStyle: GoogleFonts.quicksand(
+                textStyle: TextStyle(color: Colors.white)),
+          ),
           keyboardType: TextInputType.text,
           focusNode: _focusmessage,
           maxLines: 3,
@@ -177,8 +103,7 @@ class _AddComplaintState extends State<AddComplaint> {
           .setData(entryData);
       callResponse = true;
       return true;
-    }
-    catch (e) {
+    } catch (e) {
       print('This is the error: $e');
       callResponse = false;
       return false;
@@ -195,17 +120,90 @@ class _AddComplaintState extends State<AddComplaint> {
         isLoading = false;
       });
 
-      Map<String, dynamic> newData = {
+      if (code == 0) {
+         setState(() {
+        isLoading = true;
+      });
+        showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                  title: Text(
+                    'Your complaint could not be posted',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
+                  message: Text(
+                    'Please wait for the landlord to approve you',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                      color: Colors.black,
+                    )),
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold)),
+                      )));
+            },
+          );
+      }
+      else {
+        Map<String, dynamic> newData = {
         "fixed": false,
-        "hse": _hse,
+        "hse": data["hseNumber"],
         "title": _message,
         "landlord_code": data["landlord_code"],
         "tenant": "${data["firstName"]} ${data["lastName"]}",
         "date": DateTime.now().toLocal().toIso8601String(),
       };
-
-      _postComplaint(newData)
-          .whenComplete(() {
+        _postComplaint(newData)
+        .catchError((error) {
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                  title: Text(
+                    '$error',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold)),
+                      )));
+            },
+          );
+        })
+        .whenComplete(() {
+          setState(() {
+            isLoading = true;
+          });
         if (callResponse == true) {
           FocusScope.of(context).unfocus();
           showCupertinoModalPopup(
@@ -216,10 +214,10 @@ class _AddComplaintState extends State<AddComplaint> {
                     'Your complaint has been posted',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        )),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
                   ),
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
@@ -228,67 +226,23 @@ class _AddComplaintState extends State<AddComplaint> {
                       child: Text(
                         'CANCEL',
                         style: GoogleFonts.quicksand(
-                            textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
-                      ))
-              );
+                            textStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold)),
+                      )));
             },
           );
-          //Disable the circular progress dialog
-          setState(() {
-            isLoading = true;
-          });
           //Timed Function
           Timer(Duration(seconds: 1), () {
             Navigator.of(context).pop();
           });
           Timer(Duration(seconds: 2), () {
             Navigator.of(context).pop();
-            });
-        }
-        else {
-          showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    'Your complaint could not be posted',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        )),
-                  ),
-                  message: Text(
-                    'Ensure you have entered the code you received from your landlord',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.black,
-                        )),
-                  ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
-                      ))
-              );
-            },
-          );
-          //Disable the circular progress dialog
-          setState(() {
-            isLoading = true;
           });
         }
       });
-
+      }
     }
   }
 
@@ -298,33 +252,34 @@ class _AddComplaintState extends State<AddComplaint> {
       width: double.infinity,
       child: isLoading
           ? RaisedButton(
-        color: Colors.white,
-        onPressed: _submitPressed,
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Text(
-          'SUBMIT',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.green[900],
-                  fontSize: 18,
-                  letterSpacing: 0.5,
-                  fontWeight: FontWeight.bold)),
-        ),
-      )
+              color: Colors.white,
+              onPressed: _submitPressed,
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Text(
+                'SUBMIT',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                        color: Colors.green[900],
+                        fontSize: 18,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.bold)),
+              ),
+            )
           : Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-          strokeWidth: 3,
-        ),
-      ),
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
     );
   }
+
   Map<String, dynamic> data;
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _focusmessage.dispose();
   }
@@ -333,6 +288,7 @@ class _AddComplaintState extends State<AddComplaint> {
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
     print('Add Complaint Page Data: $data');
+    code = data["landlord_code"];
 
     return Scaffold(
       appBar: AppBar(
@@ -348,9 +304,7 @@ class _AddComplaintState extends State<AddComplaint> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.green[900]
-                ),
+                decoration: BoxDecoration(color: Colors.green[900]),
               ),
               Container(
                 height: double.infinity,
@@ -387,7 +341,6 @@ class _AddComplaintState extends State<AddComplaint> {
                         SizedBox(
                           height: 50,
                         ),
-                        _tenanthseNum(),
                         SizedBox(
                           height: 20,
                         ),

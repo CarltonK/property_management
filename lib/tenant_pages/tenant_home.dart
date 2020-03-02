@@ -24,6 +24,36 @@ class _TenantHomeState extends State<TenantHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green[900],
+        elevation: 0.0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/tenant-profile');
+          },
+          icon: Icon(
+            Icons.person_pin,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+        title: Text(
+          'Kejani',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+        ),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.alarm,
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () {
+                print('I want to set a rent reminder');
+              })
+        ],
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
@@ -31,9 +61,7 @@ class _TenantHomeState extends State<TenantHome> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.green[900]
-              ),
+              decoration: BoxDecoration(color: Colors.green[900]),
             ),
             Container(
               //This Container lays out the UI
@@ -45,12 +73,13 @@ class _TenantHomeState extends State<TenantHome> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _appBarLayout(context),
                     SizedBox(
                       height: 10,
                     ),
                     _userFunctions(context, payments),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     //_landlordDetails(context)
                   ],
                 ),
@@ -305,50 +334,6 @@ Widget _landlordDetails(BuildContext context) {
               ),
             )
           ],
-        )
-      ],
-    ),
-  );
-}
-
-
-Widget _appBarLayout(context) {
-  //This custom appBar replaces the Flutter App Bar
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed('/tenant-profile');
-          },
-          child: Container(
-            height: 80,
-            child: Hero(
-              tag: 'tenant',
-              child: CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.white,
-                child: Icon(CupertinoIcons.person_solid, color: Colors.green[900],size: 60,),
-              ),
-            ),
-          ),
-        ),
-        FloatingActionButton(
-          elevation: 10,
-          mini: false,
-          splashColor: Colors.greenAccent[700],
-          tooltip: 'Rent reminder',
-          onPressed: () {
-            print('I want to set a rent reminder');
-          },
-          backgroundColor: Colors.green[900],
-          child: Icon(
-            Icons.alarm,
-            color: Colors.white,
-            size: 30,
-          ),
         )
       ],
     ),

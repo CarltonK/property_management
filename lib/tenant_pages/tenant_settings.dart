@@ -11,7 +11,6 @@ class TenantSettings extends StatefulWidget {
 }
 
 class _TenantSettingsState extends State<TenantSettings> {
-
   final _formKey = GlobalKey<FormState>();
   String uid;
   int codeData;
@@ -24,8 +23,7 @@ class _TenantSettingsState extends State<TenantSettings> {
               color: Colors.white,
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              letterSpacing: 1)
-      ),
+              letterSpacing: 1)),
     );
   }
 
@@ -34,17 +32,11 @@ class _TenantSettingsState extends State<TenantSettings> {
       elevation: 10,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-              color: Colors.white54,
-              width: 1.2
-          )
-      ),
+          side: BorderSide(color: Colors.white54, width: 1.2)),
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-            color: Colors.green[800],
-            borderRadius: BorderRadius.circular(12)
-        ),
+            color: Colors.green[800], borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -53,10 +45,10 @@ class _TenantSettingsState extends State<TenantSettings> {
               textAlign: TextAlign.center,
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 24,
-                  )),
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 24,
+              )),
             ),
             SizedBox(
               height: 20,
@@ -68,10 +60,9 @@ class _TenantSettingsState extends State<TenantSettings> {
                   'Code: ',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      )
-                  ),
+                    color: Colors.white,
+                    fontSize: 20,
+                  )),
                 ),
                 Text(
                   '${data["landlord_code"]}',
@@ -80,9 +71,7 @@ class _TenantSettingsState extends State<TenantSettings> {
                           color: Colors.white,
                           fontSize: 20,
                           letterSpacing: .5,
-                          fontWeight: FontWeight.bold
-                      )
-                  ),
+                          fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
@@ -99,7 +88,6 @@ class _TenantSettingsState extends State<TenantSettings> {
   Future<int> _getCode() async {
     return codeData;
   }
-
 
   void _codeHandler(String value) {
     codeStr = value.trim();
@@ -129,32 +117,24 @@ class _TenantSettingsState extends State<TenantSettings> {
               textStyle: TextStyle(color: Colors.white, fontSize: 18)),
           decoration: InputDecoration(
               errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.white
-                ),
+                textStyle: TextStyle(color: Colors.white),
               ),
               enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.white
-                  )
-              ),
+                  borderSide: BorderSide(color: Colors.white)),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
               helperText: 'This is the code given to you by your landlord',
               helperStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      color: Colors.white
-                  )
-              ),
+                  textStyle: TextStyle(color: Colors.white)),
               labelText: 'Please enter the code',
               labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      color: Colors.white
-                  )
-              ),
-              icon: Icon(Icons.dialpad, color: Colors.white,)),
+                  textStyle: TextStyle(color: Colors.white)),
+              icon: Icon(
+                Icons.dialpad,
+                color: Colors.white,
+              )),
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value.isEmpty) {
@@ -199,23 +179,22 @@ class _TenantSettingsState extends State<TenantSettings> {
     if (query.documents.length == 0) {
       callResponse = "Invalid code entered";
       return false;
-    }
-    else {
-        //Update the users collection
-        await _fireStore
-            .collection(_collectionUser)
-            .document(uid)
-            .updateData({"landlord_code": code});
-        //Update the tenants collection
-        await _fireStore
-            .collection(_collectionTenant)
-            .document(uid)
-            .updateData({"landlord_code": code});
-        //Update the settings page map to reflect immediately
-        data["landlord_code"] = code;
-        print('Updated data: $data');
-        callResponse = true;
-        return true;
+    } else {
+      //Update the users collection
+      await _fireStore
+          .collection(_collectionUser)
+          .document(uid)
+          .updateData({"landlord_code": code});
+      //Update the tenants collection
+      await _fireStore
+          .collection(_collectionTenant)
+          .document(uid)
+          .updateData({"landlord_code": code});
+      //Update the settings page map to reflect immediately
+      data["landlord_code"] = code;
+      print('Updated data: $data');
+      callResponse = true;
+      return true;
     }
   }
 
@@ -234,15 +213,15 @@ class _TenantSettingsState extends State<TenantSettings> {
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
-                title: Text(
-                  'Your code has been accepted',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
-                ),
+                  title: Text(
+                    'Your code has been accepted',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -252,30 +231,28 @@ class _TenantSettingsState extends State<TenantSettings> {
                         'CANCEL',
                         style: GoogleFonts.quicksand(
                             textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25)),
-                      ))
-              );
+                                TextStyle(color: Colors.red, fontSize: 25)),
+                      )));
             },
           );
           //Disable the circular progress dialog
           setState(() {
             isLoading = true;
           });
-        }
-        else {
+        } else {
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
-                title: Text(
-                  'Invalid code entered',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
-                ),
+                  title: Text(
+                    'Invalid code entered',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -285,9 +262,8 @@ class _TenantSettingsState extends State<TenantSettings> {
                         'CANCEL',
                         style: GoogleFonts.quicksand(
                             textStyle:
-                            TextStyle(color: Colors.red, fontSize: 25)),
-                      ))
-              );
+                                TextStyle(color: Colors.red, fontSize: 25)),
+                      )));
             },
           );
           //Disable the circular progress dialog
@@ -305,26 +281,27 @@ class _TenantSettingsState extends State<TenantSettings> {
       width: double.infinity,
       child: isLoading
           ? RaisedButton(
-        color: Colors.white,
-        onPressed: _setCodeBtnPressed,
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Text(
-          'SUBMIT',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.green[900],
-                  fontSize: 18,
-                  letterSpacing: 0.5,
-                  fontWeight: FontWeight.bold)),
-        ),
-      )
+              color: Colors.white,
+              onPressed: _setCodeBtnPressed,
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Text(
+                'SUBMIT',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                        color: Colors.green[900],
+                        fontSize: 18,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.bold)),
+              ),
+            )
           : Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white,
-          strokeWidth: 3,
-        ),
-      ),
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
     );
   }
 
@@ -338,23 +315,23 @@ class _TenantSettingsState extends State<TenantSettings> {
           print('Snapshot Error: ${snapshot.error.toString()}');
           return Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Text(
-                    'Ooops! ${snapshot.error.toString()}',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.greenAccent[700],
-                          fontSize: 20,
-                        )),
-                  )
-                ],
-              ));
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                'Ooops! ${snapshot.error.toString()}',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.greenAccent[700],
+                  fontSize: 20,
+                )),
+              )
+            ],
+          ));
         }
         switch (snapshot.connectionState) {
           case ConnectionState.active:
@@ -375,10 +352,10 @@ class _TenantSettingsState extends State<TenantSettings> {
                         textAlign: TextAlign.center,
                         style: GoogleFonts.quicksand(
                             textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 24,
-                            )),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 24,
+                        )),
                       ),
                       SizedBox(
                         height: 20,
@@ -392,24 +369,23 @@ class _TenantSettingsState extends State<TenantSettings> {
                   ),
                 ),
               );
-            }
-            else {
+            } else {
               return _ownerCode();
             }
             break;
           case ConnectionState.waiting:
             return Center(
                 child: SpinKitFadingCircle(
-                  color: Colors.white,
-                  size: 150.0,
-                ));
-            break;
-      }
-        return Center(
-            child: SpinKitFadingCircle(
               color: Colors.white,
               size: 150.0,
             ));
+            break;
+        }
+        return Center(
+            child: SpinKitFadingCircle(
+          color: Colors.white,
+          size: 150.0,
+        ));
       },
     );
   }
@@ -429,9 +405,7 @@ class _TenantSettingsState extends State<TenantSettings> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.green[900]
-              ),
+              decoration: BoxDecoration(color: Colors.green[900]),
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),

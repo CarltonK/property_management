@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,7 +49,6 @@ class _RegistrationState extends State<Registration> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     //Dispose the FocusNodes
     _focuslname.dispose();
@@ -89,7 +89,7 @@ class _RegistrationState extends State<Registration> {
               topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
       onTap: () {
         print('I want to sign in');
-        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed('/login');
       },
       splashColor: Colors.grey,
       child: Container(
@@ -106,7 +106,7 @@ class _RegistrationState extends State<Registration> {
                 textStyle: TextStyle(
                     color: Colors.green[900],
                     fontSize: 20,
-                    fontWeight: FontWeight.w600)),
+                    fontWeight: FontWeight.bold)),
           ),
         ),
       ),
@@ -127,7 +127,7 @@ class _RegistrationState extends State<Registration> {
                   fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         TextFormField(
           autofocus: false,
@@ -181,7 +181,7 @@ class _RegistrationState extends State<Registration> {
                   fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         TextFormField(
           autofocus: false,
@@ -236,7 +236,7 @@ class _RegistrationState extends State<Registration> {
                   fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         TextFormField(
           autofocus: false,
@@ -291,7 +291,7 @@ class _RegistrationState extends State<Registration> {
                   fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         TextFormField(
           autofocus: false,
@@ -322,6 +322,9 @@ class _RegistrationState extends State<Registration> {
             }
             if (value.length != 10) {
               return 'Phone number should be 10 digits';
+            }
+            if (!value.startsWith("07")) {
+              return 'Phone number should start with "O7"';
             }
             return null;
           },
@@ -376,7 +379,10 @@ class _RegistrationState extends State<Registration> {
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Identification number is required';
+              return 'ID number is required';
+            }
+            if (value.length < 7 || value.length > 8) {
+              return 'ID number should be 8 digits';
             }
             return null;
           },
@@ -404,7 +410,7 @@ class _RegistrationState extends State<Registration> {
                   fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         TextFormField(
           autofocus: false,
@@ -450,9 +456,76 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  //Group value
-  String id = "Tenant";
+  String apartmentName;
+  void _showListPopup() {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActionSheet(
+                title: Text(
+                  'Apartments',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(fontSize: 30, color: Colors.black)),
+                ),
+                actions: <Widget>[
+                  Container(
+                    height: 250,
+                    child: StreamBuilder(
+                        stream: Firestore.instance
+                            .collection("apartments")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView(
+                              children: snapshot.data.documents
+                                  .map((data) => Card(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            print(
+                                                'You have selected: ${data["apartment_name"]}');
+                                            apartmentName =
+                                                data["apartment_name"];
+                                          },
+                                          child: ListTile(
+                                            title: Text(
+                                              data["apartment_name"],
+                                              style: GoogleFonts.quicksand(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.black)),
+                                            ),
+                                          ),
+                                        ),
+                                      ))
+                                  .toList(),
+                            );
+                          }
+                          return CircularProgressIndicator();
+                        }),
+                  )
+                ],
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                          textStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold)),
+                    ))),
+          );
+        });
+  }
 
+  //Group value
+  String id = "Newbie";
   Widget _designationSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -469,42 +542,77 @@ class _RegistrationState extends State<Registration> {
         SizedBox(
           height: 10,
         ),
-        Row(
-          children: <Widget>[
-            Expanded(
-                child: Container(
-              child: RadioListTile(
-                value: "Tenant",
-                groupValue: id,
-                onChanged: (value) {
-                  setState(() {
-                    id = value;
-                  });
-                },
-                title: Text(
-                  'Tenant',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+        Container(
+          width: double.infinity,
+          height: 50,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              Container(
+                width: 140,
+                height: 50,
+                child: RadioListTile(
+                    value: "Newbie",
+                    activeColor: Colors.greenAccent[700],
+                    dense: true,
+                    groupValue: id,
+                    onChanged: (value) {
+                      setState(() {
+                        id = value;
+                      });
+                    },
+                    title: Text(
+                      'Newbie',
+                      style: GoogleFonts.quicksand(
+                          textStyle:
+                              TextStyle(color: Colors.white, fontSize: 15)),
+                    )),
+              ),
+              Container(
+                width: 140,
+                height: 50,
+                child: RadioListTile(
+                  dense: true,
+                  activeColor: Colors.greenAccent[700],
+                  value: "Tenant",
+                  groupValue: id,
+                  onChanged: (value) {
+                    setState(() {
+                      id = value;
+                      _showListPopup();
+                    });
+                  },
+                  title: Text(
+                    'Tenant',
+                    style: GoogleFonts.quicksand(
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 15)),
+                  ),
                 ),
               ),
-            )),
-            Expanded(
-                child: Container(
-                    child: RadioListTile(
-                        value: "Landlord",
-                        groupValue: id,
-                        onChanged: (value) {
-                          setState(() {
-                            id = value;
-                          });
-                        },
-                        title: Text(
-                          'Landlord',
-                          style: GoogleFonts.quicksand(
-                              textStyle:
-                                  TextStyle(color: Colors.white, fontSize: 18)),
-                        )))),
-          ],
+              Container(
+                width: 160,
+                height: 50,
+                child: RadioListTile(
+                    value: "Manager",
+                    activeColor: Colors.greenAccent[700],
+                    dense: true,
+                    groupValue: id,
+                    onChanged: (value) {
+                      setState(() {
+                        id = value;
+                        _showListPopup();
+                      });
+                    },
+                    title: Text(
+                      'Manager',
+                      style: GoogleFonts.quicksand(
+                          textStyle:
+                              TextStyle(color: Colors.white, fontSize: 15)),
+                    )),
+              ),
+            ],
+          ),
         )
       ],
     );
@@ -524,7 +632,7 @@ class _RegistrationState extends State<Registration> {
                   fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         TextFormField(
           autofocus: false,
@@ -618,20 +726,34 @@ class _RegistrationState extends State<Registration> {
             natId: _natId,
             registerDate: now.toLocal(),
             designation: id,
+            apartmentName: apartmentName,
             password: _pass,
             lordCode: 0);
       }
-      if (id == "Landlord") {
+      if (id == "Newbie") {
         _user = User(
-            firstName: _fname,
-            lastName: _lname,
-            email: _email,
-            phone: _phone,
-            natId: _natId,
-            registerDate: now.toLocal(),
-            designation: id,
-            password: _pass,
-            lordCode: lordCode());
+          firstName: _fname,
+          lastName: _lname,
+          email: _email,
+          phone: _phone,
+          natId: _natId,
+          registerDate: now.toLocal(),
+          designation: id,
+          password: _pass,
+        );
+      }
+      if (id == "Manager") {
+        _user = User(
+          firstName: _fname,
+          lastName: _lname,
+          email: _email,
+          phone: _phone,
+          natId: _natId,
+          apartmentName: apartmentName,
+          registerDate: now.toLocal(),
+          designation: id,
+          password: _pass,
+        );
       }
 
       setState(() {
@@ -675,7 +797,7 @@ class _RegistrationState extends State<Registration> {
         );
       }).whenComplete(() {
         if (callResponse) {
-          print('Successful response ${result}');
+          print('Successful response $result');
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
@@ -701,10 +823,10 @@ class _RegistrationState extends State<Registration> {
             Navigator.of(context).pop();
           });
           Timer(Duration(seconds: 3), () {
-            Navigator.of(context).pop();
+            Navigator.of(context).popAndPushNamed('/login');
           });
         } else {
-          print('Failed response: ${result}');
+          print('Failed response: $result');
           //Disable the circular progress dialog
           setState(() {
             isLoading = true;
@@ -715,7 +837,7 @@ class _RegistrationState extends State<Registration> {
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                   title: Text(
-                    '${result}',
+                    '$result',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -760,7 +882,7 @@ class _RegistrationState extends State<Registration> {
                         color: Colors.green[900],
                         fontSize: 18,
                         letterSpacing: 0.5,
-                        fontWeight: FontWeight.w600)),
+                        fontWeight: FontWeight.bold)),
               ),
             )
           : Center(
@@ -801,7 +923,7 @@ class _RegistrationState extends State<Registration> {
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Form(
                     key: _formKey,
                     child: Column(

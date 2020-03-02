@@ -25,6 +25,7 @@ class API with ChangeNotifier{
   Future logout() {
     this.currentUser = null;
     notifyListeners();
+    _auth.signOut();
     return Future.value(currentUser);
   }
 
@@ -126,11 +127,13 @@ class API with ChangeNotifier{
     String lastName =  user.lastName;
     String phone = user.phone;
     String natId = user.natId;
+    String apartmentName = user.apartmentName;
     String designation = user.designation;
     DateTime registerDate = user.registerDate;
     int landlordCode = user.lordCode;
 
     try {
+
       await Firestore.instance
           .collection("users")
           .document(uid).setData(
@@ -160,13 +163,14 @@ class API with ChangeNotifier{
           "natId": natId,
           "designation": designation,
           "registerDate": registerDate,
-          "landlord_code": landlordCode
+          "landlord_code": landlordCode,
+          "apartment_name": apartmentName
         });
         print("The tenant was successfully saved");
       }
-      else {
+      else if (designation == "Newbie") {
         await Firestore.instance
-            .collection("landlords")
+            .collection("newbies")
             .document(uid)
             .setData({
           "email":email,
@@ -176,9 +180,25 @@ class API with ChangeNotifier{
           "natId": natId,
           "designation": designation,
           "registerDate": registerDate,
-          "landlord_code": landlordCode
         });
-        print("The landlord was successfully saved");
+        print("The newbie was successfully saved");
+      }
+      else {
+        await Firestore.instance
+            .collection("managers")
+            .document(uid)
+            .setData({
+          "email":email,
+          "firstName": firstName,
+          "lastName": lastName,
+          "phone": phone,
+          "natId": natId,
+          "designation": designation,
+          "registerDate": registerDate,
+          "landlord_code": landlordCode,
+          "apartment_name": apartmentName
+        });
+        print("The manager was successfully saved");
       }
     }
     catch (e) {
@@ -221,6 +241,7 @@ class API with ChangeNotifier{
           "designation": designation,
           "registerDate": registerDate,
           "landlord_code": landlordCode,
+          "apartment_name": apartment
         }
       );
       //Add data to Firestore collection "landlords"

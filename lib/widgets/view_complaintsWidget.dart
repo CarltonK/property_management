@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class ViewComplaintsWidget extends StatefulWidget {
   final int code;
@@ -96,6 +97,11 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                     var title = snapshot.data[index].data['title'];
                     bool fixed = snapshot.data[index].data['fixed'];
 
+                    //Date Parsing and Formatting
+                    var parsedDate = DateTime.parse(date);
+                    var formatter = new DateFormat('yMMMd');
+                    String dateFormatted = formatter.format(parsedDate);
+
                     return Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       color: Colors.grey[100],
@@ -106,6 +112,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                           style: GoogleFonts.quicksand(
                               textStyle: TextStyle(
                                   color: Colors.green[900],
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 20
                               )
                           ),
@@ -121,7 +128,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                                   TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
                             ),
                             Text(
-                              '${DateTime.parse(date)}',
+                              '$dateFormatted',
                               style: GoogleFonts.quicksand(
                                   textStyle:
                                   TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),

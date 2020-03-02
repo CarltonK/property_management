@@ -9,26 +9,37 @@ class OwnerComplaint extends StatefulWidget {
 }
 
 class _OwnerComplaintState extends State<OwnerComplaint> {
-
   Widget _appBarLayout() {
     return Text(
       'Complaints received',
       style: GoogleFonts.quicksand(
-          textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 22
-          )
-      ),
+          textStyle: TextStyle(color: Colors.white, fontSize: 22)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
     print('Complaints Page Data: $data');
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green[900],
+        elevation: 0.0,
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.person_pin,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+        title: Text(
+          'Kejani',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+        ),
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
@@ -36,9 +47,7 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.green[900]
-              ),
+              decoration: BoxDecoration(color: Colors.green[900]),
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
@@ -49,11 +58,7 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _appBarLayout(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ViewComplaintsWidget(code: data["landlord_code"])
+                    ViewComplaintsWidget(code: data["landlord_code"])
                   ],
                 ),
               ),

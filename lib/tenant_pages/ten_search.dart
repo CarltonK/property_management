@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:property_management/widgets/searchresults.dart';
 
 class TenSearch extends StatefulWidget {
   @override
@@ -10,37 +9,30 @@ class TenSearch extends StatefulWidget {
 }
 
 class _TenSearchState extends State<TenSearch> {
-  Widget _singleChildComplaint2() {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.grey[100],
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      child: ListTile(
-        subtitle: Text(
-          '31 Jan 2020',
-          style: GoogleFonts.quicksand(
-              textStyle:
-                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
-        ),
-        title: Text(
-          'Faulty tap',
-          style: GoogleFonts.quicksand(
-              textStyle:
-                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
-        ),
-        trailing: IconButton(
-            icon: Icon(
-              Icons.done_all,
-              color: Colors.green,
-            ),
-            onPressed: null),
-      ),
-    );
-  }
+  double _bedroomCount = 1;
+  double _price = 7000;
+  var selectedRange = RangeValues(5000, 15000);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green[900],
+        elevation: 0.0,
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.person_pin,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+        title: Text(
+          'Kejani',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+        ),
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -50,9 +42,7 @@ class _TenSearchState extends State<TenSearch> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.green[900]
-                ),
+                decoration: BoxDecoration(color: Colors.green[900]),
               ),
               Container(
                 padding: EdgeInsets.only(top: 20),
@@ -63,30 +53,187 @@ class _TenSearchState extends State<TenSearch> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      _appBarLayout(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _filterChips(),
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        margin: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                        child: ListView(
-                          itemExtent: 140,
-                          children: <Widget>[
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults(),
-                            SearchResults()
-                          ],
+                      Card(
+                        elevation: 20,
+                        margin: EdgeInsets.symmetric(horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          height: 150,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Colors.green[700],
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'Bedrooms',
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.white,
+                                        letterSpacing: 1,
+                                        fontWeight: FontWeight.w500)),
+                              ),
+                              Text(
+                                _bedroomCount.toInt() == 0
+                                    ? 'Bedsitter'
+                                    : '${_bedroomCount.toInt()}',
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                        fontSize: _bedroomCount.toInt() == 0
+                                            ? 30
+                                            : 35,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    '0',
+                                    style: GoogleFonts.quicksand(
+                                        textStyle: TextStyle(
+                                            fontSize: 22,
+                                            color: Colors.white,
+                                            letterSpacing: 1,
+                                            fontWeight: FontWeight.w500)),
+                                  ),
+                                  Slider.adaptive(
+                                      min: 0,
+                                      max: 4,
+                                      divisions: 4,
+                                      value: _bedroomCount,
+                                      activeColor: Colors.white,
+                                      inactiveColor: Colors.white,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _bedroomCount = value;
+                                        });
+                                      }),
+                                  Text(
+                                    '4',
+                                    style: GoogleFonts.quicksand(
+                                        textStyle: TextStyle(
+                                            fontSize: 22,
+                                            color: Colors.white,
+                                            letterSpacing: 1,
+                                            fontWeight: FontWeight.w500)),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Card(
+                        elevation: 20,
+                        margin: EdgeInsets.symmetric(horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          height: 150,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Colors.green[700],
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'Price',
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.white,
+                                        letterSpacing: 1,
+                                        fontWeight: FontWeight.w500)),
+                              ),
+                              Text(
+                                '${selectedRange.start.toInt()} - ${selectedRange.end.toInt()}',
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    '5000',
+                                    style: GoogleFonts.quicksand(
+                                        textStyle: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            letterSpacing: 1,
+                                            fontWeight: FontWeight.w500)),
+                                  ),
+                                  RangeSlider(
+                                      min: 5000,
+                                      max: 50000,
+                                      divisions: 20,
+                                      values: selectedRange,
+                                      activeColor: Colors.white,
+                                      inactiveColor: Colors.white,
+                                      onChanged: (newRange) {
+                                        setState(() {
+                                          selectedRange = newRange;
+                                        });
+                                      }),
+                                  Text(
+                                    '50000',
+                                    style: GoogleFonts.quicksand(
+                                        textStyle: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            letterSpacing: 1,
+                                            fontWeight: FontWeight.w500)),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Center(
+                        child: Card(
+                          elevation: 50,
+                          shape: CircleBorder(),
+                          child: MaterialButton(
+                            height: 100,
+                            shape: CircleBorder(),
+                            onPressed: () {
+                              Map<String, dynamic> _priceData = {
+                                "min": selectedRange.start.toInt(),
+                                "max": selectedRange.end.toInt()
+                              };
+                              print('Bedrooms: ${_bedroomCount.toInt()}');
+                              print('Price: ${_priceData}');
+                            },
+                            child: Text(
+                              'Pay to view',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -97,98 +244,4 @@ class _TenSearchState extends State<TenSearch> {
       ),
     );
   }
-}
-
-Widget _filterChips() {
-  return Container(
-    margin: EdgeInsets.only(top: 10),
-    height: 50,
-    padding: EdgeInsets.symmetric(horizontal: 20),
-    child: ListView(
-      scrollDirection: Axis.horizontal,
-      children: <Widget>[
-        Chip(
-          label: Text(
-            'Rent',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22)),
-          ),
-          padding: EdgeInsets.all(10),
-          backgroundColor: Colors.white,
-          elevation: 10,
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Chip(
-          label: Text(
-            '2 Bedrooms',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22)),
-          ),
-          padding: EdgeInsets.all(10),
-          backgroundColor: Colors.white,
-          elevation: 10,
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Chip(
-          label: Text(
-            '< 15000',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22)),
-          ),
-          padding: EdgeInsets.all(10),
-          backgroundColor: Colors.white,
-          elevation: 10,
-        )
-      ],
-    ),
-  );
-}
-
-Widget _appBarLayout() {
-  //This custom appBar replaces the Flutter App Bar
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          'Search',
-          style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1)),
-        ),
-        FloatingActionButton(
-          elevation: 10,
-          mini: false,
-          splashColor: Colors.greenAccent[700],
-          tooltip: 'Adjust filters',
-          onPressed: () {
-            print('I want to adjust filters');
-          },
-          backgroundColor: Colors.green[900],
-          child: Icon(
-            Icons.list,
-            color: Colors.white,
-            size: 30,
-          ),
-        )
-      ],
-    ),
-  );
 }

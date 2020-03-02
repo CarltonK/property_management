@@ -35,31 +35,29 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       backgroundColor: Colors.green[900],
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: DelayedAnimation(
-                child: AvatarGlow(
-                  endRadius: 90,
-                  duration: Duration(seconds: 2),
-                  glowColor: Colors.white,
-                  repeat: true,
-                  repeatPauseDuration: Duration(seconds: 2),
-                  startDelay: Duration(seconds: 1),
-                  child: Material(
-                    elevation: 10,
-                    shape: CircleBorder(),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey[100],
-                      child: FlutterLogo(
-                        size: 50,
-                      ),
-                      radius: 50,
+            DelayedAnimation(
+              child: AvatarGlow(
+                endRadius: 90,
+                duration: Duration(seconds: 2),
+                glowColor: Colors.white,
+                repeat: true,
+                repeatPauseDuration: Duration(seconds: 2),
+                startDelay: Duration(seconds: 1),
+                child: Material(
+                  elevation: 10,
+                  shape: CircleBorder(),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey[100],
+                    child: FlutterLogo(
+                      size: 50,
                     ),
+                    radius: 50,
                   ),
                 ),
-                delay: delayedAmount + 1000,
               ),
+              delay: delayedAmount + 1000,
             ),
             DelayedAnimation(
               child: Text(
@@ -100,7 +98,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
               delay: delayedAmount + 4000,
             ),
             SizedBox(
-              height: 50.0,
+              height: 30.0,
             ),
             DelayedAnimation(
               child: GestureDetector(
@@ -115,20 +113,23 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
               delay: delayedAmount + 5000,
             ),
             SizedBox(
-              height: 50.0,
+              height: 10.0,
             ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed('/login'),
-              child: DelayedAnimation(
-                child: Text(
-                  "I Already have An Account".toUpperCase(),
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+            DelayedAnimation(
+                child: FlatButton(
+                  padding: EdgeInsets.all(16),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/login');
+                  },
+                  child: Text(
+                    "I Already have An Account",
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
                 delay: delayedAmount + 6000,
-              ),
             ),
           ],
         ),
@@ -145,7 +146,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
         ),
         child: Center(
           child: Text(
-            'Hi, Let\s get started',
+            'LET\'S GET STARTED',
             style: TextStyle(
               fontSize: 22.0,
               fontWeight: FontWeight.bold,

@@ -38,9 +38,7 @@ class TenantProfile extends StatelessWidget {
             Container(
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.green[900]
-              ),
+              decoration: BoxDecoration(color: Colors.green[900]),
             ),
             Container(
               height: MediaQuery.of(context).size.height,
@@ -89,7 +87,8 @@ class TenantProfile extends StatelessWidget {
                       children: <Widget>[
                         Card(
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.green[500], width: 1.5),
+                            side: BorderSide(
+                                color: Colors.green[500], width: 1.5),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 5,
@@ -127,7 +126,8 @@ class TenantProfile extends StatelessWidget {
                         ),
                         Card(
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.green[500], width: 1.5),
+                            side: BorderSide(
+                                color: Colors.green[500], width: 1.5),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 5,
