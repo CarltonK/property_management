@@ -221,18 +221,37 @@ class _LoginState extends State<Login> {
       //Add the uid to the Map
       userData["uid"] = uid;
       //Show different home pages based on designation
+      //Tenant Page
       if (userdesignation == "Tenant") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context)
               .popAndPushNamed('/tenant-home', arguments: userData);
         });
-      } else if (userdesignation == "Admin") {
+      }
+      //Admin Page 
+      else if (userdesignation == "Admin") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context).popAndPushNamed('/admin', arguments: userData);
         });
-      } else {
+      }
+      //Manager page 
+       else if (userdesignation == "Manager") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context).popAndPushNamed('/manager', arguments: userData);
+        });
+      }
+      //Newbie Page
+       else if (userdesignation == "Newbie") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context).popAndPushNamed('/newbie', arguments: userData);
+        });
+      }
+      //Landlord Page
+      else {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context)
@@ -335,7 +354,7 @@ class _LoginState extends State<Login> {
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                   title: Text(
-                    '${result}',
+                    '$result',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -352,7 +371,7 @@ class _LoginState extends State<Login> {
                         'CANCEL',
                         style: GoogleFonts.muli(
                             textStyle:
-                                TextStyle(color: Colors.red, fontSize: 25)),
+                                TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
                       )));
             },
           );

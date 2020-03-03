@@ -4,6 +4,8 @@ import 'package:property_management/admin_pages/admin.dart';
 import 'package:property_management/auth/forgot_pass.dart';
 import 'package:property_management/auth/login.dart';
 import 'package:property_management/auth/registration.dart';
+import 'package:property_management/manager_pages/manager.dart';
+import 'package:property_management/newbie_pages/newbie.dart';
 import 'package:property_management/owner_pages/owner.dart';
 import 'package:property_management/tenant_pages/add_complaint.dart';
 import 'package:property_management/tenant_pages/tenant.dart';
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Property Management',
+      title: 'Kejani',
       debugShowCheckedModeBanner: false,
       routes: {
         //Default route
@@ -32,6 +34,10 @@ class MyApp extends StatelessWidget {
         '/add-complaint': (context) => AddComplaint(),
         //Owner
         '/owner_home': (context) => OwnerBase(),
+        //Manager
+        '/manager': (context) => Manager(),
+        //Newbie
+        '/newbie': (context) => Newbie(),
         //Admin
         '/admin': (context) => Admin(),
         '/add': (context) => AddLandlord(),

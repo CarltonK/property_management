@@ -24,8 +24,8 @@ class API with ChangeNotifier{
   //User Logout
   Future logout() {
     this.currentUser = null;
-    notifyListeners();
     _auth.signOut();
+    notifyListeners();
     return Future.value(currentUser);
   }
 
@@ -36,7 +36,7 @@ class API with ChangeNotifier{
           email: user.email,
           password: user.password);
       currentUser = result.user;
-      print('Positive Response: ${currentUser}');
+      //print('Positive Response: ${currentUser}');
       notifyListeners();
       return Future.value(currentUser);
     }
@@ -44,23 +44,23 @@ class API with ChangeNotifier{
       var response;
       if (e.toString().contains("ERROR_WRONG_PASSWORD")) {
         response = 'Invalid credentials. Please try again';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_INVALID_EMAIL")) {
         response = 'The email format entered is invalid';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_USER_NOT_FOUND")) {
         response = 'Please register first';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_USER_DISABLED")) {
         response = 'Your account has been disabled';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_TOO_MANY_REQUESTS")) {
         response = 'Too many requests. Please try again in 2 minutes';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       return response;
     }
@@ -74,7 +74,7 @@ class API with ChangeNotifier{
           password: user.password);
       currentUser = result.user;
       //The User has registered successfully
-      print('Positive Registration Response: ${currentUser.uid}');
+      //print('Positive Registration Response: ${currentUser.uid}');
       //Try adding the user to the Firestore
       await saveUser(user,result.user.uid);
       return currentUser;
@@ -83,15 +83,15 @@ class API with ChangeNotifier{
       var response;
       if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
         response = 'Your password is weak. Please choose another';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_INVALID_EMAIL")) {
         response = 'The email format entered is invalid';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_EMAIL_ALREADY_IN_USE")) {
         response = 'An account with the same email exists';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       return response;
     }
@@ -109,11 +109,11 @@ class API with ChangeNotifier{
     catch (e) {
       if (e.toString().contains("ERROR_INVALID_EMAIL")) {
         response = 'Invalid Email. Please enter the correct email';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_USER_NOT_FOUND")) {
         response = 'Please register first';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       return response;
     }
@@ -168,7 +168,7 @@ class API with ChangeNotifier{
         });
         print("The tenant was successfully saved");
       }
-      else if (designation == "Newbie") {
+      if (designation == "Newbie") {
         await Firestore.instance
             .collection("newbies")
             .document(uid)
@@ -182,23 +182,6 @@ class API with ChangeNotifier{
           "registerDate": registerDate,
         });
         print("The newbie was successfully saved");
-      }
-      else {
-        await Firestore.instance
-            .collection("managers")
-            .document(uid)
-            .setData({
-          "email":email,
-          "firstName": firstName,
-          "lastName": lastName,
-          "phone": phone,
-          "natId": natId,
-          "designation": designation,
-          "registerDate": registerDate,
-          "landlord_code": landlordCode,
-          "apartment_name": apartmentName
-        });
-        print("The manager was successfully saved");
       }
     }
     catch (e) {
@@ -276,15 +259,15 @@ class API with ChangeNotifier{
       var response;
       if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
         response = 'Your password is weak. Please choose another';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_INVALID_EMAIL")) {
         response = 'The email format entered is invalid';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       if (e.toString().contains("ERROR_EMAIL_ALREADY_IN_USE")) {
         response = 'An account with the same email exists';
-        print('Negative Response: $response');
+        //print('Negative Response: $response');
       }
       return response;
     }

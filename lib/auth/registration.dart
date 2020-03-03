@@ -504,7 +504,7 @@ class _RegistrationState extends State<Registration> {
                                   .toList(),
                             );
                           }
-                          return CircularProgressIndicator();
+                          return LinearProgressIndicator();
                         }),
                   )
                 ],
@@ -544,12 +544,12 @@ class _RegistrationState extends State<Registration> {
         ),
         Container(
           width: double.infinity,
-          height: 50,
+          height: 100,
           child: ListView(
-            scrollDirection: Axis.horizontal,
+            scrollDirection: Axis.vertical,
             children: <Widget>[
               Container(
-                width: 140,
+                width: 160,
                 height: 50,
                 child: RadioListTile(
                     value: "Newbie",
@@ -562,14 +562,14 @@ class _RegistrationState extends State<Registration> {
                       });
                     },
                     title: Text(
-                      'Newbie',
+                      'looking for a house',
                       style: GoogleFonts.quicksand(
                           textStyle:
                               TextStyle(color: Colors.white, fontSize: 15)),
                     )),
               ),
               Container(
-                width: 140,
+                width: 160,
                 height: 50,
                 child: RadioListTile(
                   dense: true,
@@ -589,27 +589,6 @@ class _RegistrationState extends State<Registration> {
                             TextStyle(color: Colors.white, fontSize: 15)),
                   ),
                 ),
-              ),
-              Container(
-                width: 160,
-                height: 50,
-                child: RadioListTile(
-                    value: "Manager",
-                    activeColor: Colors.greenAccent[700],
-                    dense: true,
-                    groupValue: id,
-                    onChanged: (value) {
-                      setState(() {
-                        id = value;
-                        _showListPopup();
-                      });
-                    },
-                    title: Text(
-                      'Manager',
-                      style: GoogleFonts.quicksand(
-                          textStyle:
-                              TextStyle(color: Colors.white, fontSize: 15)),
-                    )),
               ),
             ],
           ),
@@ -742,20 +721,6 @@ class _RegistrationState extends State<Registration> {
           password: _pass,
         );
       }
-      if (id == "Manager") {
-        _user = User(
-          firstName: _fname,
-          lastName: _lname,
-          email: _email,
-          phone: _phone,
-          natId: _natId,
-          apartmentName: apartmentName,
-          registerDate: now.toLocal(),
-          designation: id,
-          password: _pass,
-        );
-      }
-
       setState(() {
         isLoading = false;
       });
