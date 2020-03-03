@@ -229,22 +229,23 @@ class _LoginState extends State<Login> {
               .popAndPushNamed('/tenant-home', arguments: userData);
         });
       }
-      //Admin Page 
+      //Admin Page
       else if (userdesignation == "Admin") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context).popAndPushNamed('/admin', arguments: userData);
         });
       }
-      //Manager page 
-       else if (userdesignation == "Manager") {
+      //Manager page
+      else if (userdesignation == "Manager") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
-          Navigator.of(context).popAndPushNamed('/manager', arguments: userData);
+          Navigator.of(context)
+              .popAndPushNamed('/manager', arguments: userData);
         });
       }
       //Newbie Page
-       else if (userdesignation == "Newbie") {
+      else if (userdesignation == "Newbie") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context).popAndPushNamed('/newbie', arguments: userData);
@@ -370,8 +371,10 @@ class _LoginState extends State<Login> {
                       child: Text(
                         'CANCEL',
                         style: GoogleFonts.muli(
-                            textStyle:
-                                TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
+                            textStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold)),
                       )));
             },
           );

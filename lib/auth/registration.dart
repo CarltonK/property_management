@@ -28,6 +28,7 @@ class _RegistrationState extends State<Registration> {
   final _focuscpass = FocusNode();
 
   String _fname, _lname, _email, _phone, _natId, _pass, _cpass;
+  String apartmentName;
 
   final TextEditingController _passwording = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
@@ -110,6 +111,52 @@ class _RegistrationState extends State<Registration> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _dropDownApartments() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection("apartments").snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return LinearProgressIndicator();
+        } else {
+          return DropdownButton<String>(
+              underline: Divider(
+                color: Colors.white,
+                height: 3,
+                thickness: 1.5,
+              ),
+              icon: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.white,
+                size: 30,
+              ),
+              hint: Text(
+                'Apartment',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(color: Colors.white, fontSize: 22)),
+              ),
+              isExpanded: true,
+              value: apartmentName,
+              items: snapshot.data.documents.map((map) {
+                return DropdownMenuItem<String>(
+                    value: map["apartment_name"],
+                    child: Text(map["apartment_name"],
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                                fontSize: 20,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold))));
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  apartmentName = value;
+                });
+                print(apartmentName);
+              });
+        }
+      },
     );
   }
 
@@ -456,7 +503,6 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  String apartmentName;
   void _showListPopup() {
     showCupertinoModalPopup(
         context: context,
@@ -579,7 +625,7 @@ class _RegistrationState extends State<Registration> {
                   onChanged: (value) {
                     setState(() {
                       id = value;
-                      _showListPopup();
+                      //_showListPopup();
                     });
                   },
                   title: Text(
@@ -690,14 +736,45 @@ class _RegistrationState extends State<Registration> {
       return true;
     }
   }
-
+  
   void _registerBtnPressed() {
-    if (_formKey.currentState.validate()) {
+    if (id == 'Tenant' && apartmentName == null) {
+      //Show an action sheet with error
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  'Please select an apartment',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                          textStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold)),
+                    )));
+          },
+        );
+    }
+    else if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
       //Populate the user fields based on designation
       if (id == "Tenant") {
-        _user = User(
+          _user = User(
             firstName: _fname,
             lastName: _lname,
             email: _email,
@@ -920,6 +997,11 @@ class _RegistrationState extends State<Registration> {
                           height: 50,
                         ),
                         _designationSelector(),
+                        id == 'Tenant'
+                            ? _dropDownApartments()
+                            : SizedBox(
+                                height: 0,
+                              ),
                         SizedBox(
                           height: 20,
                         ),
