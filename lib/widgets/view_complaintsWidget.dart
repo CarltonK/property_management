@@ -85,10 +85,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                         )),
                   );
                 }
-                return ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                    color: Colors.white,
-                  ),
+                return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     var date = snapshot.data[index].data['date'];
@@ -104,18 +101,26 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
 
                     return Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      color: Colors.grey[100],
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      color: Colors.white,
+                      margin: EdgeInsets.symmetric(vertical: 5),
                       child: ListTile(
-                        leading: Text(
-                          '$hse',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.green[900],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20
-                              )
-                          ),
+                        leading: Column(
+                          children: <Widget>[
+                            Icon(Icons.home, color: Colors.green[900],size: 20,),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '$hse',
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                      color: Colors.green[900],
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16
+                                  )
+                              ),
+                            ),
+                          ],
                         ),
                         isThreeLine: true,
                         subtitle: Column(

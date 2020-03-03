@@ -55,6 +55,13 @@ class OwnerSettings extends StatelessWidget {
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add, size: 30, color: Colors.white,), 
+            onPressed: () {
+              //This button adds the manager
+            })
+        ],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -84,7 +91,7 @@ class OwnerSettings extends StatelessWidget {
                     height: 10,
                   ),
                   Container(
-                    height: 100,
+                    height: 80,
                     width: double.infinity,
                     child: FutureBuilder(
                         future: _getTenants(apartmentName),
@@ -360,7 +367,21 @@ class OwnerSettings extends StatelessWidget {
                             ),
                           );
                         }),
-                  )
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Text(
+                    'Managers',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             )
