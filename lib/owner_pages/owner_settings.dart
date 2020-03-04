@@ -31,6 +31,20 @@ class OwnerSettings extends StatelessWidget {
     return query.documents;
   }
 
+  Future _getManagers(String apartment) async {
+    //This is the name of the collection containing tenants
+    final String _collection = 'managers';
+    //Create a variable to store Firestore instance
+    final Firestore _fireStore = Firestore.instance;
+    QuerySnapshot query = await _fireStore
+        .collection(_collection)
+        .where("apartment_name", isEqualTo: apartment)
+        .getDocuments();
+    print('How many: ${query.documents.length}');
+    return query.documents;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
@@ -57,10 +71,16 @@ class OwnerSettings extends StatelessWidget {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add, size: 30, color: Colors.white,), 
-            onPressed: () {
-              //This button adds the manager
-            })
+              icon: Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                //This button adds the manager
+                Navigator.of(context)
+                    .pushNamed('/add-manager', arguments: data);
+              })
         ],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -372,7 +392,7 @@ class OwnerSettings extends StatelessWidget {
                     thickness: 1,
                   ),
                   Text(
-                    'Managers',
+                    'Manager(s)',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                             fontSize: 20,
@@ -382,6 +402,132 @@ class OwnerSettings extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
+                  Container(
+                    height: 70,
+                    width: double.infinity,
+                    child: FutureBuilder(
+                        future: _getManagers(apartmentName),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasError) {
+                            print(
+                                'Snapshot Error: ${snapshot.error.toString()}');
+                            return Center(
+                                child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 50,
+                                ),
+                                Text(
+                                  'There is an error ${snapshot.error.toString()}',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.quicksand(
+                                      textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  )),
+                                )
+                              ],
+                            ));
+                          } else {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.active:
+                                break;
+                              case ConnectionState.done:
+                                return Container(
+                                  width: double.infinity,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      var dataTemp = snapshot.data[index];
+                                      //Date Parsing and Formatting
+                                      var dateRetrieved =
+                                          dataTemp["registerDate"];
+                                      var formatter = new DateFormat('MMMd');
+                                      String date = formatter
+                                          .format(dateRetrieved.toDate());
+
+                                      return Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        margin: EdgeInsets.only(right: 8),
+                                        color: Colors.grey[100],
+                                        child: Container(
+                                          padding: EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.grey[100]),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          child: ListTile(
+                                            dense: true,
+                                            leading: Icon(Icons.person_outline),
+                                            title: Text(
+                                              '${dataTemp["firstName"]} ${dataTemp["lastName"]}',
+                                              style: GoogleFonts.quicksand(
+                                                  textStyle: TextStyle(
+                                                      color: Colors.green[900],
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  '${dataTemp["phone"]}',
+                                                  style: GoogleFonts.quicksand(
+                                                      textStyle: TextStyle(
+                                                          color:
+                                                              Colors.green[900],
+                                                          fontWeight:
+                                                              FontWeight.w600)),
+                                                ),
+                                                Text('Added on $date',
+                                                    style: GoogleFonts.quicksand(
+                                                        textStyle: TextStyle(
+                                                            color: Colors
+                                                                .green[900],
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)))
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                                break;
+                              case ConnectionState.none:
+                                break;
+                              case ConnectionState.waiting:
+                                return Center(
+                                  child: SpinKitFadingCircle(
+                                    size: 100,
+                                    color: Colors.white,
+                                  ),
+                                );
+                                break;
+                            }
+                          }
+                          return Center(
+                            child: SpinKitFadingCircle(
+                              size: 100,
+                              color: Colors.white,
+                            ),
+                          );
+                        }),
+                  )
                 ],
               ),
             )

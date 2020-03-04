@@ -339,9 +339,6 @@ class _AddComplaintState extends State<AddComplaint> {
                                   letterSpacing: 0.5)),
                         ),
                         SizedBox(
-                          height: 50,
-                        ),
-                        SizedBox(
                           height: 20,
                         ),
                         _tenantMessage(),

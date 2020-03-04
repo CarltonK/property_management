@@ -34,8 +34,13 @@ class _OwnerVacationsState extends State<OwnerVacations> {
           isThreeLine: true,
           leading: Column(
             children: <Widget>[
-              Icon(Icons.home, color: Colors.green[900],),
-              SizedBox(height: 5,),
+              Icon(
+                Icons.home,
+                color: Colors.green[900],
+              ),
+              SizedBox(
+                height: 5,
+              ),
               Text(
                 '${data["hse"]}',
                 style: GoogleFonts.quicksand(
@@ -105,8 +110,11 @@ class _OwnerVacationsState extends State<OwnerVacations> {
             ),
             Container(
               child: StreamBuilder<QuerySnapshot>(
-                  stream:
-                      Firestore.instance.collection("vacations").where('landlord_code', isEqualTo: _code).snapshots(),
+                  stream: Firestore.instance
+                      .collection("vacations")
+                      .where('landlord_code', isEqualTo: _code)
+                      .orderBy("date", descending: false)
+                      .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasData) {

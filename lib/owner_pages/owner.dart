@@ -98,7 +98,9 @@ class _OwnerBaseState extends State<OwnerBase> {
   void _logOutUser() async {
     dynamic result = await _api.logout();
     print(result);
-    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    //SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   Future<bool> _onWillPop() {

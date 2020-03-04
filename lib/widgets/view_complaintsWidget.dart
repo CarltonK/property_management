@@ -22,15 +22,17 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
     QuerySnapshot query = await _fireStore
         .collection(_collection)
         .where('landlord_code', isEqualTo: widget.code)
+        .orderBy("date", descending: true)
         .getDocuments();
-    print('Here are the documents ${query.documents}');
+    // print('Here are the documents ${query.documents}');
     return query.documents;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height,
+      
+      height: 500,
       width: MediaQuery.of(context).size.width,
       child: FutureBuilder(
           future: _getComplaints(),
@@ -98,7 +100,6 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                     var parsedDate = DateTime.parse(date);
                     var formatter = new DateFormat('yMMMd');
                     String dateFormatted = formatter.format(parsedDate);
-
                     return Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       color: Colors.white,

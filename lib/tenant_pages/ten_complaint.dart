@@ -17,6 +17,7 @@ class TenantComplain extends StatelessWidget {
         .collection(_collection)
         .document(tenantdata["uid"])
         .collection("complaints_history")
+        .orderBy("date",descending: true)
         .getDocuments();
     print('Here are the documents ${query.documents}');
     return query.documents;
@@ -73,7 +74,7 @@ class TenantComplain extends StatelessWidget {
                 padding: EdgeInsets.only(
                   top: 10,
                 ),
-                height: MediaQuery.of(context).size.height,
+                height: double.infinity,
                 width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
@@ -82,7 +83,7 @@ class TenantComplain extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                        height: MediaQuery.of(context).size.height,
+                        height: MediaQuery.of(context).size.height * 0.75,
                         width: MediaQuery.of(context).size.width,
                         child: FutureBuilder(
                             future: _getComplaints(),

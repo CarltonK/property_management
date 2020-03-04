@@ -3,7 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/widgets/delayed_animation.dart';
 
+enum AuthStatus {
+  NOT_DETERMINED,
+  NOT_LOGGED_IN,
+  LOGGED_IN,
+}
+
 class Welcome extends StatefulWidget {
+  // Welcome({this.api});
+
+  // final API api;
+
   @override
   _WelcomeState createState() => _WelcomeState();
 }
@@ -12,6 +22,8 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   final int delayedAmount = 500;
   double _scale;
   AnimationController _controller;
+  AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
+  String _userId;
 
   @override
   void initState() {
@@ -26,7 +38,34 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
         setState(() {});
       });
     super.initState();
+    // widget.api.getCurrentUser().then((user) {
+    //   setState(() {
+    //     if (user != null) {
+    //       _userId = user?.uid;
+    //     }
+    //     authStatus =
+    //         user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
+    //   });
+    // });
   }
+
+  // void loginCallback() {
+  //   widget.api.getCurrentUser().then((user) {
+  //     setState(() {
+  //       _userId = user.uid.toString();
+  //     });
+  //   });
+  //   setState(() {
+  //     authStatus = AuthStatus.LOGGED_IN;
+  //   });
+  // }
+
+  // void logoutCallback() {
+  //   setState(() {
+  //     authStatus = AuthStatus.NOT_LOGGED_IN;
+  //     _userId = "";
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -116,20 +155,20 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
               height: 10.0,
             ),
             DelayedAnimation(
-                child: FlatButton(
-                  padding: EdgeInsets.all(16),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/login');
-                  },
-                  child: Text(
-                    "I Already have An Account",
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+              child: FlatButton(
+                padding: EdgeInsets.all(16),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/login');
+                },
+                child: Text(
+                  "I Already have An Account",
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-                delay: delayedAmount + 6000,
+              ),
+              delay: delayedAmount + 6000,
             ),
           ],
         ),

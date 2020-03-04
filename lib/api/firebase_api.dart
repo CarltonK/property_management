@@ -21,6 +21,21 @@ class API with ChangeNotifier{
 
   }
 
+  Future<FirebaseUser> getCurrentUser() async {
+    FirebaseUser user = await _auth.currentUser();
+    return user;
+  }
+
+  Future<void> sendEmailVerification() async {
+    FirebaseUser user = await _auth.currentUser();
+    user.sendEmailVerification();
+  }
+
+  Future<bool> isEmailVerified() async {
+    FirebaseUser user = await _auth.currentUser();
+    return user.isEmailVerified;
+  }
+
   //User Logout
   Future logout() {
     this.currentUser = null;
@@ -252,6 +267,77 @@ class API with ChangeNotifier{
               "owner": firstName + " " + lastName,
               "apartment_code": landlordCode,
               "paybill": paybill
+            });
+      return currentUser;
+    }
+    catch (e) {
+      var response;
+      if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
+        response = 'Your password is weak. Please choose another';
+        //print('Negative Response: $response');
+      }
+      if (e.toString().contains("ERROR_INVALID_EMAIL")) {
+        response = 'The email format entered is invalid';
+        //print('Negative Response: $response');
+      }
+      if (e.toString().contains("ERROR_EMAIL_ALREADY_IN_USE")) {
+        response = 'An account with the same email exists';
+        //print('Negative Response: $response');
+      }
+      return response;
+    }
+  }
+
+  //Save Landlord
+  //This operation is done by the Admin
+  Future saveManager(User user) async {
+    //First create a user
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(
+          email: user.email,
+          password: "p@ssw.rd");
+      currentUser = result.user;
+      //The User has registered successfully
+      //Retrieve data from User object
+      String email = user.email;
+      String firstName =  user.firstName;
+      String lastName =  user.lastName;
+      String phone = user.phone;
+      String natId = user.natId;
+      String designation = user.designation;
+      DateTime registerDate = user.registerDate;
+      int landlordCode = user.lordCode;
+      String apartment = user.apartmentName;
+      //Add data to firebase collection "users"
+      await Firestore.instance
+          .collection("users")
+          .document(result.user.uid).setData(
+        {
+          "email":email,
+          "firstName": firstName,
+          "lastName": lastName,
+          "phone": phone,
+          "natId": natId,
+          "designation": designation,
+          "registerDate": registerDate,
+          "landlord_code": landlordCode,
+          "apartment_name": apartment
+        }
+      );
+      //Add data to Firestore collection "landlords"
+      await Firestore.instance
+            .collection("managers")
+            .document(result.user.uid)
+            .setData({
+              "email":email,
+              "firstName": firstName,
+              "lastName": lastName,
+              "phone": phone,
+              "natId": natId,
+              "designation": designation,
+              "registerDate": registerDate,
+              "landlord_code": landlordCode,
+              "apartment_name": apartment
             });
       return currentUser;
     }

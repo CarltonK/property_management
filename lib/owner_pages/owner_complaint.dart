@@ -9,19 +9,10 @@ class OwnerComplaint extends StatefulWidget {
 }
 
 class _OwnerComplaintState extends State<OwnerComplaint> {
-  Widget _appBarLayout() {
-    return Text(
-      'Complaints received',
-      style: GoogleFonts.quicksand(
-          textStyle: TextStyle(color: Colors.white, fontSize: 22)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
     print('Complaints Page Data: $data');
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -50,8 +41,8 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
               decoration: BoxDecoration(color: Colors.green[900]),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-              height: MediaQuery.of(context).size.height,
+              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              height: double.infinity,
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),

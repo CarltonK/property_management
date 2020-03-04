@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,45 +7,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/usermodel.dart';
 
-class AddLandlord extends StatefulWidget {
+class AddManager extends StatefulWidget {
   @override
-  _AddLandlordState createState() => _AddLandlordState();
+  _AddManagerState createState() => _AddManagerState();
 }
 
-class _AddLandlordState extends State<AddLandlord> {
+class _AddManagerState extends State<AddManager> {
   bool isLoading = true;
   dynamic result;
   bool callResponse = false;
+
+  Map<String, dynamic> data;
+  int code;
+  User _user;
 
   final _formKey = GlobalKey<FormState>();
 
   final _focuslname = FocusNode();
   final _focusnatid = FocusNode();
-  final _focuspaybill = FocusNode();
-  final _focusapartment = FocusNode();
   final _focusemail = FocusNode();
   final _focusphone = FocusNode();
 
-  @override
-  void dispose() {
-    super.dispose();
-    _focuslname.dispose();
-    _focusemail.dispose();
-    _focuspaybill.dispose();
-    _focusapartment.dispose();
-    _focusphone.dispose();
-    _focusnatid.dispose();
-  }
-
-  String _firstName,
-      _lastName,
-      _natId,
-      _phone,
-      _paybill = '',
-      _apartmentName,
-      _email;
-  int _lordCode;
-  User _user;
+  String _firstName, _lastName, _natId, apartment, _phone, _email;
 
   void _emailHandler(String value) {
     _email = value.toLowerCase().trim();
@@ -70,22 +53,6 @@ class _AddLandlordState extends State<AddLandlord> {
   void _phoneHandler(String value) {
     _phone = value.trim();
     print('Phone: $_phone');
-  }
-
-  void _paybillHandler(String value) {
-    _paybill = value.trim();
-    print('Paybill: $_paybill');
-  }
-
-  void _apartmentHandler(String value) {
-    _apartmentName = value.trim();
-    print('Apartment Name: $_apartmentName');
-  }
-
-  int lordCodeGenerator() {
-    var now = DateTime.now();
-    _lordCode = now.microsecondsSinceEpoch;
-    return _lordCode;
   }
 
   Widget _registerFirstName() {
@@ -359,117 +326,10 @@ class _AddLandlordState extends State<AddLandlord> {
             return null;
           },
           onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focusapartment);
-          },
-          textInputAction: TextInputAction.next,
-          onSaved: _nationalIdHandler,
-        )
-      ],
-    );
-  }
-
-  Widget _registerPaybill() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Paybill (Optional)',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          focusNode: _focuspaybill,
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your paybill number',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.confirmation_number,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            return null;
-          },
-          onFieldSubmitted: (value) {
             FocusScope.of(context).unfocus();
           },
           textInputAction: TextInputAction.done,
-          onSaved: _paybillHandler,
-        )
-      ],
-    );
-  }
-
-  Widget _registerApartment() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Apartment Name',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          focusNode: _focusapartment,
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter the apartment name',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.business,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.text,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Apartment Name is required';
-            }
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focuspaybill);
-          },
-          textInputAction: TextInputAction.next,
-          onSaved: _apartmentHandler,
+          onSaved: _nationalIdHandler,
         )
       ],
     );
@@ -487,7 +347,7 @@ class _AddLandlordState extends State<AddLandlord> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
               child: Text(
-                'SUBMIT',
+                'ADD',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
                         color: Colors.green[900],
@@ -508,7 +368,7 @@ class _AddLandlordState extends State<AddLandlord> {
   API _api = API();
 
   Future<bool> serverCall() async {
-    result = await _api.saveLandlord(_user);
+    result = await _api.saveManager(_user);
     print('This is the result: $result');
 
     if (result == 'Your password is weak. Please choose another') {
@@ -542,11 +402,10 @@ class _AddLandlordState extends State<AddLandlord> {
           email: _email,
           natId: _natId,
           phone: _phone,
-          apartmentName: _apartmentName,
-          paybill: _paybill,
-          designation: "Landlord",
+          designation: "Manager",
+          apartmentName: apartment,
           registerDate: DateTime.now().toLocal(),
-          lordCode: lordCodeGenerator());
+          lordCode: code);
 
       serverCall().catchError((error) {
         print('This is the error $error');
@@ -590,7 +449,7 @@ class _AddLandlordState extends State<AddLandlord> {
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                 title: Text(
-                  'The landlord/lady has been successfully added',
+                  'You have added a manager for $apartment',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -653,19 +512,21 @@ class _AddLandlordState extends State<AddLandlord> {
 
   @override
   Widget build(BuildContext context) {
+    data = ModalRoute.of(context).settings.arguments;
+    print('Add Manager Data: $data');
+    code = data["landlord_code"];
+    apartment = data["apartment_name"];
+
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.green[900],
-          elevation: 0.0,
-          title: Text(
-            'Create Landlord',
-            style: GoogleFonts.quicksand(
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-          ),
-          leading: IconButton(
-              icon: Icon(CupertinoIcons.back),
-              onPressed: () => Navigator.of(context).pop())),
+        backgroundColor: Colors.green[900],
+        elevation: 0.0,
+        title: Text(
+          'Kejani',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+        ),
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -681,27 +542,13 @@ class _AddLandlordState extends State<AddLandlord> {
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Center(
-                          child: Text(
-                            'Personal Details',
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    letterSpacing: 0.5)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
                         _registerFirstName(),
                         SizedBox(
                           height: 20,
@@ -720,29 +567,7 @@ class _AddLandlordState extends State<AddLandlord> {
                         ),
                         _registerID(),
                         SizedBox(
-                          height: 40,
-                        ),
-                        Center(
-                          child: Text(
-                            'Apartment Details',
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    letterSpacing: 0.5)),
-                          ),
-                        ),
-                        SizedBox(
                           height: 30,
-                        ),
-                        _registerApartment(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerPaybill(),
-                        SizedBox(
-                          height: 20,
                         ),
                         _registerBtn()
                       ],

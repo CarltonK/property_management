@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/widgets/view_complaintsWidget.dart';
 
 class ManagerComplaint extends StatefulWidget {
   @override
@@ -10,6 +11,9 @@ class ManagerComplaint extends StatefulWidget {
 class _ManagerComplaintState extends State<ManagerComplaint> {
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
+    print('Complaints Page Data: $data');
+    
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.green[900],
@@ -36,6 +40,20 @@ class _ManagerComplaintState extends State<ManagerComplaint> {
               height: double.infinity,
               width: double.infinity,
               color: Colors.green[900],
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              height: double.infinity,
+              width: MediaQuery.of(context).size.width,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ViewComplaintsWidget(code: data["landlord_code"])
+                  ],
+                ),
+              ),
             )
           ],
         ),
