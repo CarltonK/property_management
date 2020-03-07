@@ -32,7 +32,7 @@ class OwnerSettings extends StatelessWidget {
   }
 
   Future _getManagers(String apartment) async {
-    //This is the name of the collection containing tenants
+    //This is the name of the collection containing managers
     final String _collection = 'managers';
     //Create a variable to store Firestore instance
     final Firestore _fireStore = Firestore.instance;
@@ -44,6 +44,18 @@ class OwnerSettings extends StatelessWidget {
     return query.documents;
   }
 
+  Future _getListings(int code) async {
+    //This is the name of the collection containing listings
+    final String _collection = 'listings';
+    //Create a variable to store Firestore instance
+    final Firestore _fireStore = Firestore.instance;
+    QuerySnapshot query = await _fireStore
+        .collection(_collection)
+        .where("landlord_code", isEqualTo: code)
+        .getDocuments();
+    print('How many: ${query.documents.length}');
+    return query.documents;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -527,9 +539,167 @@ class OwnerSettings extends StatelessWidget {
                             ),
                           );
                         }),
-                  )
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Text(
+                    'Listings',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 70,
+                    width: double.infinity,
+                    child: FutureBuilder(
+                        future: _getListings(code),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasError) {
+                            print(
+                                'Snapshot Error: ${snapshot.error.toString()}');
+                            return Center(
+                                child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 50,
+                                ),
+                                Text(
+                                  'There is an error ${snapshot.error.toString()}',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.quicksand(
+                                      textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  )),
+                                )
+                              ],
+                            ));
+                          } else {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.active:
+                                break;
+                              case ConnectionState.done:
+                                return Container(
+                                  width: double.infinity,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      var dataTemp = snapshot.data[index];
+                                      return Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        margin: EdgeInsets.only(right: 8),
+                                        color: Colors.grey[100],
+                                        child: Container(
+                                          padding: EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.grey[100]),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          child: ListTile(
+                                            dense: true,
+                                            leading: Icon(Icons.location_city),
+                                            title: Text(
+                                              '${dataTemp["location"]}',
+                                              style: GoogleFonts.quicksand(
+                                                  textStyle: TextStyle(
+                                                      color: Colors.green[900],
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  '${dataTemp["price"]}',
+                                                  style: GoogleFonts.quicksand(
+                                                      textStyle: TextStyle(
+                                                          color:
+                                                              Colors.green[900],
+                                                          fontWeight:
+                                                              FontWeight.w600)),
+                                                ),
+                                                Text('${dataTemp["bedrooms"]} bedrooms',
+                                                    style: GoogleFonts.quicksand(
+                                                        textStyle: TextStyle(
+                                                            color: Colors
+                                                                .green[900],
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)))
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                                break;
+                              case ConnectionState.none:
+                                break;
+                              case ConnectionState.waiting:
+                                return Center(
+                                  child: SpinKitFadingCircle(
+                                    size: 100,
+                                    color: Colors.white,
+                                  ),
+                                );
+                                break;
+                            }
+                          }
+                          return Center(
+                            child: SpinKitFadingCircle(
+                              size: 100,
+                              color: Colors.white,
+                            ),
+                          );
+                        }),
+                  ),
                 ],
               ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: MaterialButton(
+        padding: EdgeInsets.all(10),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        splashColor: Colors.greenAccent[700],
+        onPressed: () =>
+            Navigator.of(context).pushNamed('/add-listing', arguments: data),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.create),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              'Create a listing',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)),
             )
           ],
         ),

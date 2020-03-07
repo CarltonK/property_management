@@ -78,6 +78,9 @@ class _ManagerVacateState extends State<ManagerVacate> {
   
   @override
   Widget build(BuildContext context) {
+    data = ModalRoute.of(context).settings.arguments;
+    _code = data["landlord_code"];
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.green[900],

@@ -17,7 +17,7 @@ class TenantComplain extends StatelessWidget {
         .collection(_collection)
         .document(tenantdata["uid"])
         .collection("complaints_history")
-        .orderBy("date",descending: true)
+        .orderBy("date", descending: true)
         .getDocuments();
     print('Here are the documents ${query.documents}');
     return query.documents;
@@ -163,8 +163,9 @@ class TenantComplain extends StatelessWidget {
                                         //Date Parsing and Formatting
                                         var parsedDate = DateTime.parse(date);
                                         var formatter = new DateFormat('yMMMd');
-                                        String dateFormatted = formatter.format(parsedDate);
-                                        
+                                        String dateFormatted =
+                                            formatter.format(parsedDate);
+
                                         return Card(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -178,7 +179,8 @@ class TenantComplain extends StatelessWidget {
                                               style: GoogleFonts.quicksand(
                                                   textStyle: TextStyle(
                                                       color: Colors.green[900],
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 20)),
                                             ),
                                             isThreeLine: true,

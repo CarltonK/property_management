@@ -12,8 +12,6 @@ class _ManagerComplaintState extends State<ManagerComplaint> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
-    print('Complaints Page Data: $data');
-    
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.green[900],

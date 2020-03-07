@@ -121,57 +121,55 @@ class _AddComplaintState extends State<AddComplaint> {
       });
 
       if (code == 0) {
-         setState(() {
-        isLoading = true;
-      });
+        setState(() {
+          isLoading = true;
+        });
         showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    'Your complaint could not be posted',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
-                  ),
-                  message: Text(
-                    'Please wait for the landlord to approve you',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      color: Colors.black,
-                    )),
-                  ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
-            },
-          );
-      }
-      else {
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  'Your complaint could not be posted',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
+                ),
+                message: Text(
+                  'Please wait for the landlord to approve you',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                    color: Colors.black,
+                  )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold)),
+                    )));
+          },
+        );
+      } else {
         Map<String, dynamic> newData = {
-        "fixed": false,
-        "hse": data["hseNumber"],
-        "title": _message,
-        "landlord_code": data["landlord_code"],
-        "tenant": "${data["firstName"]} ${data["lastName"]}",
-        "date": DateTime.now().toLocal().toIso8601String(),
-      };
-        _postComplaint(newData)
-        .catchError((error) {
+          "fixed": false,
+          "hse": data["hseNumber"],
+          "title": _message,
+          "landlord_code": data["landlord_code"],
+          "tenant": "${data["firstName"]} ${data["lastName"]}",
+          "date": DateTime.now().toLocal().toIso8601String(),
+        };
+        _postComplaint(newData).catchError((error) {
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
@@ -199,49 +197,48 @@ class _AddComplaintState extends State<AddComplaint> {
                       )));
             },
           );
-        })
-        .whenComplete(() {
+        }).whenComplete(() {
           setState(() {
             isLoading = true;
           });
-        if (callResponse == true) {
-          FocusScope.of(context).unfocus();
-          showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    'Your complaint has been posted',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
-                  ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
-            },
-          );
-          //Timed Function
-          Timer(Duration(seconds: 1), () {
-            Navigator.of(context).pop();
-          });
-          Timer(Duration(seconds: 2), () {
-            Navigator.of(context).pop();
-          });
-        }
-      });
+          if (callResponse == true) {
+            FocusScope.of(context).unfocus();
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                    title: Text(
+                      'Your complaint has been posted',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                    ),
+                    cancelButton: CupertinoActionSheetAction(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'CANCEL',
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold)),
+                        )));
+              },
+            );
+            //Timed Function
+            Timer(Duration(seconds: 1), () {
+              Navigator.of(context).pop();
+            });
+            Timer(Duration(seconds: 2), () {
+              Navigator.of(context).pop();
+            });
+          }
+        });
       }
     }
   }

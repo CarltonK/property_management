@@ -522,7 +522,7 @@ class _AddManagerState extends State<AddManager> {
         backgroundColor: Colors.green[900],
         elevation: 0.0,
         title: Text(
-          'Kejani',
+          'Add a manager',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
         ),

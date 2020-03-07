@@ -1,3 +1,4 @@
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,8 @@ class TenantHome extends StatefulWidget {
 }
 
 class _TenantHomeState extends State<TenantHome> {
+  final GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
+
   //A list to hold payments
   List<Payment> payments = [
     june,
@@ -21,9 +24,12 @@ class _TenantHomeState extends State<TenantHome> {
     december
   ];
 
+  DateTime _setDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldState,
       appBar: AppBar(
         backgroundColor: Colors.green[900],
         elevation: 0.0,
@@ -51,6 +57,47 @@ class _TenantHomeState extends State<TenantHome> {
               ),
               onPressed: () {
                 print('I want to set a rent reminder');
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CupertinoActionSheet(
+                        title: Text(
+                          'Pick a Date',
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: Colors.black,
+                          )),
+                        ),
+                        message: Container(
+                          height: 100,
+                          child: CupertinoDatePicker(
+                            maximumDate: DateTime.now().add(Duration(days: 31)),
+                            onDateTimeChanged: (value) {
+                              _setDate = value;
+                            },
+                            maximumYear: DateTime.now().year,
+                            mode: CupertinoDatePickerMode.date,
+                            initialDateTime: _setDate,
+                          ),
+                        ),
+                        cancelButton: CupertinoActionSheetAction(
+                            onPressed: () {
+                              _eventSetter(_setDate);
+                              print(_setDate);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'SET DATE',
+                              style: GoogleFonts.muli(
+                                  textStyle: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold)),
+                            )));
+                  },
+                );
               })
         ],
       ),
@@ -89,6 +136,45 @@ class _TenantHomeState extends State<TenantHome> {
         ),
       ),
     );
+  }
+
+  void _eventSetter(DateTime setDate) {
+    setDate = _setDate.add(Duration(days: 30));
+    final Event event = Event(
+        title: 'Rent reminder',
+        description: 'I want to pay my rent on this day',
+        startDate: setDate,
+        endDate: setDate,
+        allDay: true);
+
+    Add2Calendar.addEvent2Cal(event).catchError((error) {
+      showDialog(
+          context: context,
+          child: CupertinoAlertDialog(
+            content: Text(
+              'We encountered an error when setting your reminder. Please try again',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              )),
+            ),
+          ));
+    });
+    // .whenComplete(() {
+    //   showDialog(
+    //       context: context,
+    //       child: CupertinoAlertDialog(
+    //         content: Text(
+    //           'Redirecting you to your calendar',
+    //           style: GoogleFonts.quicksand(
+    //               textStyle: TextStyle(
+    //             color: Colors.black,
+    //             fontSize: 20,
+    //           )),
+    //         ),
+    //       ));
+    // });
   }
 }
 

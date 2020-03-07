@@ -97,7 +97,7 @@ class _TenantBaseState extends State<TenantBase> {
     );
   }
 
-   API _api = API();
+  API _api = API();
 
   void _logOutUser() async {
     dynamic result = await _api.logout();
@@ -107,7 +107,7 @@ class _TenantBaseState extends State<TenantBase> {
     Navigator.of(context).pop();
   }
 
-   Future<bool> _onWillPop() {
+  Future<bool> _onWillPop() {
     return _buildLogOutSheet(context) ?? false;
   }
 
@@ -162,7 +162,8 @@ class _TenantBaseState extends State<TenantBase> {
                     ),
                     title: Text('Search',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(fontWeight: FontWeight.w500)))),
+                            textStyle:
+                                TextStyle(fontWeight: FontWeight.w500)))),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.exit_to_app,
@@ -171,7 +172,8 @@ class _TenantBaseState extends State<TenantBase> {
                     ),
                     title: Text('Vacate',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(fontWeight: FontWeight.w500)))),
+                            textStyle:
+                                TextStyle(fontWeight: FontWeight.w500)))),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.comment,
@@ -180,7 +182,8 @@ class _TenantBaseState extends State<TenantBase> {
                     ),
                     title: Text('Complaints',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(fontWeight: FontWeight.w500)))),
+                            textStyle:
+                                TextStyle(fontWeight: FontWeight.w500)))),
                 // BottomNavigationBarItem(
                 //     icon: Icon(
                 //       Icons.settings,
