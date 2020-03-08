@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:property_management/services/location.dart';
+import 'package:property_management/services/permission_handle.dart';
 
 class AddListing extends StatefulWidget {
   @override
@@ -18,7 +20,12 @@ class _AddListingState extends State<AddListing> {
       FirebaseStorage(storageBucket: 'gs://property-moha.appspot.com/');
   StorageUploadTask _uploadTask;
 
+  PermissionService _permissionsService = PermissionService();
+  Locate _locatioN = Locate();
+
   Map<String, dynamic> data;
+  Map<String, dynamic> coordinates;
+
   String apartment_name;
   int landlord_code;
   bool _uploaded = false;
@@ -46,6 +53,20 @@ class _AddListingState extends State<AddListing> {
       _imageFile = selected;
     });
     _uploaded = true;
+  }
+
+  Future<Map> coordFuture() async {
+    coordinates = await _locatioN.getCoordinates();
+    print('$coordinates');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //Initiate the permissions request
+    _permissionsService.requestallPermissions();
+    coordFuture();
+
   }
 
   void _locationHandler(String value) {
@@ -236,21 +257,24 @@ class _AddListingState extends State<AddListing> {
       "price": _price,
       "landlord_code": landlord_code,
       "bedrooms": _bedroomCount.toInt(),
-      "url": url
+      "url": url,
+      "coordinates": coordinates
     });
   }
 
   String filePath;
+  dynamic url_result;
 
   /// Starts an upload task
-  void _startUpload(File file) {
-
+  Future<String> _startUpload(File file) async {
     /// Unique file name for the file
-    filePath = 'images/${landlord_code.toString()}/${DateTime.now()}.png';
-
+    filePath = 'images/${landlord_code.toString()}/coverPic.png';
     setState(() {
       _uploadTask = _storage.ref().child(filePath).putFile(file);
     });
+    url_result = await (await _uploadTask.onComplete).ref.getDownloadURL();
+    filePath = url_result.toString();
+    return filePath;
   }
 
   Future saveToStorage(File file) {
@@ -268,14 +292,13 @@ class _AddListingState extends State<AddListing> {
               color: Colors.black,
             )),
           ),
-          content: StreamBuilder(
-              stream: _uploadTask.events,
+          content: FutureBuilder(
+              future: _startUpload(file),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                var event = snapshot?.data?.snapshot;
-                double progressPercent = event != null
-                    ? event.bytesTransferred / event.totalByteCount
-                    : 0;
-                return LinearProgressIndicator(value: progressPercent);
+                if (snapshot.hasData) {
+                  filePath = snapshot.data.toString();
+                }
+                return LinearProgressIndicator();
               }),
         ));
       
@@ -296,13 +319,6 @@ class _AddListingState extends State<AddListing> {
         saveToStorage(_imageFile);
         //Save to firestore
         saveToFirestore(filePath);
-         //Timed Function
-          Timer(Duration(seconds: 3), () {
-            Navigator.of(context).pop();
-          });
-          Timer(Duration(seconds: 4), () {
-            Navigator.of(context).pop();
-          });
       } else {
         saveToFirestore('').catchError((error) {
           print('This is the error $error');
