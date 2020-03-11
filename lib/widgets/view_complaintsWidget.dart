@@ -74,15 +74,17 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                 break;
               case ConnectionState.done:
                 if (snapshot.data.length == 0) {
-                  return Text(
-                    'You have not received complaints',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 25,
-                    )),
+                  return Center(
+                    child: Text(
+                      'You have not received complaints',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 25,
+                      )),
+                    ),
                   );
                 }
                 return ListView.builder(

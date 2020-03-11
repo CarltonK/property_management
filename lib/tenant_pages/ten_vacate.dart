@@ -28,7 +28,7 @@ class _TenVacateState extends State<TenVacate> {
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
     _code = data["landlord_code"];
-    _name = data["firstName"] + " " + data["lastName"];
+    _name = data["fullName"];
     _hse = data["hseNumber"];
     return Scaffold(
       appBar: AppBar(

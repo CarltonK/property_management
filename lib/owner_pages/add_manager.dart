@@ -50,12 +50,12 @@ class _AddManagerState extends State<AddManager> {
     print('Phone: $_phone');
   }
 
-  Widget _registerFirstName() {
+  Widget _registerFullName() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'First Name',
+          'Full Name',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
                   color: Colors.white,
@@ -80,7 +80,11 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your first name',
+              labelText: 'Managers\' full name',
+              helperText: 'Be sure to use a space',
+              helperStyle: GoogleFonts.quicksand(
+                textStyle: TextStyle(color: Colors.white),
+              ),
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -90,12 +94,15 @@ class _AddManagerState extends State<AddManager> {
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
-              return 'First Name is required';
+              return 'Full Name is required';
+            }
+            if (!value.contains(' ')) {
+              return 'Remember to use a space';
             }
             return null;
           },
           onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focuslname);
+            FocusScope.of(context).requestFocus(_focusemail);
           },
           textInputAction: TextInputAction.next,
           onSaved: _firstNameHandler,
@@ -103,61 +110,6 @@ class _AddManagerState extends State<AddManager> {
       ],
     );
   }
-//
-//  Widget _registerOtherName() {
-//    return Column(
-//      crossAxisAlignment: CrossAxisAlignment.start,
-//      children: <Widget>[
-//        Text(
-//          'Other Name(s)',
-//          style: GoogleFonts.quicksand(
-//              textStyle: TextStyle(
-//                  color: Colors.white,
-//                  fontSize: 20,
-//                  letterSpacing: .2,
-//                  fontWeight: FontWeight.bold)),
-//        ),
-//        SizedBox(
-//          height: 10,
-//        ),
-//        TextFormField(
-//          autofocus: false,
-//          style: GoogleFonts.quicksand(
-//              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-//          focusNode: _focuslname,
-//          decoration: InputDecoration(
-//              errorStyle: GoogleFonts.quicksand(
-//                textStyle: TextStyle(color: Colors.white),
-//              ),
-//              enabledBorder: UnderlineInputBorder(
-//                  borderSide: BorderSide(color: Colors.white)),
-//              focusedBorder: UnderlineInputBorder(
-//                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-//              errorBorder: UnderlineInputBorder(
-//                  borderSide: BorderSide(color: Colors.red)),
-//              labelText: 'Please enter your other names',
-//              labelStyle: GoogleFonts.quicksand(
-//                  textStyle: TextStyle(color: Colors.white)),
-//              icon: Icon(
-//                Icons.person,
-//                color: Colors.white,
-//              )),
-//          keyboardType: TextInputType.text,
-//          validator: (value) {
-//            if (value.isEmpty) {
-//              return 'Other Name(s) are required';
-//            }
-//            return null;
-//          },
-//          onFieldSubmitted: (value) {
-//            FocusScope.of(context).requestFocus(_focusemail);
-//          },
-//          textInputAction: TextInputAction.next,
-//          onSaved: _lastNameHandler,
-//        )
-//      ],
-//    );
-//  }
 
   Widget _registerEmail() {
     return Column(
@@ -190,7 +142,7 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your email',
+              labelText: 'Managers\' email',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -245,7 +197,7 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your phone number',
+              labelText: 'Managers\' phone number',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -303,7 +255,7 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your ID',
+              labelText: 'Managers\' ID',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -543,11 +495,7 @@ class _AddManagerState extends State<AddManager> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        _registerFirstName(),
-//                        SizedBox(
-//                          height: 20,
-//                        ),
-//                        _registerOtherName(),
+                        _registerFullName(),
                         SizedBox(
                           height: 20,
                         ),

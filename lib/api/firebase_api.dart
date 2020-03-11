@@ -134,6 +134,37 @@ class API with ChangeNotifier{
     }
   }
 
+  Future completeProfile(User user, String uid) async {
+    String phone = user.phone;
+    String natId = user.natId;
+
+    try {
+      //Update users collection
+      await Firestore.instance
+          .collection("users")
+          .document(uid)
+          .updateData({
+        "phone": phone,
+        "natId": natId
+      });
+      print('The user was updated successfully');
+
+      await Firestore.instance
+          .collection("tenants")
+          .document(uid)
+          .updateData({
+        "phone": phone,
+        "natId": natId
+      });
+      print('The tenant was updated successfully');
+      return true;
+    }
+    catch (e) {
+      print('This is the error: $e');
+      return null;
+    }
+  }
+
   //Save the User as a document in the "users" collection
   Future saveUser(User user, String uid) async {
     //Retrieve fields

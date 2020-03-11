@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class TenSearch extends StatefulWidget {
   @override
@@ -10,8 +11,83 @@ class TenSearch extends StatefulWidget {
 
 class _TenSearchState extends State<TenSearch> {
   double _bedroomCount = 1;
-  double _price = 7000;
   var selectedRange = RangeValues(5000, 15000);
+
+  RangeValues range;
+
+  List<RangeValues> ranges = <RangeValues>[
+    RangeValues(5000, 10000),
+    RangeValues(10001, 15000),
+    RangeValues(15001, 20000),
+    RangeValues(20001, 25000),
+    RangeValues(25001, 30000),
+    RangeValues(30001, 40000),
+    RangeValues(40001, 50000),
+    RangeValues(50001, 60000),
+    RangeValues(60001, 70000),
+    RangeValues(70001,10000)
+  ];
+
+
+  Widget _dropDownRanges() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          color: Colors.green[900],
+          borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Text(
+              'Price',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.w500)),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          DropdownButton<RangeValues>(
+              underline: Divider(
+                color: Colors.white,
+                height: 2,
+                thickness: 1.5,
+              ),
+              icon: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.white,
+                size: 30,
+              ),
+              items: ranges.map((map) {
+                return DropdownMenuItem<RangeValues>(
+                    value: map,
+                    child: Text('${map.start} - ${map.end}',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                                fontSize: 20,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold))));
+              }).toList(),
+              isExpanded: true,
+              value: range,
+              onChanged: (value) {
+                setState(() {
+                  range = value;
+                });
+//                print("Range: $range");
+//                print('Start value: ${range.start}');
+//                print('End value: ${range.end}');
+              }),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,82 +206,11 @@ class _TenSearchState extends State<TenSearch> {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 40,
                       ),
-                      Card(
-                        elevation: 20,
-                        margin: EdgeInsets.symmetric(horizontal: 16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          height: 150,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.green[700],
-                              borderRadius: BorderRadius.circular(12)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'Price',
-                                style: GoogleFonts.quicksand(
-                                    textStyle: TextStyle(
-                                        fontSize: 22,
-                                        color: Colors.white,
-                                        letterSpacing: 1,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                              Text(
-                                '${selectedRange.start.toInt()} - ${selectedRange.end.toInt()}',
-                                style: GoogleFonts.quicksand(
-                                    textStyle: TextStyle(
-                                        fontSize: 30,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text(
-                                    '5000',
-                                    style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                            letterSpacing: 1,
-                                            fontWeight: FontWeight.w500)),
-                                  ),
-                                  RangeSlider(
-                                      min: 5000,
-                                      max: 50000,
-                                      divisions: 20,
-                                      values: selectedRange,
-                                      activeColor: Colors.white,
-                                      inactiveColor: Colors.white,
-                                      onChanged: (newRange) {
-                                        setState(() {
-                                          selectedRange = newRange;
-                                        });
-                                      }),
-                                  Text(
-                                    '50000',
-                                    style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                            letterSpacing: 1,
-                                            fontWeight: FontWeight.w500)),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      _dropDownRanges(),
                       SizedBox(
-                        height: 30,
+                        height: 40,
                       ),
                       Center(
                         child: Card(
@@ -216,14 +221,14 @@ class _TenSearchState extends State<TenSearch> {
                             shape: CircleBorder(),
                             onPressed: () {
                               Map<String, dynamic> _priceData = {
-                                "min": selectedRange.start.toInt(),
-                                "max": selectedRange.end.toInt()
+                                "min": range.start.toInt(),
+                                "max": range.end.toInt()
                               };
                               print('Bedrooms: ${_bedroomCount.toInt()}');
                               print('Price: ${_priceData}');
                             },
                             child: Text(
-                              'Pay to view',
+                              'View results',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.quicksand(
                                   textStyle: TextStyle(

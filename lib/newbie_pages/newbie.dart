@@ -81,6 +81,88 @@ class _NewbieState extends State<Newbie> {
     return _buildLogOutSheet(context) ?? false;
   }
 
+  RangeValues range;
+
+  List<RangeValues> ranges = <RangeValues>[
+    RangeValues(5000, 10000),
+    RangeValues(10001, 15000),
+    RangeValues(15001, 20000),
+    RangeValues(20001, 25000),
+    RangeValues(25001, 30000),
+    RangeValues(30001, 40000),
+    RangeValues(40001, 50000),
+    RangeValues(50001, 60000),
+    RangeValues(60001, 70000),
+    RangeValues(70001,10000)
+  ];
+
+
+  Widget _dropDownRanges() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          color: Colors.green[900],
+          borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Text(
+              'Price',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.w500)),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          DropdownButton<RangeValues>(
+              underline: Divider(
+                color: Colors.white,
+                height: 2,
+                thickness: 1.5,
+              ),
+              icon: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.white,
+                size: 30,
+              ),
+              items: ranges.map((map) {
+                return DropdownMenuItem<RangeValues>(
+                    value: map,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(10),
+                      height: 48,
+                      color: Colors.green[900],
+                      child: Text('${map.start} - ${map.end}',
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))),
+                    ));
+              }).toList(),
+              isExpanded: true,
+              value: range,
+              onChanged: (value) {
+                setState(() {
+                  range = value;
+                });
+//                print("Range: $range");
+//                print('Start value: ${range.start}');
+//                print('End value: ${range.end}');
+              }),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -200,82 +282,11 @@ class _NewbieState extends State<Newbie> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 40,
                         ),
-                        Card(
-                          elevation: 20,
-                          margin: EdgeInsets.symmetric(horizontal: 16),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                                color: Colors.green[700],
-                                borderRadius: BorderRadius.circular(12)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Price',
-                                  style: GoogleFonts.quicksand(
-                                      textStyle: TextStyle(
-                                          fontSize: 22,
-                                          color: Colors.white,
-                                          letterSpacing: 1,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                                Text(
-                                  '${selectedRange.start.toInt()} - ${selectedRange.end.toInt()}',
-                                  style: GoogleFonts.quicksand(
-                                      textStyle: TextStyle(
-                                          fontSize: 30,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    Text(
-                                      '5000',
-                                      style: GoogleFonts.quicksand(
-                                          textStyle: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white,
-                                              letterSpacing: 1,
-                                              fontWeight: FontWeight.w500)),
-                                    ),
-                                    RangeSlider(
-                                        min: 5000,
-                                        max: 50000,
-                                        divisions: 20,
-                                        values: selectedRange,
-                                        activeColor: Colors.white,
-                                        inactiveColor: Colors.white,
-                                        onChanged: (newRange) {
-                                          setState(() {
-                                            selectedRange = newRange;
-                                          });
-                                        }),
-                                    Text(
-                                      '50000',
-                                      style: GoogleFonts.quicksand(
-                                          textStyle: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white,
-                                              letterSpacing: 1,
-                                              fontWeight: FontWeight.w500)),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        _dropDownRanges(),
                         SizedBox(
-                          height: 30,
+                          height: 40,
                         ),
                         Center(
                           child: Card(

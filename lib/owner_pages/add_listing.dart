@@ -21,8 +21,8 @@ class _AddListingState extends State<AddListing> {
   StorageUploadTask _uploadTask;
 
   PermissionService _permissionsService = PermissionService();
-  Locate _locatioN = Locate();
-
+//  Locate _locatioN = Locate();
+//
   Map<String, dynamic> data;
   Map<String, dynamic> coordinates;
 
@@ -37,9 +37,8 @@ class _AddListingState extends State<AddListing> {
   final _formKey = GlobalKey<FormState>();
 
   final _focusdescription = FocusNode();
-  final _focusLocation = FocusNode();
 
-  String _location, _description;
+  String _description;
   double _bedroomCount = 1;
   double _price;
 
@@ -55,22 +54,17 @@ class _AddListingState extends State<AddListing> {
     _uploaded = true;
   }
 
-  Future<Map> coordFuture() async {
-    coordinates = await _locatioN.getCoordinates();
-    print('$coordinates');
-  }
+//  Future<Map> coordFuture() async {
+//    coordinates = await _locatioN.getCoordinates();
+//    print('$coordinates');
+//  }
 
   @override
   void initState() {
     super.initState();
-    //Initiate the permissions request
-    _permissionsService.requestallPermissions();
-    coordFuture();
-  }
-
-  void _locationHandler(String value) {
-    _location = value.toLowerCase().trim();
-    print('Location: $_location');
+//    //Initiate the permissions request
+//    _permissionsService.requestallPermissions();
+//    coordFuture();
   }
 
   void _descHandler(String value) {
@@ -129,65 +123,10 @@ class _AddListingState extends State<AddListing> {
             return null;
           },
           onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focusLocation);
-          },
-          textInputAction: TextInputAction.next,
-          onSaved: _priceHandler,
-        )
-      ],
-    );
-  }
-
-  Widget _addLocation() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Location',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          focusNode: _focusLocation,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'E.g: Kilimani, Nairobi',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.location_city,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.text,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Location is required';
-            }
-            return null;
-          },
-          onFieldSubmitted: (value) {
             FocusScope.of(context).requestFocus(_focusdescription);
           },
           textInputAction: TextInputAction.next,
-          onSaved: _locationHandler,
+          onSaved: _priceHandler,
         )
       ],
     );
@@ -248,7 +187,6 @@ class _AddListingState extends State<AddListing> {
     String _collectionName = "listings";
     await Firestore.instance.collection(_collectionName).document().setData({
       "name": apartment_name,
-      "location": _location,
       "description": _description,
       "price": _price,
       "landlord_code": landlord_code,
@@ -649,10 +587,6 @@ class _AddListingState extends State<AddListing> {
                           height: 20,
                         ),
                         _addPrice(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _addLocation(),
                         SizedBox(
                           height: 20,
                         ),
