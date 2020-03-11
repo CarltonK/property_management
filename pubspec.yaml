@@ -42,6 +42,10 @@ dependencies:
   # Location
   location: ^2.3.5
   geolocator: any
+  # Connection
+  connection_status_bar: ^1.1.2
+#  # Unique ID
+#  uuid: 2.0.4
 
 
 

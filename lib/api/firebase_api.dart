@@ -138,10 +138,7 @@ class API with ChangeNotifier{
   Future saveUser(User user, String uid) async {
     //Retrieve fields
     String email = user.email;
-    String firstName =  user.firstName;
-    String lastName =  user.lastName;
-    String phone = user.phone;
-    String natId = user.natId;
+    String fullName =  user.fullName;
     String apartmentName = user.apartmentName;
     String designation = user.designation;
     DateTime registerDate = user.registerDate;
@@ -154,10 +151,7 @@ class API with ChangeNotifier{
           .document(uid).setData(
         {
           "email":email,
-          "firstName": firstName,
-          "lastName": lastName,
-          "phone": phone,
-          "natId": natId,
+          "fullName": fullName,
           "designation": designation,
           "registerDate": registerDate,
           "landlord_code": landlordCode,
@@ -172,31 +166,13 @@ class API with ChangeNotifier{
             .document(uid)
             .setData({
           "email":email,
-          "firstName": firstName,
-          "lastName": lastName,
-          "phone": phone,
-          "natId": natId,
+          "fullName": fullName,
           "designation": designation,
           "registerDate": registerDate,
           "landlord_code": landlordCode,
           "apartment_name": apartmentName
         });
         print("The tenant was successfully saved");
-      }
-      if (designation == "Newbie") {
-        await Firestore.instance
-            .collection("newbies")
-            .document(uid)
-            .setData({
-          "email":email,
-          "firstName": firstName,
-          "lastName": lastName,
-          "phone": phone,
-          "natId": natId,
-          "designation": designation,
-          "registerDate": registerDate,
-        });
-        print("The newbie was successfully saved");
       }
     }
     catch (e) {
@@ -217,11 +193,12 @@ class API with ChangeNotifier{
       //The User has registered successfully
       //Retrieve data from User object
       String email = user.email;
-      String firstName =  user.firstName;
-      String lastName =  user.lastName;
+      String fullName =  user.fullName;
       String phone = user.phone;
       String natId = user.natId;
       String paybill = user.paybill;
+      String location = user.location;
+      String county = user.county;
       String designation = user.designation;
       DateTime registerDate = user.registerDate;
       int landlordCode = user.lordCode;
@@ -232,14 +209,13 @@ class API with ChangeNotifier{
           .document(result.user.uid).setData(
         {
           "email":email,
-          "firstName": firstName,
-          "lastName": lastName,
+          "firstName": fullName,
           "phone": phone,
           "natId": natId,
           "designation": designation,
           "registerDate": registerDate,
           "landlord_code": landlordCode,
-          "apartment_name": apartment
+          "apartment_name": apartment,
         }
       );
       //Add data to Firestore collection "landlords"
@@ -248,8 +224,7 @@ class API with ChangeNotifier{
             .document(result.user.uid)
             .setData({
               "email":email,
-              "firstName": firstName,
-              "lastName": lastName,
+              "fullName": fullName,
               "phone": phone,
               "natId": natId,
               "designation": designation,
@@ -264,9 +239,11 @@ class API with ChangeNotifier{
             .setData({
               "apartment_name": apartment,
               "add_date": DateTime.now().toLocal(),
-              "owner": firstName + " " + lastName,
+              "owner": fullName,
               "apartment_code": landlordCode,
-              "paybill": paybill
+              "paybill": paybill,
+              "location": location,
+              "county": county,
             });
       return currentUser;
     }
@@ -300,8 +277,7 @@ class API with ChangeNotifier{
       //The User has registered successfully
       //Retrieve data from User object
       String email = user.email;
-      String firstName =  user.firstName;
-      String lastName =  user.lastName;
+      String fullName =  user.fullName;
       String phone = user.phone;
       String natId = user.natId;
       String designation = user.designation;
@@ -314,8 +290,7 @@ class API with ChangeNotifier{
           .document(result.user.uid).setData(
         {
           "email":email,
-          "firstName": firstName,
-          "lastName": lastName,
+          "fullName": fullName,
           "phone": phone,
           "natId": natId,
           "designation": designation,
@@ -330,8 +305,7 @@ class API with ChangeNotifier{
             .document(result.user.uid)
             .setData({
               "email":email,
-              "firstName": firstName,
-              "lastName": lastName,
+              "fullName": fullName,
               "phone": phone,
               "natId": natId,
               "designation": designation,

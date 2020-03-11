@@ -28,7 +28,7 @@ class _AddManagerState extends State<AddManager> {
   final _focusemail = FocusNode();
   final _focusphone = FocusNode();
 
-  String _firstName, _lastName, _natId, apartment, _phone, _email;
+  String _fullName, _natId, apartment, _phone, _email;
 
   void _emailHandler(String value) {
     _email = value.toLowerCase().trim();
@@ -36,13 +36,8 @@ class _AddManagerState extends State<AddManager> {
   }
 
   void _firstNameHandler(String value) {
-    _firstName = value.trim();
-    print('First Name: $_firstName');
-  }
-
-  void _lastNameHandler(String value) {
-    _lastName = value.trim();
-    print('Last Name: $_lastName');
+    _fullName = value.trim();
+    print('First Name: $_fullName');
   }
 
   void _nationalIdHandler(String value) {
@@ -108,61 +103,61 @@ class _AddManagerState extends State<AddManager> {
       ],
     );
   }
-
-  Widget _registerOtherName() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Other Name(s)',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          focusNode: _focuslname,
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your other names',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.text,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Other Name(s) are required';
-            }
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focusemail);
-          },
-          textInputAction: TextInputAction.next,
-          onSaved: _lastNameHandler,
-        )
-      ],
-    );
-  }
+//
+//  Widget _registerOtherName() {
+//    return Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+//        Text(
+//          'Other Name(s)',
+//          style: GoogleFonts.quicksand(
+//              textStyle: TextStyle(
+//                  color: Colors.white,
+//                  fontSize: 20,
+//                  letterSpacing: .2,
+//                  fontWeight: FontWeight.bold)),
+//        ),
+//        SizedBox(
+//          height: 10,
+//        ),
+//        TextFormField(
+//          autofocus: false,
+//          style: GoogleFonts.quicksand(
+//              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+//          focusNode: _focuslname,
+//          decoration: InputDecoration(
+//              errorStyle: GoogleFonts.quicksand(
+//                textStyle: TextStyle(color: Colors.white),
+//              ),
+//              enabledBorder: UnderlineInputBorder(
+//                  borderSide: BorderSide(color: Colors.white)),
+//              focusedBorder: UnderlineInputBorder(
+//                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
+//              errorBorder: UnderlineInputBorder(
+//                  borderSide: BorderSide(color: Colors.red)),
+//              labelText: 'Please enter your other names',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
+//              icon: Icon(
+//                Icons.person,
+//                color: Colors.white,
+//              )),
+//          keyboardType: TextInputType.text,
+//          validator: (value) {
+//            if (value.isEmpty) {
+//              return 'Other Name(s) are required';
+//            }
+//            return null;
+//          },
+//          onFieldSubmitted: (value) {
+//            FocusScope.of(context).requestFocus(_focusemail);
+//          },
+//          textInputAction: TextInputAction.next,
+//          onSaved: _lastNameHandler,
+//        )
+//      ],
+//    );
+//  }
 
   Widget _registerEmail() {
     return Column(
@@ -397,8 +392,7 @@ class _AddManagerState extends State<AddManager> {
       });
 
       _user = User(
-          firstName: _firstName,
-          lastName: _lastName,
+          fullName: _fullName,
           email: _email,
           natId: _natId,
           phone: _phone,
@@ -550,10 +544,10 @@ class _AddManagerState extends State<AddManager> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         _registerFirstName(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerOtherName(),
+//                        SizedBox(
+//                          height: 20,
+//                        ),
+//                        _registerOtherName(),
                         SizedBox(
                           height: 20,
                         ),

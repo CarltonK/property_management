@@ -635,7 +635,8 @@ class OwnerSettings extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w600)),
                                                 ),
-                                                Text('${dataTemp["bedrooms"]} bedrooms',
+                                                Text(
+                                                    '${dataTemp["bedrooms"]} bedrooms',
                                                     style: GoogleFonts.quicksand(
                                                         textStyle: TextStyle(
                                                             color: Colors

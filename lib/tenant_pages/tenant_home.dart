@@ -28,6 +28,7 @@ class _TenantHomeState extends State<TenantHome> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> user = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       key: scaffoldState,
       appBar: AppBar(
@@ -35,7 +36,7 @@ class _TenantHomeState extends State<TenantHome> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushNamed('/tenant-profile');
+            Navigator.of(context).pushNamed('/tenant-profile', arguments: user);
           },
           icon: Icon(
             Icons.person_pin,
@@ -48,58 +49,58 @@ class _TenantHomeState extends State<TenantHome> {
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
         ),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.alarm,
-                color: Colors.white,
-                size: 30,
-              ),
-              onPressed: () {
-                print('I want to set a rent reminder');
-                showCupertinoModalPopup(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CupertinoActionSheet(
-                        title: Text(
-                          'Pick a Date',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            color: Colors.black,
-                          )),
-                        ),
-                        message: Container(
-                          height: 100,
-                          child: CupertinoDatePicker(
-                            maximumDate: DateTime.now().add(Duration(days: 31)),
-                            onDateTimeChanged: (value) {
-                              _setDate = value;
-                            },
-                            maximumYear: DateTime.now().year,
-                            mode: CupertinoDatePickerMode.date,
-                            initialDateTime: _setDate,
-                          ),
-                        ),
-                        cancelButton: CupertinoActionSheetAction(
-                            onPressed: () {
-                              _eventSetter(_setDate);
-                              print(_setDate);
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              'SET DATE',
-                              style: GoogleFonts.muli(
-                                  textStyle: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold)),
-                            )));
-                  },
-                );
-              })
-        ],
+//        actions: <Widget>[
+//          IconButton(
+//              icon: Icon(
+//                Icons.alarm,
+//                color: Colors.white,
+//                size: 30,
+//              ),
+//              onPressed: () {
+//                print('I want to set a rent reminder');
+//                showCupertinoModalPopup(
+//                  context: context,
+//                  builder: (BuildContext context) {
+//                    return CupertinoActionSheet(
+//                        title: Text(
+//                          'Pick a Date',
+//                          style: GoogleFonts.quicksand(
+//                              textStyle: TextStyle(
+//                            fontWeight: FontWeight.w600,
+//                            fontSize: 20,
+//                            color: Colors.black,
+//                          )),
+//                        ),
+//                        message: Container(
+//                          height: 100,
+//                          child: CupertinoDatePicker(
+//                            maximumDate: DateTime.now().add(Duration(days: 31)),
+//                            onDateTimeChanged: (value) {
+//                              _setDate = value;
+//                            },
+//                            maximumYear: DateTime.now().year,
+//                            mode: CupertinoDatePickerMode.date,
+//                            initialDateTime: _setDate,
+//                          ),
+//                        ),
+//                        cancelButton: CupertinoActionSheetAction(
+//                            onPressed: () {
+//                              _eventSetter(_setDate);
+//                              print(_setDate);
+//                              Navigator.of(context).pop();
+//                            },
+//                            child: Text(
+//                              'SET DATE',
+//                              style: GoogleFonts.muli(
+//                                  textStyle: TextStyle(
+//                                      color: Colors.red,
+//                                      fontSize: 25,
+//                                      fontWeight: FontWeight.bold)),
+//                            )));
+//                  },
+//                );
+//              })
+//        ],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,

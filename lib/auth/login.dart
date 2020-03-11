@@ -244,13 +244,6 @@ class _LoginState extends State<Login> {
               .popAndPushNamed('/manager', arguments: userData);
         });
       }
-      //Newbie Page
-      else if (userdesignation == "Newbie") {
-        //Timed Function
-        Timer(Duration(milliseconds: 100), () {
-          Navigator.of(context).popAndPushNamed('/newbie', arguments: userData);
-        });
-      }
       //Landlord Page
       else {
         //Timed Function

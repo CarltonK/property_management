@@ -6,14 +6,13 @@ import 'package:intl/intl.dart';
 
 class ViewComplaintsWidget extends StatefulWidget {
   final int code;
-  ViewComplaintsWidget({Key key, @required this.code}) : super (key: key);
+  ViewComplaintsWidget({Key key, @required this.code}) : super(key: key);
 
   @override
   _ViewComplaintsWidgetState createState() => _ViewComplaintsWidgetState();
 }
 
 class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
-
   Future _getComplaints() async {
     //This is the name of the collection containing complaints
     final String _collection = 'complaints';
@@ -31,7 +30,6 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       height: 500,
       width: MediaQuery.of(context).size.width,
       child: FutureBuilder(
@@ -42,31 +40,31 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
               print('Snapshot Error: ${snapshot.error.toString()}');
               return Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Text(
-                        'Ooops! ${snapshot.error.toString()}',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.greenAccent[700],
-                              fontSize: 20,
-                            )),
-                      )
-                    ],
-                  ));
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Text(
+                    'Ooops! ${snapshot.error.toString()}',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.greenAccent[700],
+                      fontSize: 20,
+                    )),
+                  )
+                ],
+              ));
             }
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
                 return Center(
                     child: SpinKitFadingCircle(
-                      color: Colors.white,
-                      size: 150.0,
-                    ));
+                  color: Colors.white,
+                  size: 150.0,
+                ));
                 break;
               case ConnectionState.none:
                 return Text('none');
@@ -81,10 +79,10 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 25,
-                        )),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 25,
+                    )),
                   );
                 }
                 return ListView.builder(
@@ -101,13 +99,18 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                     var formatter = new DateFormat('yMMMd');
                     String dateFormatted = formatter.format(parsedDate);
                     return Card(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                       color: Colors.white,
                       margin: EdgeInsets.symmetric(vertical: 5),
                       child: ListTile(
                         leading: Column(
                           children: <Widget>[
-                            Icon(Icons.home, color: Colors.green[900],size: 20,),
+                            Icon(
+                              Icons.home,
+                              color: Colors.green[900],
+                              size: 20,
+                            ),
                             SizedBox(
                               height: 5,
                             ),
@@ -117,9 +120,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                                   textStyle: TextStyle(
                                       color: Colors.green[900],
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16
-                                  )
-                              ),
+                                      fontSize: 16)),
                             ),
                           ],
                         ),
@@ -130,48 +131,55 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                             Text(
                               '$title',
                               style: GoogleFonts.quicksand(
-                                  textStyle:
-                                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
+                                  textStyle: TextStyle(
+                                      color: Colors.green[900],
+                                      fontWeight: FontWeight.w500)),
                             ),
                             Text(
                               '$dateFormatted',
                               style: GoogleFonts.quicksand(
-                                  textStyle:
-                                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.w500)),
+                                  textStyle: TextStyle(
+                                      color: Colors.green[900],
+                                      fontWeight: FontWeight.w500)),
                             ),
                           ],
                         ),
                         title: Text(
                           '$tenant',
                           style: GoogleFonts.quicksand(
-                              textStyle:
-                              TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
+                              textStyle: TextStyle(
+                                  color: Colors.green[900],
+                                  fontWeight: FontWeight.bold)),
                         ),
                         trailing: Column(
                           children: <Widget>[
                             Text(
                               'Done',
                               style: GoogleFonts.quicksand(
-                                  textStyle:
-                                  TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold)),
+                                  textStyle: TextStyle(
+                                      color: Colors.green[900],
+                                      fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(
                               height: 5,
                             ),
-                            Icon(fixed ? Icons.done : Icons.cancel,
-                              color: fixed ? Colors.green[900] : Colors.red,),
+                            Icon(
+                              fixed ? Icons.done : Icons.cancel,
+                              color: fixed ? Colors.green[900] : Colors.red,
+                            ),
                           ],
                         ),
                       ),
                     );
-                  },);
+                  },
+                );
                 break;
             }
             return Center(
                 child: SpinKitFadingCircle(
-                  color: Colors.white,
-                  size: 150.0,
-                ));
+              color: Colors.white,
+              size: 150.0,
+            ));
           }),
     );
   }

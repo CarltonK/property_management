@@ -79,7 +79,7 @@ class _AdminState extends State<Admin> {
     );
   }
 
-   API _api = API();
+  API _api = API();
 
   void _logOutUser() async {
     dynamic result = await _api.logout();
@@ -87,7 +87,7 @@ class _AdminState extends State<Admin> {
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   }
 
-   Future<bool> _onWillPop() {
+  Future<bool> _onWillPop() {
     return _buildLogOutSheet(context) ?? false;
   }
 
@@ -97,22 +97,23 @@ class _AdminState extends State<Admin> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 30,
+          backgroundColor: Colors.green[900],
+          elevation: 0.0,
+          leading: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.person_pin,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+          title: Text(
+            'Kejani',
+            style: GoogleFonts.quicksand(
+                textStyle:
+                    TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
           ),
         ),
-        title: Text(
-          'Kejani',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
-        ),
-      ),
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: Stack(

@@ -7,11 +7,12 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
 class User {
-  String firstName;
-  String lastName;
+  String fullName;
   String email;
   String natId;
   String phone;
+  String county;
+  String location;
   DateTime registerDate;
   DateTime reminder;
   String apartmentName;
@@ -23,8 +24,7 @@ class User {
   String uid;
 
   User({
-    this.firstName,
-    this.lastName,
+    this.fullName,
     this.email,
     this.natId,
     this.phone,
@@ -32,6 +32,8 @@ class User {
     this.reminder,
     this.designation,
     this.paybill,
+    this.county,
+    this.location,
     this.lordCode,
     this.complaints,
     this.apartmentName,
@@ -40,8 +42,7 @@ class User {
 });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    firstName: json["firstName"],
-    lastName: json["lastName"],
+    fullName: json["fullName"],
     email: json["email"],
     natId: json["natId"],
     phone: json["phone"],
@@ -49,17 +50,18 @@ class User {
     reminder: json["reminder"],
     designation: json["designation"],
     paybill: json["paybill"],
+    location: json["location"],
     complaints: Complaints.fromJson(json["complaints"]),
     password: json["password"],
     uid: json["uid"],
     lordCode: json["lordCode"],
+    county: json["county"],
     apartmentName: json["apartmentName"]
   );
 
   //Convert Dart object to JSON
   Map<String, dynamic> toJson() => {
-    "firstName": firstName,
-    "lastName": lastName,
+    "fullName": fullName,
     "email": email,
     "natId": natId,
     "phone": phone,
@@ -69,6 +71,8 @@ class User {
     "paybill": paybill,
     "complaints": complaints.toJson(),
     "password": password,
+    "location": location,
+    "county": county,
     "uid": uid,
     "lordCode": lordCode,
     "apartmentName": apartmentName

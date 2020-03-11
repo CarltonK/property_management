@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
+import 'package:property_management/models/countymodel.dart';
 import 'package:property_management/models/usermodel.dart';
 
 class AddLandlord extends StatefulWidget {
@@ -19,30 +20,30 @@ class _AddLandlordState extends State<AddLandlord> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final _focuslname = FocusNode();
   final _focusnatid = FocusNode();
   final _focuspaybill = FocusNode();
   final _focusapartment = FocusNode();
   final _focusemail = FocusNode();
   final _focusphone = FocusNode();
+  final _focusLocation = FocusNode();
 
   @override
   void dispose() {
     super.dispose();
-    _focuslname.dispose();
     _focusemail.dispose();
     _focuspaybill.dispose();
     _focusapartment.dispose();
     _focusphone.dispose();
     _focusnatid.dispose();
+    _focusLocation.dispose();
   }
 
-  String _firstName,
-      _lastName,
+  String _fullName,
       _natId,
       _phone,
       _paybill = '',
       _apartmentName,
+      _location,
       _email;
   int _lordCode;
   User _user;
@@ -52,14 +53,9 @@ class _AddLandlordState extends State<AddLandlord> {
     print('Email: $_email');
   }
 
-  void _firstNameHandler(String value) {
-    _firstName = value.trim();
-    print('First Name: $_firstName');
-  }
-
-  void _lastNameHandler(String value) {
-    _lastName = value.trim();
-    print('Last Name: $_lastName');
+  void _fullNameHandler(String value) {
+    _fullName = value.trim();
+    print('Full Name: $_fullName');
   }
 
   void _nationalIdHandler(String value) {
@@ -70,6 +66,11 @@ class _AddLandlordState extends State<AddLandlord> {
   void _phoneHandler(String value) {
     _phone = value.trim();
     print('Phone: $_phone');
+  }
+
+  void _locationHandler(String value) {
+    _location = value.trim();
+    print('Location: $_location');
   }
 
   void _paybillHandler(String value) {
@@ -93,7 +94,7 @@ class _AddLandlordState extends State<AddLandlord> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'First Name',
+          'Full Name',
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(
                   color: Colors.white,
@@ -118,7 +119,11 @@ class _AddLandlordState extends State<AddLandlord> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your first name',
+              labelText: 'Enter full names',
+              helperText: 'Be sure to use a space',
+              helperStyle: GoogleFonts.quicksand(
+                textStyle: TextStyle(color: Colors.white),
+              ),
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -128,62 +133,10 @@ class _AddLandlordState extends State<AddLandlord> {
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
-              return 'First Name is required';
+              return 'Full Name is required';
             }
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focuslname);
-          },
-          textInputAction: TextInputAction.next,
-          onSaved: _firstNameHandler,
-        )
-      ],
-    );
-  }
-
-  Widget _registerOtherName() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Other Name(s)',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          focusNode: _focuslname,
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your other names',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.text,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Other Name(s) are required';
+            if (!value.contains(' ')) {
+              return 'Remember to use a space';
             }
             return null;
           },
@@ -191,11 +144,66 @@ class _AddLandlordState extends State<AddLandlord> {
             FocusScope.of(context).requestFocus(_focusemail);
           },
           textInputAction: TextInputAction.next,
-          onSaved: _lastNameHandler,
+          onSaved: _fullNameHandler,
         )
       ],
     );
   }
+
+//  Widget _registerOtherName() {
+//    return Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+//        Text(
+//          'Surname',
+//          style: GoogleFonts.quicksand(
+//              textStyle: TextStyle(
+//                  color: Colors.white,
+//                  fontSize: 20,
+//                  letterSpacing: .2,
+//                  fontWeight: FontWeight.bold)),
+//        ),
+//        SizedBox(
+//          height: 10,
+//        ),
+//        TextFormField(
+//          autofocus: false,
+//          style: GoogleFonts.quicksand(
+//              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+//          focusNode: _focuslname,
+//          decoration: InputDecoration(
+//              errorStyle: GoogleFonts.quicksand(
+//                textStyle: TextStyle(color: Colors.white),
+//              ),
+//              enabledBorder: UnderlineInputBorder(
+//                  borderSide: BorderSide(color: Colors.white)),
+//              focusedBorder: UnderlineInputBorder(
+//                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
+//              errorBorder: UnderlineInputBorder(
+//                  borderSide: BorderSide(color: Colors.red)),
+//              labelText: 'Please enter your surname',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
+//              icon: Icon(
+//                Icons.person,
+//                color: Colors.white,
+//              )),
+//          keyboardType: TextInputType.text,
+//          validator: (value) {
+//            if (value.isEmpty) {
+//              return 'Surname is required';
+//            }
+//            return null;
+//          },
+//          onFieldSubmitted: (value) {
+//            FocusScope.of(context).requestFocus(_focusemail);
+//          },
+//          textInputAction: TextInputAction.next,
+//          onSaved: _lastNameHandler,
+//        )
+//      ],
+//    );
+//  }
 
   Widget _registerEmail() {
     return Column(
@@ -228,7 +236,7 @@ class _AddLandlordState extends State<AddLandlord> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your email',
+              labelText: 'Enter email',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -283,7 +291,7 @@ class _AddLandlordState extends State<AddLandlord> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your phone number',
+              labelText: 'Enter phone number',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -297,6 +305,9 @@ class _AddLandlordState extends State<AddLandlord> {
             }
             if (value.length != 10) {
               return 'Phone number should be 10 digits';
+            }
+            if (!value.startsWith("07")) {
+              return 'Phone number should start with "07"';
             }
             return null;
           },
@@ -341,7 +352,7 @@ class _AddLandlordState extends State<AddLandlord> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your ID',
+              labelText: 'Enter ID',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -363,58 +374,6 @@ class _AddLandlordState extends State<AddLandlord> {
           },
           textInputAction: TextInputAction.next,
           onSaved: _nationalIdHandler,
-        )
-      ],
-    );
-  }
-
-  Widget _registerPaybill() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Paybill (Optional)',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          focusNode: _focuspaybill,
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your paybill number',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.confirmation_number,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).unfocus();
-          },
-          textInputAction: TextInputAction.done,
-          onSaved: _paybillHandler,
         )
       ],
     );
@@ -451,7 +410,7 @@ class _AddLandlordState extends State<AddLandlord> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter the apartment name',
+              labelText: 'Name of the building',
               labelStyle: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
@@ -466,10 +425,117 @@ class _AddLandlordState extends State<AddLandlord> {
             return null;
           },
           onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focuspaybill);
+            FocusScope.of(context).requestFocus(_focusLocation);
           },
           textInputAction: TextInputAction.next,
           onSaved: _apartmentHandler,
+        )
+      ],
+    );
+  }
+
+  Widget _registerApartmentLocation() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Apartment Location',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  letterSpacing: .2,
+                  fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          autofocus: false,
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+          focusNode: _focusLocation,
+          decoration: InputDecoration(
+              errorStyle: GoogleFonts.quicksand(
+                textStyle: TextStyle(color: Colors.white),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
+              errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red)),
+              labelText: 'E.g: Langata, Nairobi',
+              labelStyle: GoogleFonts.quicksand(
+                  textStyle: TextStyle(color: Colors.white)),
+              icon: Icon(
+                Icons.location_on,
+                color: Colors.white,
+              )),
+          keyboardType: TextInputType.text,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Apartment location is required';
+            }
+            return null;
+          },
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).requestFocus(_focuspaybill);
+          },
+          textInputAction: TextInputAction.next,
+          onSaved: _locationHandler,
+        )
+      ],
+    );
+  }
+
+  Widget _registerPaybill() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Paybill (Optional)',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  letterSpacing: .2,
+                  fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          autofocus: false,
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+          focusNode: _focuspaybill,
+          decoration: InputDecoration(
+              errorStyle: GoogleFonts.quicksand(
+                textStyle: TextStyle(color: Colors.white),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
+              errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red)),
+              labelText: 'Safaricom paybill',
+              labelStyle: GoogleFonts.quicksand(
+                  textStyle: TextStyle(color: Colors.white)),
+              icon: Icon(
+                Icons.confirmation_number,
+                color: Colors.white,
+              )),
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            return null;
+          },
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).unfocus();
+          },
+          textInputAction: TextInputAction.done,
+          onSaved: _paybillHandler,
         )
       ],
     );
@@ -528,39 +594,14 @@ class _AddLandlordState extends State<AddLandlord> {
 
   void _submitBtnPressed() {
     //Validate the Form
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-
-      //Display the Circular Loading Indicator
-      setState(() {
-        isLoading = false;
-      });
-
-      _user = User(
-          firstName: _firstName,
-          lastName: _lastName,
-          email: _email,
-          natId: _natId,
-          phone: _phone,
-          apartmentName: _apartmentName,
-          paybill: _paybill,
-          designation: "Landlord",
-          registerDate: DateTime.now().toLocal(),
-          lordCode: lordCodeGenerator());
-
-      serverCall().catchError((error) {
-        print('This is the error $error');
-        //Disable the circular progress dialog
-        setState(() {
-          isLoading = true;
-        });
-        //Show an action sheet with error
-        showCupertinoModalPopup(
+    if (countyName == null) {
+      //Show an action sheet with error
+      showCupertinoModalPopup(
           context: context,
           builder: (BuildContext context) {
             return CupertinoActionSheet(
                 title: Text(
-                  '$error',
+                  'You have not selected a county',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -580,51 +621,42 @@ class _AddLandlordState extends State<AddLandlord> {
                               fontSize: 25,
                               fontWeight: FontWeight.bold)),
                     )));
-          },
-        );
-      }).whenComplete(() {
-        if (callResponse) {
-          print('Successful response $result');
-          showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                title: Text(
-                  'The landlord/lady has been successfully added',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
-                ),
-              );
-            },
-          );
+          });
+    } else {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+
+        //Display the Circular Loading Indicator
+        setState(() {
+          isLoading = false;
+        });
+
+        _user = User(
+            fullName: _fullName,
+            email: _email,
+            natId: _natId,
+            phone: _phone,
+            apartmentName: _apartmentName,
+            location: _location,
+            paybill: _paybill,
+            designation: "Landlord",
+            county: countyName,
+            registerDate: DateTime.now().toLocal(),
+            lordCode: lordCodeGenerator());
+
+        serverCall().catchError((error) {
+          print('This is the error $error');
           //Disable the circular progress dialog
           setState(() {
             isLoading = true;
           });
-          //Timed Function
-          Timer(Duration(seconds: 2), () {
-            Navigator.of(context).pop();
-          });
-          Timer(Duration(seconds: 3), () {
-            Navigator.of(context).pop();
-          });
-        } else {
-          print('Failed response: $result');
-          //Disable the circular progress dialog
-          setState(() {
-            isLoading = true;
-          });
-          //Show an action sheet with result
+          //Show an action sheet with error
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
                   title: Text(
-                    '$result',
+                    '$error',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -646,9 +678,176 @@ class _AddLandlordState extends State<AddLandlord> {
                       )));
             },
           );
-        }
-      });
+        }).whenComplete(() {
+          if (callResponse) {
+            print('Successful response $result');
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                  message: Text(
+                    'We have added $_fullName\nOwner of $_apartmentName',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
+                );
+              },
+            );
+            //Disable the circular progress dialog
+            setState(() {
+              isLoading = true;
+            });
+            //Timed Function
+            Timer(Duration(seconds: 2), () {
+              Navigator.of(context).pop();
+            });
+            Timer(Duration(seconds: 3), () {
+              Navigator.of(context).pop();
+            });
+          } else {
+            print('Failed response: $result');
+            //Disable the circular progress dialog
+            setState(() {
+              isLoading = true;
+            });
+            //Show an action sheet with result
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                    title: Text(
+                      '$result',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                    ),
+                    cancelButton: CupertinoActionSheetAction(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'CANCEL',
+                          style: GoogleFonts.muli(
+                              textStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold)),
+                        )));
+              },
+            );
+          }
+        });
+      }
     }
+  }
+
+  String countyName;
+
+  List<County> counties = <County>[
+    County(name: 'Nairobi'),
+    County(name: 'Kiambu'),
+    County(name: 'Mombasa'),
+    County(name: 'Kisumu'),
+    County(name: 'Nakuru'),
+//    County(name: 'Kwale'),
+//    County(name: 'Kilifi'),
+//    County(name: 'Tana River'),
+//    County(name: 'Lamu'),
+//    County(name: 'Taita Taveta'),
+//    County(name: 'Garissa'),
+//    County(name: 'Wajir'),
+//    County(name: 'Mandera'),
+//    County(name: 'Marsabit'),
+//    County(name: 'Isiolo'),
+//    County(name: 'Meru'),
+//    County(name: 'Tharaka Nithi'),
+//    County(name: 'Embu'),
+//    County(name: 'Kitui'),
+//    County(name: 'Machakos'),
+//    County(name: 'Makueni'),
+//    County(name: 'Nyandarua'),
+//    County(name: 'Nyeri'),
+//    County(name: 'Kirinyaga'),
+//    County(name: 'Murang\'a'),
+//    County(name: 'Turkana'),
+//    County(name: 'West Pokot'),
+//    County(name: 'Samburu'),
+//    County(name: 'Trans-Nzoia'),
+//    County(name: 'Uasin Gishu'),
+//    County(name: 'Elgeyo Marakwet'),
+//    County(name: 'Nandi'),
+//    County(name: 'Baringo'),
+//    County(name: 'Laikipia'),
+//    County(name: 'Narok'),
+//    County(name: 'Kajiado'),
+//    County(name: 'Kericho'),
+//    County(name: 'Bomet'),
+//    County(name: 'Kakamega'),
+//    County(name: 'Vihiga'),
+//    County(name: 'Bungoma'),
+//    County(name: 'Busia'),
+//    County(name: 'Siaya'),
+//    County(name: 'Homa Bay'),
+//    County(name: 'Migori'),
+//    County(name: 'Kisii'),
+//    County(name: 'Nyamira'),
+
+  ];
+
+  Widget _dropDownCounties() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'County',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  letterSpacing: .2,
+                  fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        DropdownButton<String>(
+            underline: Divider(
+              color: Colors.white,
+              height: 3,
+              thickness: 1.5,
+            ),
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: Colors.white,
+              size: 30,
+            ),
+            isExpanded: true,
+            value: countyName,
+            items: counties.map((map) {
+              return DropdownMenuItem<String>(
+                  value: map.name,
+                  child: Text(map.name,
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold))));
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                countyName = value;
+              });
+              print("County: $countyName");
+            }),
+      ],
+    );
   }
 
   @override
@@ -681,7 +880,7 @@ class _AddLandlordState extends State<AddLandlord> {
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -703,10 +902,6 @@ class _AddLandlordState extends State<AddLandlord> {
                           height: 30,
                         ),
                         _registerFirstName(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerOtherName(),
                         SizedBox(
                           height: 20,
                         ),
@@ -734,9 +929,17 @@ class _AddLandlordState extends State<AddLandlord> {
                           ),
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 40,
                         ),
                         _registerApartment(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _dropDownCounties(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _registerApartmentLocation(),
                         SizedBox(
                           height: 20,
                         ),

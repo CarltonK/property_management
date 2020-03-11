@@ -20,9 +20,7 @@ class _BreakdownState extends State<Breakdown> {
                   textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
-                      fontWeight: FontWeight.w600
-                  )
-              ),
+                      fontWeight: FontWeight.w600)),
             ),
             children: <Widget>[
               Card(
@@ -33,18 +31,13 @@ class _BreakdownState extends State<Breakdown> {
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w600
-                        )
-                    ),
+                            fontWeight: FontWeight.w600)),
                   ),
                   leading: Text(
                     '101',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                        )
-                    ),
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   isThreeLine: true,
                   subtitle: Column(
@@ -53,32 +46,26 @@ class _BreakdownState extends State<Breakdown> {
                       Text(
                         '1 Jan',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       ),
                       Text(
                         '12,000',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       )
                     ],
                   ),
-                  trailing: Icon(Icons.done, color: Colors.blue,),),
+                  trailing: Icon(
+                    Icons.done,
+                    color: Colors.blue,
+                  ),
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                        color: Colors.greenAccent[700]
-                    )
-                ),
+                    side: BorderSide(color: Colors.greenAccent[700])),
                 color: Colors.green[900],
-
               ),
               Card(
                 child: ListTile(
@@ -88,18 +75,13 @@ class _BreakdownState extends State<Breakdown> {
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w600
-                        )
-                    ),
+                            fontWeight: FontWeight.w600)),
                   ),
                   leading: Text(
                     '102',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                        )
-                    ),
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   isThreeLine: true,
                   subtitle: Column(
@@ -108,32 +90,26 @@ class _BreakdownState extends State<Breakdown> {
                       Text(
                         '3 Jan',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       ),
                       Text(
                         '12,000',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       )
                     ],
                   ),
-                  trailing: Icon(Icons.done, color: Colors.blue,),),
+                  trailing: Icon(
+                    Icons.done,
+                    color: Colors.blue,
+                  ),
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                        color: Colors.greenAccent[700]
-                    )
-                ),
+                    side: BorderSide(color: Colors.greenAccent[700])),
                 color: Colors.green[900],
-
               ),
               Card(
                 child: ListTile(
@@ -143,18 +119,13 @@ class _BreakdownState extends State<Breakdown> {
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w600
-                        )
-                    ),
+                            fontWeight: FontWeight.w600)),
                   ),
                   leading: Text(
                     '103',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                        )
-                    ),
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   isThreeLine: true,
                   subtitle: Column(
@@ -163,32 +134,26 @@ class _BreakdownState extends State<Breakdown> {
                       Text(
                         '3 days late',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       ),
                       Text(
                         '12,000',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       )
                     ],
                   ),
-                  trailing: Icon(Icons.cancel, color: Colors.red,),),
+                  trailing: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                        color: Colors.greenAccent[700]
-                    )
-                ),
+                    side: BorderSide(color: Colors.greenAccent[700])),
                 color: Colors.green[900],
-
               )
             ],
           ),
@@ -199,9 +164,7 @@ class _BreakdownState extends State<Breakdown> {
                   textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
-                      fontWeight: FontWeight.w600
-                  )
-              ),
+                      fontWeight: FontWeight.w600)),
             ),
             children: <Widget>[
               Card(
@@ -212,18 +175,13 @@ class _BreakdownState extends State<Breakdown> {
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w600
-                        )
-                    ),
+                            fontWeight: FontWeight.w600)),
                   ),
                   leading: Text(
                     '102',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                        )
-                    ),
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   isThreeLine: true,
                   subtitle: Column(
@@ -232,32 +190,26 @@ class _BreakdownState extends State<Breakdown> {
                       Text(
                         '3 Jan',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       ),
                       Text(
                         '12,000',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       )
                     ],
                   ),
-                  trailing: Icon(Icons.done, color: Colors.blue,),),
+                  trailing: Icon(
+                    Icons.done,
+                    color: Colors.blue,
+                  ),
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                        color: Colors.greenAccent[700]
-                    )
-                ),
+                    side: BorderSide(color: Colors.greenAccent[700])),
                 color: Colors.green[900],
-
               ),
               Card(
                 child: ListTile(
@@ -267,18 +219,13 @@ class _BreakdownState extends State<Breakdown> {
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w600
-                        )
-                    ),
+                            fontWeight: FontWeight.w600)),
                   ),
                   leading: Text(
                     '103',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                        )
-                    ),
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   isThreeLine: true,
                   subtitle: Column(
@@ -287,34 +234,29 @@ class _BreakdownState extends State<Breakdown> {
                       Text(
                         '3 days late',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       ),
                       Text(
                         '12,000',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       )
                     ],
                   ),
-                  trailing: Icon(Icons.cancel, color: Colors.red,),),
+                  trailing: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                        color: Colors.greenAccent[700]
-                    )
-                ),
+                    side: BorderSide(color: Colors.greenAccent[700])),
                 color: Colors.green[900],
-
               )
-            ],),
+            ],
+          ),
           ExpansionTile(
             title: Text(
               'Floor: 3',
@@ -322,9 +264,7 @@ class _BreakdownState extends State<Breakdown> {
                   textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
-                      fontWeight: FontWeight.w600
-                  )
-              ),
+                      fontWeight: FontWeight.w600)),
             ),
             children: <Widget>[
               Card(
@@ -335,18 +275,13 @@ class _BreakdownState extends State<Breakdown> {
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w600
-                        )
-                    ),
+                            fontWeight: FontWeight.w600)),
                   ),
                   leading: Text(
                     '102',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                        )
-                    ),
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   isThreeLine: true,
                   subtitle: Column(
@@ -355,32 +290,26 @@ class _BreakdownState extends State<Breakdown> {
                       Text(
                         '3 Jan',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       ),
                       Text(
                         '12,000',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       )
                     ],
                   ),
-                  trailing: Icon(Icons.done, color: Colors.blue,),),
+                  trailing: Icon(
+                    Icons.done,
+                    color: Colors.blue,
+                  ),
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                        color: Colors.greenAccent[700]
-                    )
-                ),
+                    side: BorderSide(color: Colors.greenAccent[700])),
                 color: Colors.green[900],
-
               ),
               Card(
                 child: ListTile(
@@ -390,18 +319,13 @@ class _BreakdownState extends State<Breakdown> {
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
-                            fontWeight: FontWeight.w600
-                        )
-                    ),
+                            fontWeight: FontWeight.w600)),
                   ),
                   leading: Text(
                     '103',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                        )
-                    ),
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   isThreeLine: true,
                   subtitle: Column(
@@ -410,34 +334,29 @@ class _BreakdownState extends State<Breakdown> {
                       Text(
                         '3 days late',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       ),
                       Text(
                         '12,000',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
-                            )
-                        ),
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                       )
                     ],
                   ),
-                  trailing: Icon(Icons.cancel, color: Colors.red,),),
+                  trailing: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                        color: Colors.greenAccent[700]
-                    )
-                ),
+                    side: BorderSide(color: Colors.greenAccent[700])),
                 color: Colors.green[900],
-
               )
-            ],),
+            ],
+          ),
           ExpansionTile(
             title: Text(
               'Floor: 4',
@@ -445,10 +364,9 @@ class _BreakdownState extends State<Breakdown> {
                   textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
-                      fontWeight: FontWeight.w600
-                  )
-              ),
-            ),),
+                      fontWeight: FontWeight.w600)),
+            ),
+          ),
           ExpansionTile(
             title: Text(
               'Floor: 5',
@@ -456,10 +374,9 @@ class _BreakdownState extends State<Breakdown> {
                   textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
-                      fontWeight: FontWeight.w600
-                  )
-              ),
-            ),)
+                      fontWeight: FontWeight.w600)),
+            ),
+          )
         ],
       ),
     );

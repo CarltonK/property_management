@@ -66,7 +66,6 @@ class _AddListingState extends State<AddListing> {
     //Initiate the permissions request
     _permissionsService.requestallPermissions();
     coordFuture();
-
   }
 
   void _locationHandler(String value) {
@@ -247,10 +246,7 @@ class _AddListingState extends State<AddListing> {
 
   Future saveToFirestore(String url) async {
     String _collectionName = "listings";
-    await Firestore.instance
-        .collection(_collectionName)
-        .document()
-        .setData({
+    await Firestore.instance.collection(_collectionName).document().setData({
       "name": apartment_name,
       "location": _location,
       "description": _description,
@@ -301,7 +297,6 @@ class _AddListingState extends State<AddListing> {
                 return LinearProgressIndicator();
               }),
         ));
-      
   }
 
   void _submitBtnPressed() {

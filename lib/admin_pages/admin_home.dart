@@ -16,7 +16,7 @@ class _AdminHomeState extends State<AdminHome> {
     var dateRetrieved = data["registerDate"];
     var formatter = new DateFormat('yMMMd');
     String date = formatter.format(dateRetrieved.toDate());
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Container(
@@ -26,11 +26,10 @@ class _AdminHomeState extends State<AdminHome> {
         ),
         child: ExpansionTile(
           title: Text(
-            '${data["firstName"]} ${data["lastName"]}',
+            '${data["fullName"]}',
             style: GoogleFonts.quicksand(
                 textStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
+                    color: Colors.white, fontWeight: FontWeight.bold)),
           ),
           subtitle: Text(
             '${data["apartment_name"]}',
@@ -49,17 +48,17 @@ class _AdminHomeState extends State<AdminHome> {
                       Text(
                         '${data["email"]}',
                         style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(color: Colors.white)),
+                            textStyle: TextStyle(color: Colors.white)),
                       ),
                       Text(
                         '${data["phone"]}',
                         style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(color: Colors.white)),
+                            textStyle: TextStyle(color: Colors.white)),
                       ),
                       Text(
                         'Member since $date',
                         style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(color: Colors.white)),
+                            textStyle: TextStyle(color: Colors.white)),
                       ),
                     ],
                   ),
@@ -68,13 +67,19 @@ class _AdminHomeState extends State<AdminHome> {
                         var docId = data.documentID;
                         //Delete the document in "landlords"
                         await Firestore.instance
-                              .collection("landlords").document(docId).delete();
+                            .collection("landlords")
+                            .document(docId)
+                            .delete();
                         //Delete the document in "users"
                         await Firestore.instance
-                              .collection("users").document(docId).delete();
+                            .collection("users")
+                            .document(docId)
+                            .delete();
                         //Delete the document in "apartments"
                         await Firestore.instance
-                              .collection("apartments").document(data["landlord_code"].toString()).delete();
+                            .collection("apartments")
+                            .document(data["landlord_code"].toString())
+                            .delete();
                       },
                       color: Colors.white,
                       child: Center(
@@ -84,7 +89,9 @@ class _AdminHomeState extends State<AdminHome> {
                             Text(
                               'Delete',
                               style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(color: Colors.green[900], fontWeight: FontWeight.w600)),
+                                  textStyle: TextStyle(
+                                      color: Colors.green[900],
+                                      fontWeight: FontWeight.w600)),
                             ),
                           ],
                         ),
