@@ -12,23 +12,21 @@ class PermissionService {
     print('result: $result');
     //result is a Map. To request the value of a single entry, pass the key,
     //which is an entry in the permissiongroup
-    if (result[permissionGroup]  == PermissionStatus.granted) {
+    if (result[permissionGroup] == PermissionStatus.granted) {
       //If permission is granted return true
       return true;
     }
     //Call the permission request window
-    await _permissionHandler.shouldShowRequestPermissionRationale(permissionGroup);
+    await _permissionHandler
+        .shouldShowRequestPermissionRationale(permissionGroup);
     return false;
     //Otherwise return false by default
   }
 
-
   //All permissions required by this application
-  List<PermissionGroup> requiredPerms = [
-    PermissionGroup.location
-  ];
+  List<PermissionGroup> requiredPerms = [PermissionGroup.location];
   Future<bool> requestallPermissions() async {
-    for (int i=0;i<requiredPerms.length;i++) {
+    for (int i = 0; i < requiredPerms.length; i++) {
       await requestPermission(requiredPerms[i]);
     }
     return null;

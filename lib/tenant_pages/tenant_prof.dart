@@ -1,10 +1,13 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/usermodel.dart';
@@ -16,7 +19,13 @@ class TenantProfile extends StatefulWidget {
 
 class _TenantProfileState extends State<TenantProfile> {
   String _phone, _natId;
+  String uid, file_path, url_result;
+  Map<String, dynamic> user;
   final _formKey = GlobalKey<FormState>();
+  double remaining;
+
+  StorageUploadTask storageUploadTask;
+  StorageTaskSnapshot taskSnapshot;
 
   final _focusnatid = FocusNode();
 
@@ -122,10 +131,80 @@ class _TenantProfileState extends State<TenantProfile> {
     super.initState();
   }
 
+  /// Active image file
+  File _imageFile;
+
+  /// Select an image via gallery or camera
+  Future<void> _pickImage(ImageSource source) async {
+    File selected = await ImagePicker.pickImage(source: source);
+    if (selected != null) {
+      setState(() {
+        _imageFile = selected;
+      });
+    }
+  }
+
+  /// Starts an upload task
+  Future<String> _startUpload(File file) async {
+    /// Unique file name for the file
+    file_path = 'profiles/$uid/displayPic.png';
+    //Create a storage reference
+    StorageReference reference = FirebaseStorage.instance.ref().child(file_path);
+    //Create a task that will handle the upload
+    storageUploadTask = reference.putFile(
+      file,
+    );
+    taskSnapshot = await storageUploadTask.onComplete;
+    setState(() {
+      remaining = (taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount) * 100;
+      print('remaining $remaining');
+    });
+    url_result = await taskSnapshot.ref.getDownloadURL();
+    print('URL is $url_result');
+    return url_result;
+  }
+
+  Future _changePic() async {
+    _startUpload(_imageFile).then((value) {
+      //Change value in firebase users collection
+      Firestore.instance
+          .collection("users")
+          .document(uid)
+          .updateData({
+        "url":value
+      });
+    }).whenComplete(() {
+      setState(() {
+        user["url"] = url_result;
+      });
+      Navigator.of(context).pop();
+    });
+
+    showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoActionSheet(
+            title: Text(
+              'Uploading',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
+            ),
+            message: SpinKitDualRing(
+              color: Colors.red,
+              size: 50,),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> user = ModalRoute.of(context).settings.arguments;
+    user = ModalRoute.of(context).settings.arguments;
     print('Data received in profile page $user');
+    uid = user["uid"];
 
     //Date Parsing and Formatting
 //    print('${user["registerDate"].runtimeType}');
@@ -164,10 +243,7 @@ class _TenantProfileState extends State<TenantProfile> {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
 
-        _user = User(
-          phone: _phone,
-          natId: _natId
-        );
+        _user = User(phone: _phone, natId: _natId);
 
         setState(() {
           isLoading = false;
@@ -188,10 +264,10 @@ class _TenantProfileState extends State<TenantProfile> {
                     '$error',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        )),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
                   ),
                   cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
@@ -219,10 +295,10 @@ class _TenantProfileState extends State<TenantProfile> {
                     'Your profile has been updated',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        )),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
                   ),
                 );
               },
@@ -233,8 +309,7 @@ class _TenantProfileState extends State<TenantProfile> {
             });
             Timer(Duration(seconds: 2), () => Navigator.of(context).pop());
             Timer(Duration(seconds: 3), () => Navigator.of(context).pop());
-          }
-          else {
+          } else {
             //print('Failed response: ${result}');
             //Disable the circular progress dialog
             setState(() {
@@ -249,10 +324,10 @@ class _TenantProfileState extends State<TenantProfile> {
                       'We have updated your profile',
                       style: GoogleFonts.quicksand(
                           textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            color: Colors.black,
-                          )),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
                     ),
                     cancelButton: CupertinoActionSheetAction(
                         onPressed: () {
@@ -271,7 +346,6 @@ class _TenantProfileState extends State<TenantProfile> {
             );
           }
         });
-
       }
     }
 
@@ -298,92 +372,11 @@ class _TenantProfileState extends State<TenantProfile> {
                   letterSpacing: 1,
                   fontSize: 24)),
         ),
-        actions: <Widget>[
-          isProfilePending
-              ? IconButton(
-                  icon: Icon(
-                    Icons.person_add,
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              'Complete your profile',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 18)),
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                side: BorderSide(
-                                    color: Colors.greenAccent[700],
-                                    width: 1.5)),
-                            content: Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    _registerPhone(context),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    _registerID(context)
-                                  ],
-                                ),
-                              ),
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: Text(
-                                  'SKIP',
-                                  style: GoogleFonts.quicksand(
-                                      textStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: 18)),
-                                ),
-                                color: Colors.red,
-                              ),
-                              isLoading
-                                  ? FlatButton(
-                                      onPressed: _completeBtnPressed,
-                                      child: Text(
-                                        'COMPLETE',
-                                        style: GoogleFonts.quicksand(
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                fontSize: 18)),
-                                      ),
-                                      color: Colors.green,
-                                    )
-                                  : Center(
-                                      child: CircularProgressIndicator(
-                                        backgroundColor: Colors.white,
-                                        strokeWidth: 3,
-                                      ),
-                                    )
-                            ],
-                          );
-                        });
-                  })
-              : Text(''),
-        ],
       ),
       backgroundColor: Colors.white,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Stack(
-          children: <Widget>[
+          value: SystemUiOverlayStyle.light,
+          child: Stack(children: <Widget>[
             Container(
               height: double.infinity,
               width: double.infinity,
@@ -398,30 +391,21 @@ class _TenantProfileState extends State<TenantProfile> {
                   SizedBox(
                     height: 20,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      print('I want to set my profile picture');
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: Hero(
-                        tag: 'tenant',
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 100,
-                          child: Center(
-                            child: Icon(
-                              Icons.add_a_photo,
-                              size: 50,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: Hero(
+                      tag: 'tenant',
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: (MediaQuery.of(context).size.height * 0.25)/2,
+                        backgroundImage: user["url"] == null
+                          ? null
+                          : NetworkImage(user["url"]),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
                   Text(
                     '${user["fullName"]}',
@@ -439,178 +423,178 @@ class _TenantProfileState extends State<TenantProfile> {
                             color: Colors.white,
                             fontSize: 18)),
                   ),
-//                  Container(
-//                    padding: EdgeInsets.symmetric(vertical: 20),
-//                    height: MediaQuery.of(context).size.height * 0.35,
-//                    width: MediaQuery.of(context).size.width,
-//                    child: Row(
-//                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                      children: <Widget>[
-//                        Card(
-//                          shape: RoundedRectangleBorder(
-//                            side: BorderSide(
-//                                color: Colors.green[500], width: 1.5),
-//                            borderRadius: BorderRadius.circular(20),
-//                          ),
-//                          elevation: 5,
-//                          child: Container(
-//                            decoration: BoxDecoration(
-//                                color: Colors.grey[100],
-//                                borderRadius: BorderRadius.circular(20)),
-//                            width: MediaQuery.of(context).size.width * 0.4,
-//                            child: Column(
-//                              crossAxisAlignment: CrossAxisAlignment.center,
-//                              mainAxisAlignment: MainAxisAlignment.center,
-//                              children: <Widget>[
-//                                Icon(
-//                                  Icons.location_city,
-//                                  size: 100,
-//                                ),
-//                                Text(
-//                                  'BUILDING',
-//                                  style: GoogleFonts.quicksand(
-//                                      textStyle: TextStyle(
-//                                          fontWeight: FontWeight.bold,
-//                                          color: Colors.indigo[400],
-//                                          fontSize: 15)),
-//                                ),
-//                                Text(
-//                                  'Lala Salama',
-//                                  style: GoogleFonts.quicksand(
-//                                      textStyle: TextStyle(
-//                                          fontWeight: FontWeight.w400,
-//                                          fontSize: 20)),
-//                                )
-//                              ],
-//                            ),
-//                          ),
-//                        ),
-//                        Card(
-//                          shape: RoundedRectangleBorder(
-//                            side: BorderSide(
-//                                color: Colors.green[500], width: 1.5),
-//                            borderRadius: BorderRadius.circular(20),
-//                          ),
-//                          elevation: 5,
-//                          child: Container(
-//                            decoration: BoxDecoration(
-//                                color: Colors.grey[100],
-//                                borderRadius: BorderRadius.circular(20)),
-//                            width: MediaQuery.of(context).size.width * 0.4,
-//                            child: Column(
-//                              crossAxisAlignment: CrossAxisAlignment.center,
-//                              mainAxisAlignment: MainAxisAlignment.center,
-//                              children: <Widget>[
-//                                Icon(
-//                                  CupertinoIcons.book_solid,
-//                                  size: 100,
-//                                ),
-//                                Text(
-//                                  'CONTRACT END',
-//                                  style: GoogleFonts.quicksand(
-//                                      textStyle: TextStyle(
-//                                          fontWeight: FontWeight.bold,
-//                                          color: Colors.indigo[400],
-//                                          fontSize: 15)),
-//                                ),
-//                                Text(
-//                                  'July 2020',
-//                                  style: GoogleFonts.quicksand(
-//                                      textStyle: TextStyle(
-//                                          fontWeight: FontWeight.w400,
-//                                          fontSize: 20)),
-//                                )
-//                              ],
-//                            ),
-//                          ),
-//                        )
-//                      ],
-//                    ),
-//                  )
+                  SizedBox(
+                    height: 10,
+                  ),
+                  isProfilePending
+                      ? FlatButton(
+                          onPressed: () {
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Complete your profile',
+                                      style: GoogleFonts.quicksand(
+                                          textStyle: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                              fontSize: 18)),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        side: BorderSide(
+                                            color: Colors.greenAccent[700],
+                                            width: 1.5)),
+                                    content: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            _registerPhone(context),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            _registerID(context)
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text(
+                                          'SKIP',
+                                          style: GoogleFonts.quicksand(
+                                              textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 18)),
+                                        ),
+                                        color: Colors.red,
+                                      ),
+                                      isLoading
+                                          ? FlatButton(
+                                              onPressed: _completeBtnPressed,
+                                              child: Text(
+                                                'COMPLETE',
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                        fontSize: 18)),
+                                              ),
+                                              color: Colors.green,
+                                            )
+                                          : Center(
+                                              child: CircularProgressIndicator(
+                                                backgroundColor: Colors.white,
+                                                strokeWidth: 3,
+                                              ),
+                                            )
+                                    ],
+                                  );
+                                });
+                          },
+                          child: Text(
+                            'Complete your profile',
+                            style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 18)),
+                          ),
+                          color: Colors.white,
+                        )
+                      : Text('')
                 ],
               ),
             ),
-//            Positioned(
-//              top: 70,
-//              bottom: 70,
-//              left: 20,
-//              right: 20,
-//              child: AnimatedOpacity(
-//                opacity: isProfilePending ? 1 : 0,
-//                duration: Duration(milliseconds: 500),
-//                child: Card(
-//                  shape: RoundedRectangleBorder(
-//                    borderRadius: BorderRadius.circular(16),
-//                    side: BorderSide(
-//                      color: Colors.greenAccent[700],
-//                      width: 2
-//                    )
-//                  ),
-//                  child: Container(
-//                    decoration: BoxDecoration(
-//                      color: Colors.white,
-//                      borderRadius: BorderRadius.circular(16),
-//                    ),
-//                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-//                    height: MediaQuery.of(context).size.height,
-//                    width: MediaQuery.of(context).size.width,
-//                    child: Column(
-//                      children: <Widget>[
-//                        Text(
-//                          'Complete your profile',
-//                          style: GoogleFonts.quicksand(
-//                              textStyle: TextStyle(
-//                                  fontWeight: FontWeight.bold,
-//                                  color: Colors.black,
-//                                  fontSize: 20)),
-//                        ),
-//                        SizedBox(height: 20,),
-//                        _registerPhone(context),
-//                        SizedBox(height: 20,),
-//                        _registerID(context),
-//                        Expanded(
-//                            child: Container(
-//                              child: Center(
-//                                child: Row(
-//                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                                  children: <Widget>[
-//                                    RaisedButton(
-//                                      padding: EdgeInsets.all(12),
-//                                      color: Colors.green[900],
-//                                        child: Text(
-//                                          'SKIP',
-//                                          style: GoogleFonts.quicksand(
-//                                              textStyle: TextStyle(
-//                                                  fontWeight: FontWeight.bold,
-//                                                  color: Colors.white,
-//                                                  fontSize: 18)),
-//                                        ),
-//                                        onPressed: _skipBtnPressed
-//                                    ),
-//                                    RaisedButton(
-//                                        padding: EdgeInsets.all(12),
-//                                        color: Colors.green[900],
-//                                        child: Text(
-//                                          'COMPLETE',
-//                                          style: GoogleFonts.quicksand(
-//                                              textStyle: TextStyle(
-//                                                  fontWeight: FontWeight.bold,
-//                                                  color: Colors.white,
-//                                                  fontSize: 18)),
-//                                        ),
-//                                        onPressed: () {
-//
-//                                        })
-//                                  ],
-//                                ),
-//                              ),
-//                            ))
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//              ),
-//            ),
+          ])),
+      floatingActionButton: MaterialButton(
+        padding: EdgeInsets.all(10),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        splashColor: Colors.greenAccent[700],
+        onPressed: () {
+          _imageFile == null
+              ? showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CupertinoActionSheet(
+                        title: Text(
+                          'Select a source',
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: Colors.black,
+                          )),
+                        ),
+                        actions: <Widget>[
+                          CupertinoActionSheetAction(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _pickImage(ImageSource.camera);
+                              },
+                              child: Text(
+                                'CAMERA',
+                                style: GoogleFonts.muli(
+                                    textStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold)),
+                              )),
+                          CupertinoActionSheetAction(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _pickImage(ImageSource.gallery);
+                              },
+                              child: Text(
+                                'GALLERY',
+                                style: GoogleFonts.muli(
+                                    textStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold)),
+                              ))
+                        ],
+                        cancelButton: CupertinoActionSheetAction(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: Text(
+                              'CANCEL',
+                              style: GoogleFonts.muli(
+                                  textStyle: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold)),
+                            )));
+                  },
+                )
+              : _changePic();
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.add_a_photo),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              _imageFile == null ? 'Add a picture' : 'Upload',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)),
+            )
           ],
         ),
       ),

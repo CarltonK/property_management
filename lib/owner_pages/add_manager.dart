@@ -491,28 +491,30 @@ class _AddManagerState extends State<AddManager> {
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   child: Form(
                     key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        _registerFullName(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerEmail(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerPhone(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerID(),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        _registerBtn()
-                      ],
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          _registerFullName(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _registerEmail(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _registerPhone(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _registerID(),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          _registerBtn()
+                        ],
+                      ),
                     ),
                   ),
                 ),

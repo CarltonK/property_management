@@ -30,7 +30,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500,
+      height: MediaQuery.of(context).size.width,
       width: MediaQuery.of(context).size.width,
       child: FutureBuilder(
           future: _getComplaints(),
@@ -80,7 +80,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.quicksand(
                           textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
                         color: Colors.white,
                         fontSize: 25,
                       )),

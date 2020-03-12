@@ -13,7 +13,6 @@ class Manager extends StatefulWidget {
 }
 
 class _ManagerState extends State<Manager> {
-
   int _selectedIndex = 0;
 
   Future _buildLogOutSheet(BuildContext context) {
@@ -93,13 +92,13 @@ class _ManagerState extends State<Manager> {
     ManagerComplaint(),
     ManagerVacate(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
             child: Stack(
               children: <Widget>[
@@ -159,8 +158,7 @@ class _ManagerState extends State<Manager> {
               currentIndex: _selectedIndex,
               onTap: _onIndexChanged,
             ),
-          )
-      ),
+          )),
     );
   }
 }

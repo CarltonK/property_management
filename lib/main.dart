@@ -14,6 +14,7 @@ import 'package:property_management/tenant_pages/tenant.dart';
 import 'package:property_management/tenant_pages/tenant_prof.dart';
 import 'package:property_management/welcome.dart';
 import 'package:property_management/widgets/view_tenantsWidgets.dart';
+import 'package:property_management/widgets/view_listingsWidget.dart';
 
 void main() => runApp(MyApp());
 
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/add-manager': (context) => AddManager(),
         '/add-listing': (context) => AddListing(),
         '/view-tenants': (context) => ViewTenants(),
+        '/view-listings': (context) => ViewListings(),
         //Manager
         '/manager': (context) => Manager(),
         //Newbie

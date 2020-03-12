@@ -33,19 +33,6 @@ class _OwnerSettingsState extends State<OwnerSettings> {
     return query.documents;
   }
 
-  Future _getListings(int code) async {
-    //This is the name of the collection containing listings
-    final String _collection = 'listings';
-    //Create a variable to store Firestore instance
-    final Firestore _fireStore = Firestore.instance;
-    QuerySnapshot query = await _fireStore
-        .collection(_collection)
-        .where("landlord_code", isEqualTo: code)
-        .getDocuments();
-    print('How many: ${query.documents.length}');
-    return query.documents;
-  }
-
   @override
   Widget build(BuildContext context) {
     OwnerSettings.data = ModalRoute.of(context).settings.arguments;
@@ -96,7 +83,8 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                               child: GestureDetector(
                                 onTap: () {
                                   print('I want to view tenants');
-                                  Navigator.of(context).pushNamed('/view-tenants',arguments: {
+                                  Navigator.of(context)
+                                      .pushNamed('/view-tenants', arguments: {
                                     "code": code,
                                     "apartment": apartmentName
                                   });
@@ -144,6 +132,9 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                               child: GestureDetector(
                                 onTap: () {
                                   print('I want to view listings');
+                                  Navigator.of(context).pushNamed(
+                                      '/view-listings',
+                                      arguments: OwnerSettings.data);
                                 },
                                 child: Card(
                                   child: Container(
@@ -191,7 +182,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                     thickness: 1,
                   ),
                   Expanded(
-                      flex: 4,
+                      flex: 3,
                       child: Container(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,30 +332,15 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                       );
                                       break;
                                   }
-                                  return Expanded(
-                                    child: SpinKitFadingCircle(
-                                      size: 120,
-                                      color: Colors.white,
+                                  return Center(
+                                    child: LinearProgressIndicator(
+                                      backgroundColor: Colors.white,
                                     ),
                                   );
                                 }),
                           ],
                         ),
                       )),
-//                  Divider(
-//                    thickness: 1,
-//                  ),
-//                  Text(
-//                    'Listings',
-//                    style: GoogleFonts.quicksand(
-//                        textStyle: TextStyle(
-//                            fontSize: 20,
-//                            fontWeight: FontWeight.w500,
-//                            color: Colors.white)),
-//                  ),
-//                  SizedBox(
-//                    height: 10,
-//                  ),
 //                  Container(
 //                    height: 70,
 //                    width: double.infinity,
@@ -491,64 +467,32 @@ class _OwnerSettingsState extends State<OwnerSettings> {
           ],
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          MaterialButton(
-            padding: EdgeInsets.all(10),
-            color: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            splashColor: Colors.greenAccent[700],
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamed('/add-manager', arguments: OwnerSettings.data);
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(Icons.person_add),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'Add a manager',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16)),
-                )
-              ],
+      floatingActionButton: MaterialButton(
+        padding: EdgeInsets.all(10),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        splashColor: Colors.greenAccent[700],
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamed('/add-manager', arguments: OwnerSettings.data);
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.person_add),
+            SizedBox(
+              width: 5,
             ),
-          ),
-          MaterialButton(
-            padding: EdgeInsets.all(10),
-            color: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            splashColor: Colors.greenAccent[700],
-            onPressed: () => Navigator.of(context)
-                .pushNamed('/add-listing', arguments: OwnerSettings.data),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(Icons.create),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'Create a listing',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16)),
-                )
-              ],
-            ),
-          ),
-        ],
+            Text(
+              'Add a manager',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)),
+            )
+          ],
+        ),
       ),
     );
   }

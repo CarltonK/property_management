@@ -128,15 +128,17 @@ class TenantComplain extends StatelessWidget {
                                   break;
                                 case ConnectionState.done:
                                   if (snapshot.data.length == 0) {
-                                    return Text(
-                                      'You have not posted any complaints',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.quicksand(
-                                          textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        fontSize: 25,
-                                      )),
+                                    return Center(
+                                      child: Text(
+                                        'You have not posted any complaints',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.quicksand(
+                                            textStyle: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                        )),
+                                      ),
                                     );
                                   }
                                   //print('${snapshot.data[0].data["landlord_code"]}');

@@ -111,9 +111,10 @@ class _ViewTenantsState extends State<ViewTenants> {
     final Firestore _fireStore = Firestore.instance;
     QuerySnapshot query = await _fireStore
         .collection(_collection)
-        .orderBy("floorNumber", descending: true)
+        .orderBy("registerDate", descending: true)
         .getDocuments();
     print('How many: ${query.documents.length}');
+    print('Docs: ${query.documents[0].data}');
     return query.documents;
   }
 
@@ -221,8 +222,24 @@ class _ViewTenantsState extends State<ViewTenants> {
                                               )),
                                             ),
                                       trailing: _approved == null
-                                          ? Icon(Icons.cancel,
-                                              color: Colors.red)
+                                          ? Column(
+                                              children: <Widget>[
+                                                Text(
+                                                  'Pending',
+                                                  style: GoogleFonts.quicksand(
+                                                      textStyle: TextStyle(
+                                                          color:
+                                                              Colors.green[900],
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Icon(Icons.cancel,
+                                                    color: Colors.red),
+                                              ],
+                                            )
                                           : Icon(Icons.done,
                                               color: Colors.green[900]),
                                       title: Text(
@@ -237,7 +254,7 @@ class _ViewTenantsState extends State<ViewTenants> {
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            '${dataTemp["phone"]}',
+                                            '${dataTemp["apartment_name"]}',
                                             style: GoogleFonts.quicksand(
                                                 textStyle: TextStyle(
                                                     color: Colors.green[900],

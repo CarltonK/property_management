@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:property_management/models/usermodel.dart';
 
 //Use ChangeNotifier to allow widgets using this service to be updated
-class API with ChangeNotifier{
+class API with ChangeNotifier {
   //Store a user as a variable
   var currentUser;
 
@@ -18,7 +18,6 @@ class API with ChangeNotifier{
   //Return a user
   Future getUser() {
     return Future.value(currentUser);
-
   }
 
   Future<FirebaseUser> getCurrentUser() async {
@@ -46,16 +45,14 @@ class API with ChangeNotifier{
 
   //Sign In
   Future signInEmailPass(User user) async {
-    try{
+    try {
       AuthResult result = await _auth.signInWithEmailAndPassword(
-          email: user.email,
-          password: user.password);
+          email: user.email, password: user.password);
       currentUser = result.user;
       //print('Positive Response: ${currentUser}');
       notifyListeners();
       return Future.value(currentUser);
-    }
-    catch (e) {
+    } catch (e) {
       var response;
       if (e.toString().contains("ERROR_WRONG_PASSWORD")) {
         response = 'Invalid credentials. Please try again';
@@ -85,16 +82,14 @@ class API with ChangeNotifier{
   Future createUserEmailPass(User user) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: user.email,
-          password: user.password);
+          email: user.email, password: user.password);
       currentUser = result.user;
       //The User has registered successfully
       //print('Positive Registration Response: ${currentUser.uid}');
       //Try adding the user to the Firestore
-      await saveUser(user,result.user.uid);
+      await saveUser(user, result.user.uid);
       return currentUser;
-    }
-    catch (e) {
+    } catch (e) {
       var response;
       if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
         response = 'Your password is weak. Please choose another';
@@ -116,12 +111,10 @@ class API with ChangeNotifier{
   Future resetPass(String email) async {
     var response;
     try {
-      await _auth.sendPasswordResetEmail(
-          email: email);
+      await _auth.sendPasswordResetEmail(email: email);
       response = true;
       return response;
-    }
-    catch (e) {
+    } catch (e) {
       if (e.toString().contains("ERROR_INVALID_EMAIL")) {
         response = 'Invalid Email. Please enter the correct email';
         //print('Negative Response: $response');
@@ -143,23 +136,16 @@ class API with ChangeNotifier{
       await Firestore.instance
           .collection("users")
           .document(uid)
-          .updateData({
-        "phone": phone,
-        "natId": natId
-      });
+          .updateData({"phone": phone, "natId": natId});
       print('The user was updated successfully');
 
       await Firestore.instance
           .collection("tenants")
           .document(uid)
-          .updateData({
-        "phone": phone,
-        "natId": natId
-      });
+          .updateData({"phone": phone, "natId": natId});
       print('The tenant was updated successfully');
       return true;
-    }
-    catch (e) {
+    } catch (e) {
       print('This is the error: $e');
       return null;
     }
@@ -169,34 +155,26 @@ class API with ChangeNotifier{
   Future saveUser(User user, String uid) async {
     //Retrieve fields
     String email = user.email;
-    String fullName =  user.fullName;
+    String fullName = user.fullName;
     String apartmentName = user.apartmentName;
     String designation = user.designation;
     DateTime registerDate = user.registerDate;
     int landlordCode = user.lordCode;
 
     try {
-
-      await Firestore.instance
-          .collection("users")
-          .document(uid).setData(
-        {
-          "email":email,
-          "fullName": fullName,
-          "designation": designation,
-          "registerDate": registerDate,
-          "landlord_code": landlordCode,
-        }
-      );
+      await Firestore.instance.collection("users").document(uid).setData({
+        "email": email,
+        "fullName": fullName,
+        "designation": designation,
+        "registerDate": registerDate,
+        "landlord_code": landlordCode,
+      });
 
       print("The user was successfully saved");
 
       if (designation == "Tenant") {
-        await Firestore.instance
-            .collection("tenants")
-            .document(uid)
-            .setData({
-          "email":email,
+        await Firestore.instance.collection("tenants").document(uid).setData({
+          "email": email,
           "fullName": fullName,
           "designation": designation,
           "registerDate": registerDate,
@@ -205,8 +183,7 @@ class API with ChangeNotifier{
         });
         print("The tenant was successfully saved");
       }
-    }
-    catch (e) {
+    } catch (e) {
       print("The user was not successfully saved");
       print("This is the error ${e.toString()}");
     }
@@ -218,13 +195,12 @@ class API with ChangeNotifier{
     //First create a user
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: user.email,
-          password: "p@ssw.rd");
+          email: user.email, password: "p@ssw.rd");
       currentUser = result.user;
       //The User has registered successfully
       //Retrieve data from User object
       String email = user.email;
-      String fullName =  user.fullName;
+      String fullName = user.fullName;
       String phone = user.phone;
       String natId = user.natId;
       String paybill = user.paybill;
@@ -237,48 +213,46 @@ class API with ChangeNotifier{
       //Add data to firebase collection "users"
       await Firestore.instance
           .collection("users")
-          .document(result.user.uid).setData(
-        {
-          "email":email,
-          "firstName": fullName,
-          "phone": phone,
-          "natId": natId,
-          "designation": designation,
-          "registerDate": registerDate,
-          "landlord_code": landlordCode,
-          "apartment_name": apartment,
-        }
-      );
+          .document(result.user.uid)
+          .setData({
+        "email": email,
+        "firstName": fullName,
+        "phone": phone,
+        "natId": natId,
+        "designation": designation,
+        "registerDate": registerDate,
+        "landlord_code": landlordCode,
+        "apartment_name": apartment,
+      });
       //Add data to Firestore collection "landlords"
       await Firestore.instance
-            .collection("landlords")
-            .document(result.user.uid)
-            .setData({
-              "email":email,
-              "fullName": fullName,
-              "phone": phone,
-              "natId": natId,
-              "designation": designation,
-              "registerDate": registerDate,
-              "landlord_code": landlordCode,
-              "apartment_name": apartment
-            });
+          .collection("landlords")
+          .document(result.user.uid)
+          .setData({
+        "email": email,
+        "fullName": fullName,
+        "phone": phone,
+        "natId": natId,
+        "designation": designation,
+        "registerDate": registerDate,
+        "landlord_code": landlordCode,
+        "apartment_name": apartment
+      });
       //Add data to Firestore collection "apartments"
       await Firestore.instance
-            .collection("apartments")
-            .document(landlordCode.toString())
-            .setData({
-              "apartment_name": apartment,
-              "add_date": DateTime.now().toLocal(),
-              "owner": fullName,
-              "apartment_code": landlordCode,
-              "paybill": paybill,
-              "location": location,
-              "county": county,
-            });
+          .collection("apartments")
+          .document(landlordCode.toString())
+          .setData({
+        "apartment_name": apartment,
+        "add_date": DateTime.now().toLocal(),
+        "owner": fullName,
+        "apartment_code": landlordCode,
+        "paybill": paybill,
+        "location": location,
+        "county": county,
+      });
       return currentUser;
-    }
-    catch (e) {
+    } catch (e) {
       var response;
       if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
         response = 'Your password is weak. Please choose another';
@@ -302,13 +276,12 @@ class API with ChangeNotifier{
     //First create a user
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: user.email,
-          password: "p@ssw.rd");
+          email: user.email, password: "p@ssw.rd");
       currentUser = result.user;
       //The User has registered successfully
       //Retrieve data from User object
       String email = user.email;
-      String fullName =  user.fullName;
+      String fullName = user.fullName;
       String phone = user.phone;
       String natId = user.natId;
       String designation = user.designation;
@@ -318,35 +291,33 @@ class API with ChangeNotifier{
       //Add data to firebase collection "users"
       await Firestore.instance
           .collection("users")
-          .document(result.user.uid).setData(
-        {
-          "email":email,
-          "fullName": fullName,
-          "phone": phone,
-          "natId": natId,
-          "designation": designation,
-          "registerDate": registerDate,
-          "landlord_code": landlordCode,
-          "apartment_name": apartment
-        }
-      );
+          .document(result.user.uid)
+          .setData({
+        "email": email,
+        "fullName": fullName,
+        "phone": phone,
+        "natId": natId,
+        "designation": designation,
+        "registerDate": registerDate,
+        "landlord_code": landlordCode,
+        "apartment_name": apartment
+      });
       //Add data to Firestore collection "landlords"
       await Firestore.instance
-            .collection("managers")
-            .document(result.user.uid)
-            .setData({
-              "email":email,
-              "fullName": fullName,
-              "phone": phone,
-              "natId": natId,
-              "designation": designation,
-              "registerDate": registerDate,
-              "landlord_code": landlordCode,
-              "apartment_name": apartment
-            });
+          .collection("managers")
+          .document(result.user.uid)
+          .setData({
+        "email": email,
+        "fullName": fullName,
+        "phone": phone,
+        "natId": natId,
+        "designation": designation,
+        "registerDate": registerDate,
+        "landlord_code": landlordCode,
+        "apartment_name": apartment
+      });
       return currentUser;
-    }
-    catch (e) {
+    } catch (e) {
       var response;
       if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
         response = 'Your password is weak. Please choose another';

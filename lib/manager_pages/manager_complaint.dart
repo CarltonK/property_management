@@ -14,22 +14,22 @@ class _ManagerComplaintState extends State<ManagerComplaint> {
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.green[900],
-          elevation: 0.0,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.person_pin,
-              color: Colors.white,
-              size: 30,
-            ),
-          ),
-          title: Text(
-            'Kejani',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+        backgroundColor: Colors.green[900],
+        elevation: 0.0,
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.person_pin,
+            color: Colors.white,
+            size: 30,
           ),
         ),
+        title: Text(
+          'Kejani',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+        ),
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(

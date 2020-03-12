@@ -586,8 +586,7 @@ class _RegistrationState extends State<Registration> {
       result = "Please check your internet connection";
       callResponse = false;
       return false;
-    }
-    else {
+    } else {
       callResponse = true;
       return true;
     }
@@ -775,6 +774,31 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
+  void _browse() {
+    print('I want to browse listings');
+    Navigator.of(context).pushNamed('/newbie');
+  }
+
+  Widget _browseWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        FlatButton(
+          color: Colors.green[800],
+          onPressed: _browse,
+          child: Text(
+            'looking for a house',
+            style: GoogleFonts.muli(
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold)),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -817,12 +841,16 @@ class _RegistrationState extends State<Registration> {
                           color: Colors.black,
                           title: Text(
                             'Please check your internet connection',
-                          style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
+                            style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                            )
-                          ),),
+                            )),
+                          ),
+                        ),
+                        _browseWidget(),
+                        SizedBox(
+                          height: 30,
                         ),
                         Text(
                           'Hello',
@@ -871,7 +899,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

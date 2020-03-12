@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:property_management/services/location.dart';
 import 'package:property_management/services/permission_handle.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AddListing extends StatefulWidget {
   @override
@@ -16,13 +17,13 @@ class AddListing extends StatefulWidget {
 }
 
 class _AddListingState extends State<AddListing> {
-  final FirebaseStorage _storage =
-      FirebaseStorage(storageBucket: 'gs://property-moha.appspot.com/');
-  StorageUploadTask _uploadTask;
-
-  PermissionService _permissionsService = PermissionService();
-//  Locate _locatioN = Locate();
+//  final FirebaseStorage _storage =
+//      FirebaseStorage(storageBucket: 'gs://property-moha.appspot.com/');
+//  StorageUploadTask _uploadTask;
 //
+//  PermissionService _permissionsService = PermissionService();
+////  Locate _locatioN = Locate();
+////
   Map<String, dynamic> data;
   Map<String, dynamic> coordinates;
 
@@ -192,52 +193,29 @@ class _AddListingState extends State<AddListing> {
       "landlord_code": landlord_code,
       "bedrooms": _bedroomCount.toInt(),
       "url": url,
-      "coordinates": coordinates
     });
   }
 
   String filePath;
-  dynamic url_result;
+  String url_result;
 
   /// Starts an upload task
   Future<String> _startUpload(File file) async {
     /// Unique file name for the file
     filePath = 'images/${landlord_code.toString()}/coverPic.png';
-    setState(() {
-      _uploadTask = _storage.ref().child(filePath).putFile(file);
-    });
-    url_result = await (await _uploadTask.onComplete).ref.getDownloadURL();
-    filePath = url_result.toString();
-    return filePath;
+    //Create a storage reference
+    StorageReference reference = FirebaseStorage.instance.ref().child(filePath);
+    //Create a task that will handle the upload
+    StorageUploadTask storageUploadTask = reference.putFile(
+      file,
+    );
+    StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
+    url_result = await taskSnapshot.ref.getDownloadURL();
+    print('URL is $url_result');
+    return url_result;
   }
 
-  Future saveToStorage(File file) {
-    //Start the upload
-    _startUpload(file);
-    showDialog(
-        context: context,
-        child: AlertDialog(
-          title: Text(
-            'Upload progress',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Colors.black,
-            )),
-          ),
-          content: FutureBuilder(
-              future: _startUpload(file),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  filePath = snapshot.data.toString();
-                }
-                return LinearProgressIndicator();
-              }),
-        ));
-  }
-
-  void _submitBtnPressed() {
+  void _submitBtnPressed() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       print('Bedrooms: ${_bedroomCount.toInt()}');
@@ -245,13 +223,54 @@ class _AddListingState extends State<AddListing> {
       setState(() {
         isLoading = false;
       });
-      //First save the image file to cloud storage (if available)
+      //First save the image file to cloud storage (if image is available)
       //Then retrieve the url and save to firestore
       if (_imageFile != null) {
-        //Save to storage
-        saveToStorage(_imageFile);
-        //Save to firestore
-        saveToFirestore(filePath);
+        //Save to cloud storage
+        _startUpload(_imageFile).then((value) {
+          //Save to firestore with response of start upload
+          saveToFirestore(value).whenComplete(() {
+            //Show an action sheet with error
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                    title: Text(
+                      'You have added a listing',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                    ),
+                    cancelButton: CupertinoActionSheetAction(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'CANCEL',
+                          style: GoogleFonts.muli(
+                              textStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold)),
+                        )));
+              },
+            );
+            //Disable the circular progress dialog
+            setState(() {
+              isLoading = true;
+            });
+            //Timed Function
+            Timer(Duration(seconds: 2), () {
+              Navigator.of(context).pop();
+            });
+            Timer(Duration(seconds: 3), () {
+              Navigator.of(context).pop();
+            });
+          });
+        });
       } else {
         saveToFirestore('').catchError((error) {
           print('This is the error $error');

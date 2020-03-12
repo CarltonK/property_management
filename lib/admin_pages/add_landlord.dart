@@ -798,7 +798,6 @@ class _AddLandlordState extends State<AddLandlord> {
 //    County(name: 'Migori'),
 //    County(name: 'Kisii'),
 //    County(name: 'Nyamira'),
-
   ];
 
   Widget _dropDownCounties() {

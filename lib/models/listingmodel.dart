@@ -5,11 +5,10 @@ class Listing {
   int bedrooms;
   int bathrooms;
 
-  Listing({
-    this.title,
-    this.description,
-    this.price,
-    this.bedrooms,
-    this.bathrooms
-});
+  Listing(
+      {this.title,
+      this.description,
+      this.price,
+      this.bedrooms,
+      this.bathrooms});
 }

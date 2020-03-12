@@ -16,26 +16,21 @@ class _TenSearchState extends State<TenSearch> {
   RangeValues range;
 
   List<RangeValues> ranges = <RangeValues>[
-    RangeValues(5000, 10000),
-    RangeValues(10001, 15000),
-    RangeValues(15001, 20000),
-    RangeValues(20001, 25000),
-    RangeValues(25001, 30000),
-    RangeValues(30001, 40000),
-    RangeValues(40001, 50000),
-    RangeValues(50001, 60000),
-    RangeValues(60001, 70000),
-    RangeValues(70001,10000)
+    RangeValues(0, 15000),
+    RangeValues(15001, 25000),
+    RangeValues(25001, 35000),
+    RangeValues(35001, 45000),
+    RangeValues(45001, 55000),
+    RangeValues(55001, 65000),
+    RangeValues(65001, 100000)
   ];
-
 
   Widget _dropDownRanges() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: Colors.green[900],
-          borderRadius: BorderRadius.circular(12)),
+          color: Colors.green[900], borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
