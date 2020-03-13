@@ -14,7 +14,7 @@ class _ViewListingsState extends State<ViewListings> {
 
   int code;
 
-  Future _getListings(int code) async {
+  Future<List<DocumentSnapshot>> _getListings(int code) async {
     //This is the name of the collection containing listings
     final String _collection = 'listings';
     //Create a variable to store Firestore instance
@@ -56,7 +56,11 @@ class _ViewListingsState extends State<ViewListings> {
               width: MediaQuery.of(context).size.width,
               child: FutureBuilder(
                   future: _getListings(code),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+//                    for (int i = 0; i<snapshot.data.length; i++) {
+//                      print('Listing $i\n${snapshot.data[i].data}');
+//                    }
                     if (snapshot.hasError) {
                       print('Snapshot Error: ${snapshot.error.toString()}');
                       return Center(
@@ -91,6 +95,124 @@ class _ViewListingsState extends State<ViewListings> {
                               ),
                             );
                           }
+                          return ListView(
+                            children: snapshot.data
+                                .map((map) => Card(
+                                      elevation: 10,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 5),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        height: 200,
+                                        child: Stack(
+                                          children: <Widget>[
+                                            Positioned(
+                                              child: Container(
+                                                child: Image.network(
+                                                  map["url"],
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                            ),
+                                            Positioned(
+                                                bottom: 10,
+                                                left: 20,
+                                                child: Opacity(
+                                                  opacity: 0.75,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 15,
+                                                            vertical: 10),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        Text(
+                                                          'Bedrooms',
+                                                          style: GoogleFonts.quicksand(
+                                                              textStyle: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                            '${map["bedrooms"]}',
+                                                            style: GoogleFonts.quicksand(
+                                                                textStyle: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
+                                            Positioned(
+                                                bottom: 10,
+                                                right: 20,
+                                                child: Opacity(
+                                                  opacity: 0.75,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 15,
+                                                            vertical: 10),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        Text('Price',
+                                                            style: GoogleFonts.quicksand(
+                                                                textStyle: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold))),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text('${map["price"]}',
+                                                            style: GoogleFonts.quicksand(
+                                                                textStyle: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                          );
                           break;
                         case ConnectionState.none:
                           break;
@@ -127,7 +249,10 @@ class _ViewListingsState extends State<ViewListings> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(Icons.create),
+            Icon(
+              Icons.create,
+              size: 20,
+            ),
             SizedBox(
               width: 5,
             ),
@@ -137,7 +262,7 @@ class _ViewListingsState extends State<ViewListings> {
                   textStyle: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16)),
+                      fontSize: 14)),
             )
           ],
         ),

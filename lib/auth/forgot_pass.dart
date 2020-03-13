@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:connection_status_bar/connection_status_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,9 +50,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   borderSide: BorderSide(color: Colors.indigo, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your email',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Please enter your email',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.email,
                 color: Colors.white,
@@ -112,7 +113,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         setState(() {
           isLoading = true;
         });
-
         //Show an action sheet with error
         showCupertinoModalPopup(
           context: context,
@@ -143,7 +143,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       }).whenComplete(() {
         if (callResponse) {
           FocusScope.of(context).unfocus();
-          print('Successful response ${result}');
+          print('Successful response $result');
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
@@ -182,7 +182,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           });
         } else {
           FocusScope.of(context).unfocus();
-          print('Failed response: ${result}');
+          print('Failed response: $result');
           //Disable the circular progress dialog
           setState(() {
             isLoading = true;
@@ -239,7 +239,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         color: Colors.green[900],
                         fontSize: 18,
                         letterSpacing: 0.5,
-                        fontWeight: FontWeight.w600)),
+                        fontWeight: FontWeight.bold)),
               ),
             )
           : Center(
@@ -268,10 +268,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         child: GestureDetector(
           onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
+            FocusScope.of(context).unfocus();
           },
           child: Stack(
             children: <Widget>[

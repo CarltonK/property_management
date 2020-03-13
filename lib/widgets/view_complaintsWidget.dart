@@ -76,7 +76,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                 if (snapshot.data.length == 0) {
                   return Center(
                     child: Text(
-                      'You have not received complaints',
+                      'You have not received any complaints',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.quicksand(
                           textStyle: TextStyle(

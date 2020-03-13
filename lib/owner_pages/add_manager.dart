@@ -80,7 +80,7 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Managers\' full name',
+//              labelText: 'Managers\' full name',
               helperText: 'Be sure to use a space',
               helperStyle: GoogleFonts.quicksand(
                 textStyle: TextStyle(color: Colors.white),
@@ -142,9 +142,9 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Managers\' email',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Managers\' email',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.email,
                 color: Colors.white,
@@ -197,9 +197,9 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Managers\' phone number',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Managers\' phone number',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.phone,
                 color: Colors.white,
@@ -255,9 +255,9 @@ class _AddManagerState extends State<AddManager> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Managers\' ID',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Managers\' ID',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.perm_identity,
                 color: Colors.white,

@@ -20,7 +20,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
   String apartmentName;
   String tenName;
 
-  Future _getManagers(String apartment) async {
+  Future<List<DocumentSnapshot>> _getManagers(String apartment) async {
     //This is the name of the collection containing managers
     final String _collection = 'managers';
     //Create a variable to store Firestore instance
@@ -109,13 +109,13 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                           size: 50,
                                         ),
                                         SizedBox(
-                                          height: 20,
+                                          height: 10,
                                         ),
                                         Text(
                                           'Tenants',
                                           style: GoogleFonts.quicksand(
                                               textStyle: TextStyle(
-                                                  fontSize: 30,
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.white)),
                                         )
@@ -156,13 +156,13 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                           size: 50,
                                         ),
                                         SizedBox(
-                                          height: 20,
+                                          height: 10,
                                         ),
                                         Text(
                                           'Listings',
                                           style: GoogleFonts.quicksand(
                                               textStyle: TextStyle(
-                                                  fontSize: 30,
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.white)),
                                         )
@@ -191,17 +191,18 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                               'Manager(s)',
                               style: GoogleFonts.quicksand(
                                   textStyle: TextStyle(
-                                      fontSize: 30,
+                                      fontSize: 24,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.white)),
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            FutureBuilder(
+                            FutureBuilder<List<DocumentSnapshot>>(
                                 future: _getManagers(apartmentName),
                                 builder: (BuildContext context,
-                                    AsyncSnapshot snapshot) {
+                                    AsyncSnapshot<List<DocumentSnapshot>>
+                                        snapshot) {
                                   if (snapshot.hasError) {
                                     print(
                                         'Snapshot Error: ${snapshot.error.toString()}');
@@ -248,86 +249,64 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                       return Expanded(
                                         child: Container(
                                           width: double.infinity,
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.vertical,
-                                            itemCount: snapshot.data.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              var dataTemp =
-                                                  snapshot.data[index];
-                                              //Date Parsing and Formatting
-                                              var dateRetrieved =
-                                                  dataTemp["registerDate"];
-                                              var formatter =
-                                                  new DateFormat('MMMd');
-                                              String date = formatter.format(
-                                                  dateRetrieved.toDate());
-                                              return Card(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                                margin:
-                                                    EdgeInsets.only(right: 8),
-                                                color: Colors.grey[100],
-                                                child: Container(
-                                                  padding: EdgeInsets.all(4),
-                                                  decoration: BoxDecoration(
+                                          child: ListView(
+                                              scrollDirection: Axis.vertical,
+                                              children:
+                                                  snapshot.data.map((map) {
+                                                return Card(
+                                                  shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              10),
-                                                      color: Colors.grey[100]),
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: ListTile(
-                                                    dense: true,
-                                                    leading: Icon(
-                                                        Icons.person_outline),
-                                                    title: Text(
-                                                      '${dataTemp["fullName"]}',
-                                                      style: GoogleFonts.quicksand(
-                                                          textStyle: TextStyle(
-                                                              color: Colors
-                                                                  .green[900],
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                    ),
-                                                    subtitle: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          '${dataTemp["phone"]}',
+                                                              12)),
+                                                  margin: EdgeInsets.symmetric(
+                                                      vertical: 4),
+                                                  color: Colors.grey[100],
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(4),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color:
+                                                            Colors.grey[100]),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 10),
+                                                      child: ListTile(
+                                                        dense: true,
+                                                        leading: Icon(Icons
+                                                            .person_outline),
+                                                        title: Text(
+                                                          '${map["fullName"]}',
                                                           style: GoogleFonts.quicksand(
                                                               textStyle: TextStyle(
                                                                   color: Colors
-                                                                          .green[
-                                                                      900],
+                                                                      .black,
+                                                                  fontSize: 15,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w600)),
+                                                                          .bold)),
                                                         ),
-                                                        Text('Added on $date',
+                                                        subtitle: Text(
+                                                            '${map["apartment_name"]}',
                                                             style: GoogleFonts.quicksand(
                                                                 textStyle: TextStyle(
                                                                     color: Colors
-                                                                            .green[
-                                                                        900],
+                                                                        .black,
                                                                     fontSize:
                                                                         13,
                                                                     fontWeight:
-                                                                        FontWeight
-                                                                            .w600)))
-                                                      ],
+                                                                        FontWeight.w600))),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                                );
+                                              }).toList()),
                                         ),
                                       );
                                       break;
@@ -479,7 +458,10 @@ class _OwnerSettingsState extends State<OwnerSettings> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(Icons.person_add),
+            Icon(
+              Icons.person_add,
+              size: 20,
+            ),
             SizedBox(
               width: 5,
             ),
@@ -489,7 +471,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                   textStyle: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16)),
+                      fontSize: 14)),
             )
           ],
         ),

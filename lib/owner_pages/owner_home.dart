@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/widgets/breakdown_widget.dart';
+import 'package:property_management/widgets/tenant_popup.dart';
 
 class OwnerHome extends StatefulWidget {
   @override
@@ -10,6 +11,8 @@ class OwnerHome extends StatefulWidget {
 }
 
 class _OwnerHomeState extends State<OwnerHome> {
+  static Map<String, dynamic> data;
+
   Widget _ownerQuickGlance() {
     return Card(
       elevation: 10,
@@ -70,6 +73,8 @@ class _OwnerHomeState extends State<OwnerHome> {
 
   @override
   Widget build(BuildContext context) {
+    data = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -149,7 +154,7 @@ class _OwnerHomeState extends State<OwnerHome> {
             ),
             Container(
               margin: EdgeInsets.only(top: 30, left: 20, right: 20),
-              height: double.infinity,
+              height: MediaQuery.of(context).size.width,
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
@@ -176,14 +181,11 @@ class _OwnerHomeState extends State<OwnerHome> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold)),
                     ),
-                    Container(
-                        child: SingleChildScrollView(
-                            physics: AlwaysScrollableScrollPhysics(),
-                            child: Breakdown()))
                   ],
                 ),
               ),
             ),
+            TenantPopup(apartment_name: data["apartment_name"],code: data["landlord_code"],)
           ],
         ),
       ),

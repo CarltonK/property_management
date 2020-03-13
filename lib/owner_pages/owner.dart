@@ -7,6 +7,7 @@ import 'package:property_management/owner_pages/owner_complaint.dart';
 import 'package:property_management/owner_pages/owner_home.dart';
 import 'package:property_management/owner_pages/owner_settings.dart';
 import 'package:property_management/owner_pages/owner_vacations.dart';
+import 'package:property_management/widgets/tenant_popup.dart';
 
 class OwnerBase extends StatefulWidget {
   @override
@@ -109,6 +110,9 @@ class _OwnerBaseState extends State<OwnerBase> {
 
   @override
   Widget build(BuildContext context) {
+
+    data = ModalRoute.of(context).settings.arguments;
+    print('Data pulled: $data');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -126,7 +130,7 @@ class _OwnerBaseState extends State<OwnerBase> {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   width: MediaQuery.of(context).size.width,
                   child: _ownerTenants[_selectedIndex],
-                )
+                ),
               ],
             ),
           ),

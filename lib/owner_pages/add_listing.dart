@@ -109,9 +109,9 @@ class _AddListingState extends State<AddListing> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Rent per month',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Rent per month',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.attach_money,
                 color: Colors.white,
@@ -165,9 +165,9 @@ class _AddListingState extends State<AddListing> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder:
                   OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-              labelText: 'A few words about the apartment',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'A few words about the apartment',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.info_outline,
                 color: Colors.white,

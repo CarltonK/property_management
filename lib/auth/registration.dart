@@ -209,9 +209,9 @@ class _RegistrationState extends State<Registration> {
               helperStyle: GoogleFonts.quicksand(
                 textStyle: TextStyle(color: Colors.white),
               ),
-              labelText: 'Please enter your full name',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Please enter your full name',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.person,
                 color: Colors.white,
@@ -267,9 +267,9 @@ class _RegistrationState extends State<Registration> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your email',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Please enter your email',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.email,
                 color: Colors.white,
@@ -326,9 +326,9 @@ class _RegistrationState extends State<Registration> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Create a secure password',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Create a secure password',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.vpn_key,
                 color: Colors.white,
@@ -353,146 +353,6 @@ class _RegistrationState extends State<Registration> {
       ],
     );
   }
-
-//  void _showListPopup() {
-//    showCupertinoModalPopup(
-//        context: context,
-//        builder: (BuildContext context) {
-//          return Center(
-//            child: CupertinoActionSheet(
-//                title: Text(
-//                  'Apartments',
-//                  style: GoogleFonts.quicksand(
-//                      textStyle: TextStyle(fontSize: 30, color: Colors.black)),
-//                ),
-//                actions: <Widget>[
-//                  Container(
-//                    height: 250,
-//                    child: StreamBuilder(
-//                        stream: Firestore.instance
-//                            .collection("apartments")
-//                            .snapshots(),
-//                        builder: (BuildContext context,
-//                            AsyncSnapshot<QuerySnapshot> snapshot) {
-//                          if (snapshot.hasData) {
-//                            return ListView(
-//                              children: snapshot.data.documents
-//                                  .map((data) => Card(
-//                                        margin: EdgeInsets.symmetric(
-//                                            horizontal: 10, vertical: 5),
-//                                        child: GestureDetector(
-//                                          onTap: () {
-//                                            print(
-//                                                'You have selected: ${data["apartment_name"]}');
-//                                            apartmentName =
-//                                                data["apartment_name"];
-//                                          },
-//                                          child: ListTile(
-//                                            title: Text(
-//                                              data["apartment_name"],
-//                                              style: GoogleFonts.quicksand(
-//                                                  textStyle: TextStyle(
-//                                                      fontSize: 18,
-//                                                      color: Colors.black)),
-//                                            ),
-//                                          ),
-//                                        ),
-//                                      ))
-//                                  .toList(),
-//                            );
-//                          }
-//                          return LinearProgressIndicator();
-//                        }),
-//                  )
-//                ],
-//                cancelButton: CupertinoActionSheetAction(
-//                    onPressed: () {
-//                      Navigator.of(context).pop();
-//                    },
-//                    child: Text(
-//                      'CANCEL',
-//                      style: GoogleFonts.muli(
-//                          textStyle: TextStyle(
-//                              color: Colors.red,
-//                              fontSize: 25,
-//                              fontWeight: FontWeight.bold)),
-//                    ))),
-//          );
-//        });
-//  }
-
-//  //Group value
-//  String id = "Newbie";
-//  Widget _designationSelector() {
-//    return Column(
-//      crossAxisAlignment: CrossAxisAlignment.start,
-//      children: <Widget>[
-//        Text(
-//          'I am a: ',
-//          style: GoogleFonts.quicksand(
-//              textStyle: TextStyle(
-//                  color: Colors.white,
-//                  fontWeight: FontWeight.bold,
-//                  fontSize: 24,
-//                  letterSpacing: 0.5)),
-//        ),
-//        SizedBox(
-//          height: 10,
-//        ),
-//        Container(
-//          width: double.infinity,
-//          height: 100,
-//          child: ListView(
-//            scrollDirection: Axis.vertical,
-//            children: <Widget>[
-//              Container(
-//                width: 160,
-//                height: 50,
-//                child: RadioListTile(
-//                    value: "Newbie",
-//                    activeColor: Colors.greenAccent[700],
-//                    dense: true,
-//                    groupValue: id,
-//                    onChanged: (value) {
-//                      setState(() {
-//                        id = value;
-//                      });
-//                    },
-//                    title: Text(
-//                      'looking for a house',
-//                      style: GoogleFonts.quicksand(
-//                          textStyle:
-//                              TextStyle(color: Colors.white, fontSize: 15)),
-//                    )),
-//              ),
-//              Container(
-//                width: 160,
-//                height: 50,
-//                child: RadioListTile(
-//                  dense: true,
-//                  activeColor: Colors.greenAccent[700],
-//                  value: "Tenant",
-//                  groupValue: id,
-//                  onChanged: (value) {
-//                    setState(() {
-//                      id = value;
-//                      //_showListPopup();
-//                    });
-//                  },
-//                  title: Text(
-//                    'Tenant',
-//                    style: GoogleFonts.quicksand(
-//                        textStyle:
-//                            TextStyle(color: Colors.white, fontSize: 15)),
-//                  ),
-//                ),
-//              ),
-//            ],
-//          ),
-//        )
-//      ],
-//    );
-//  }
 
   Widget _registerPassword2() {
     return Column(
@@ -526,9 +386,9 @@ class _RegistrationState extends State<Registration> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Confirm your password',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Confirm your password',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.vpn_key,
                 color: Colors.white,
@@ -781,16 +641,16 @@ class _RegistrationState extends State<Registration> {
 
   Widget _browseWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         FlatButton(
-          color: Colors.green[800],
+          color: Colors.grey[100],
           onPressed: _browse,
           child: Text(
             'looking for a house',
             style: GoogleFonts.muli(
                 textStyle: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 17,
                     fontWeight: FontWeight.bold)),
           ),
@@ -850,7 +710,7 @@ class _RegistrationState extends State<Registration> {
                         ),
                         _browseWidget(),
                         SizedBox(
-                          height: 30,
+                          height: 10,
                         ),
                         Text(
                           'Hello',
@@ -858,37 +718,37 @@ class _RegistrationState extends State<Registration> {
                               textStyle: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   letterSpacing: 0.5)),
                         ),
                         SizedBox(
                           height: 5,
                         ),
                         Text(
-                          'Please fill in the form below to open a new account',
+                          'Please fill in the form below to open a new tenant account',
                           style: GoogleFonts.quicksand(
                               textStyle: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   letterSpacing: 0.5)),
                         ),
                         SizedBox(height: 30),
                         _dropDownApartments(),
                         SizedBox(
-                          height: 30,
+                          height: 25,
                         ),
                         _registerFullName(),
                         SizedBox(
-                          height: 30,
+                          height: 25,
                         ),
                         _registerEmail(),
                         SizedBox(
-                          height: 30,
+                          height: 25,
                         ),
                         _registerPassword1(),
                         SizedBox(
-                          height: 30,
+                          height: 25,
                         ),
                         _registerPassword2(),
                         SizedBox(

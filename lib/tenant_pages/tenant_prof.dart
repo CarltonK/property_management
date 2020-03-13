@@ -149,14 +149,16 @@ class _TenantProfileState extends State<TenantProfile> {
     /// Unique file name for the file
     file_path = 'profiles/$uid/displayPic.png';
     //Create a storage reference
-    StorageReference reference = FirebaseStorage.instance.ref().child(file_path);
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child(file_path);
     //Create a task that will handle the upload
     storageUploadTask = reference.putFile(
       file,
     );
     taskSnapshot = await storageUploadTask.onComplete;
     setState(() {
-      remaining = (taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount) * 100;
+      remaining =
+          (taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount) * 100;
       print('remaining $remaining');
     });
     url_result = await taskSnapshot.ref.getDownloadURL();
@@ -170,9 +172,7 @@ class _TenantProfileState extends State<TenantProfile> {
       Firestore.instance
           .collection("users")
           .document(uid)
-          .updateData({
-        "url":value
-      });
+          .updateData({"url": value});
     }).whenComplete(() {
       setState(() {
         user["url"] = url_result;
@@ -188,14 +188,15 @@ class _TenantProfileState extends State<TenantProfile> {
               'Uploading',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
             ),
             message: SpinKitDualRing(
               color: Colors.red,
-              size: 50,),
+              size: 50,
+            ),
           );
         });
   }
@@ -397,10 +398,10 @@ class _TenantProfileState extends State<TenantProfile> {
                       tag: 'tenant',
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
-                        radius: (MediaQuery.of(context).size.height * 0.25)/2,
+                        radius: (MediaQuery.of(context).size.height * 0.25) / 2,
                         backgroundImage: user["url"] == null
-                          ? null
-                          : NetworkImage(user["url"]),
+                            ? null
+                            : NetworkImage(user["url"]),
                       ),
                     ),
                   ),

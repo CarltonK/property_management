@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connection_status_bar/connection_status_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,9 +68,9 @@ class _LoginState extends State<Login> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your email',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Please enter your email',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.email,
                 color: Colors.white,
@@ -123,9 +124,9 @@ class _LoginState extends State<Login> {
                   borderSide: BorderSide(color: Colors.white, width: 1.5)),
               errorBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Please enter your password',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+//              labelText: 'Please enter your password',
+//              labelStyle: GoogleFonts.quicksand(
+//                  textStyle: TextStyle(color: Colors.white)),
               icon: Icon(
                 Icons.vpn_key,
                 color: Colors.white,

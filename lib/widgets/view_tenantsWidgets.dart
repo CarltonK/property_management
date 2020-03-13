@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:property_management/widgets/breakdown_widget.dart';
 
 class ViewTenants extends StatefulWidget {
   @override
@@ -78,43 +79,16 @@ class _ViewTenantsState extends State<ViewTenants> {
     );
   }
 
-  Future _updateFields(String docId, int code, String hseNumber,
-      int floorNumber, String name) async {
-    //Update users first
-    await Firestore.instance.collection("users").document(docId).updateData({
-      "landlord_code": code,
-      "hseNumber": hseNumber,
-      "approved": true,
-      "floorNumber": floorNumber
-    });
+  Future<List<DocumentSnapshot>> _getFloors(int code) async {
+    final String _collectionUpper = "apartments";
+    final String _collectionLower = "floors";
 
-    await Firestore.instance.collection("tenants").document(docId).updateData({
-      "landlord_code": code,
-      "hseNumber": hseNumber,
-      "approved": true,
-      "floorNumber": floorNumber
-    });
-
-    await Firestore.instance
-        .collection("apartments")
+    QuerySnapshot query = await Firestore.instance
+        .collection(_collectionUpper)
         .document(code.toString())
-        .collection("tenants")
-        .document()
-        .setData(
-            {"name": name, "floorNumber": floorNumber, "hseNumber": hseNumber});
-  }
-
-  Future _getTenants(String apartment, int code) async {
-    //This is the name of the collection containing tenants
-    final String _collection = 'tenants';
-    //Create a variable to store Firestore instance
-    final Firestore _fireStore = Firestore.instance;
-    QuerySnapshot query = await _fireStore
-        .collection(_collection)
-        .orderBy("registerDate", descending: true)
+        .collection(_collectionLower)
+        .orderBy("floorNumber")
         .getDocuments();
-    print('How many: ${query.documents.length}');
-    print('Docs: ${query.documents[0].data}');
     return query.documents;
   }
 
@@ -145,10 +119,83 @@ class _ViewTenantsState extends State<ViewTenants> {
             Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              child: FutureBuilder(
-                  future: _getTenants(apartmentName, code),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: FutureBuilder<List<DocumentSnapshot>>(
+                  future: _getFloors(code),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
                     if (snapshot.hasError) {
+                      print('Snapshot Error: ${snapshot.error.toString()}');
+                      return Center(
+                          child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Text(
+                            'There is an error ${snapshot.error.toString()}',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 20,
+                            )),
+                          )
+                        ],
+                      ));
+                    } else {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.done:
+                          if (snapshot.data.length == 0) {
+                            return Center(
+                              child: Text(
+                                'You have not created any listings',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                        fontSize: 28, color: Colors.white)),
+                              ),
+                            );
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                  child: Breakdown(snapshot: snapshot.data,code: code,)),
+                            ],
+                          );
+                          break;
+                        case ConnectionState.waiting:
+                          return Center(
+                            child: SpinKitFadingCircle(
+                              size: 150,
+                              color: Colors.white,
+                            ),
+                          );
+                          break;
+                        case ConnectionState.active:
+                          break;
+                        case ConnectionState.none:
+                          break;
+                      }
+                      return Center(
+                        child: SpinKitFadingCircle(
+                          size: 150,
+                          color: Colors.white,
+                        ),
+                      );
+                    }
+                  }),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+/*
+  if (snapshot.hasError) {
                       print('Snapshot Error: ${snapshot.error.toString()}');
                       return Center(
                           child: Column(
@@ -471,11 +518,4 @@ class _ViewTenantsState extends State<ViewTenants> {
                         ),
                       );
                     }
-                  }),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+ */
