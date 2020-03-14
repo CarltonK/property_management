@@ -6,16 +6,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class TenantPopup extends StatefulWidget {
-
   final String apartment_name;
   final int code;
-  TenantPopup({Key key, @required this.apartment_name, @required this.code}) : super(key: key);
+  TenantPopup({Key key, @required this.apartment_name, @required this.code})
+      : super(key: key);
   @override
   _TenantPopupState createState() => _TenantPopupState();
 }
 
 class _TenantPopupState extends State<TenantPopup> {
-
   double opacity = 1;
   double padd = 100;
   bool hasDataQuery = false;
@@ -99,14 +98,10 @@ class _TenantPopupState extends State<TenantPopup> {
     );
   }
 
-
   Future _updateFields(String docId, int code, String hseNumber,
       int floorNumber, String name) async {
     //Update users first
-    await Firestore.instance
-        .collection("users")
-        .document(docId)
-        .updateData({
+    await Firestore.instance.collection("users").document(docId).updateData({
       "landlord_code": code,
       "hseNumber": hseNumber,
       "approved": true,
@@ -125,20 +120,19 @@ class _TenantPopupState extends State<TenantPopup> {
         .document(code.toString())
         .collection("floors")
         .document(floorNumber.toString())
-        .setData({
-      "floorNumber": floorNumber
-    }
-    );
+        .setData({"floorNumber": floorNumber});
 
     await Firestore.instance
         .collection("apartments")
         .document(code.toString())
         .collection("floors")
         .document(floorNumber.toString())
-        .collection("tenants").document(docId).setData({
+        .collection("tenants")
+        .document(docId)
+        .setData({
       "name": name,
-      "uid":docId,
-      "hseNumber":hseNumber,
+      "uid": docId,
+      "hseNumber": hseNumber,
     });
 
     setState(() {
@@ -165,12 +159,8 @@ class _TenantPopupState extends State<TenantPopup> {
         child: Card(
           elevation: 50,
           shape: RoundedRectangleBorder(
-            side: BorderSide(
-              color: Colors.red[900],
-              width: 2
-            ),
-            borderRadius: BorderRadius.circular(12)
-          ),
+              side: BorderSide(color: Colors.red[900], width: 2),
+              borderRadius: BorderRadius.circular(12)),
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -179,104 +169,99 @@ class _TenantPopupState extends State<TenantPopup> {
               children: <Widget>[
                 Expanded(
                     child: Container(
-                      child: FutureBuilder(
-                        future: _getTenants(widget.apartment_name),
-                          builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(
-                              child: Text(
-                                'You have no tenant approval requests',
-                                style: GoogleFonts.quicksand(
-                                    textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold
-                                    )
-                                ),),
-                            );
-                          }
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.done:
-                              if (snapshot.data.length == 0) {
-                                setState(() {
-                                  opacity = 0;
-                                });
-                                return Center(
-                                  child: Text(
-                                    'You have no tenant approval requests',
-                                    style: GoogleFonts.quicksand(
+                  child: FutureBuilder(
+                      future: _getTenants(widget.apartment_name),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              'You have no tenant approval requests',
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          );
+                        }
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.done:
+                            if (snapshot.data.length == 0) {
+                              setState(() {
+                                opacity = 0;
+                              });
+                              return Center(
+                                child: Text(
+                                  'You have no tenant approval requests',
+                                  style: GoogleFonts.quicksand(
                                       textStyle: TextStyle(
                                           color: Colors.black,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold
-                                      )
-                                  ),),
-                                );
-                              }
-                              else {
-                                return ListView(
-                                  children: snapshot.data.map((map) {
-                                    //Date Parsing and Formatting
-                                    var dateRetrieved = map["registerDate"];
-                                    var formatter = new DateFormat('MMMd');
-                                    String date =
-                                    formatter.format(dateRetrieved.toDate());
-                                    return Card(
-                                      shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              color: Colors.green,
-                                              width: 2
-                                          ),
-                                          borderRadius: BorderRadius.circular(8)
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              );
+                            } else {
+                              return ListView(
+                                children: snapshot.data.map((map) {
+                                  //Date Parsing and Formatting
+                                  var dateRetrieved = map["registerDate"];
+                                  var formatter = new DateFormat('MMMd');
+                                  String date =
+                                      formatter.format(dateRetrieved.toDate());
+                                  return Card(
+                                    shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: Colors.green, width: 2),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: ListTile(
+                                      title: Text(
+                                        '${map["fullName"]}',
+                                        style: GoogleFonts.quicksand(
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.bold)),
                                       ),
-                                      child: ListTile(
-                                        title: Text(
-                                          '${map["fullName"]}',
-                                          style: GoogleFonts.quicksand(
-                                              textStyle: TextStyle(
-                                                  fontWeight: FontWeight.bold
-                                              )
-                                          ),),
-                                        isThreeLine: true,
-                                        subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              '${map["email"]}',
-                                              style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                      fontWeight: FontWeight.bold
-                                                  )
-                                              ),),
-                                            Text(
-                                              'Registered on $date',
-                                              style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                      fontWeight: FontWeight.bold
-                                                  )
-                                              ),),
-                                            map["approved"] == null
-                                                ? FlatButton(
-                                              color: Colors.green[900],
-                                              onPressed: () {
-                                                showCupertinoModalPopup(
-                                                  context: context,
-                                                  builder: (_) =>
-                                                      AlertDialog(
+                                      isThreeLine: true,
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            '${map["email"]}',
+                                            style: GoogleFonts.quicksand(
+                                                textStyle: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                          Text(
+                                            'Registered on $date',
+                                            style: GoogleFonts.quicksand(
+                                                textStyle: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                          map["approved"] == null
+                                              ? FlatButton(
+                                                  color: Colors.green[900],
+                                                  onPressed: () {
+                                                    showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          AlertDialog(
                                                         elevation: 20,
                                                         shape: RoundedRectangleBorder(
                                                             borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                16)),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        16)),
                                                         title: Text(
                                                           'Assign house details',
                                                           style: GoogleFonts.quicksand(
                                                               textStyle: TextStyle(
                                                                   fontSize: 22,
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                                      FontWeight
+                                                                          .w600,
                                                                   color: Colors
                                                                       .black)),
                                                         ),
@@ -284,15 +269,15 @@ class _TenantPopupState extends State<TenantPopup> {
                                                           key: _formKey,
                                                           child: Column(
                                                             mainAxisSize:
-                                                            MainAxisSize
-                                                                .min,
+                                                                MainAxisSize
+                                                                    .min,
                                                             children: <Widget>[
                                                               TextFormField(
                                                                 keyboardType:
-                                                                TextInputType
-                                                                    .text,
+                                                                    TextInputType
+                                                                        .text,
                                                                 onSaved:
-                                                                _hseHandler,
+                                                                    _hseHandler,
                                                                 validator:
                                                                     (value) {
                                                                   if (value
@@ -302,16 +287,16 @@ class _TenantPopupState extends State<TenantPopup> {
                                                                   return null;
                                                                 },
                                                                 decoration:
-                                                                InputDecoration(
-                                                                    labelText:
-                                                                    'Enter the house number'),
+                                                                    InputDecoration(
+                                                                        labelText:
+                                                                            'Enter the house number'),
                                                                 textInputAction:
-                                                                TextInputAction
-                                                                    .done,
+                                                                    TextInputAction
+                                                                        .done,
                                                                 onFieldSubmitted:
                                                                     (value) {
                                                                   FocusScope.of(
-                                                                      context)
+                                                                          context)
                                                                       .unfocus();
                                                                 },
                                                               ),
@@ -330,20 +315,20 @@ class _TenantPopupState extends State<TenantPopup> {
                                                                     null) {
                                                                   showCupertinoModalPopup(
                                                                     context:
-                                                                    context,
+                                                                        context,
                                                                     builder:
                                                                         (BuildContext
-                                                                    context) {
+                                                                            context) {
                                                                       return CupertinoActionSheet(
                                                                           title:
-                                                                          Text(
+                                                                              Text(
                                                                             'You have not selected a floor number',
                                                                             style: GoogleFonts.quicksand(
                                                                                 textStyle: TextStyle(
-                                                                                  fontWeight: FontWeight.w600,
-                                                                                  fontSize: 20,
-                                                                                  color: Colors.black,
-                                                                                )),
+                                                                              fontWeight: FontWeight.w600,
+                                                                              fontSize: 20,
+                                                                              color: Colors.black,
+                                                                            )),
                                                                           ),
                                                                           cancelButton: CupertinoActionSheetAction(
                                                                               onPressed: () {
@@ -365,27 +350,27 @@ class _TenantPopupState extends State<TenantPopup> {
                                                                         .save();
                                                                     //Get the docId which is the uid of the tenant
                                                                     String
-                                                                    docId =
+                                                                        docId =
                                                                         map.documentID;
                                                                     print(
                                                                         'The docId is: $docId');
                                                                     //Update necessary documents (tenants and users)
                                                                     _updateFields(
                                                                         docId,
-                                                                        widget.code,
+                                                                        widget
+                                                                            .code,
                                                                         _hseNumber,
                                                                         _floor,
-                                                                        map["fullName"]
-                                                                    );
+                                                                        map["fullName"]);
                                                                     Future.delayed(
                                                                         Duration(
                                                                             seconds:
-                                                                            2),
-                                                                            () {
-                                                                          Navigator.of(
+                                                                                2),
+                                                                        () {
+                                                                      Navigator.of(
                                                                               context)
-                                                                              .pop();
-                                                                        });
+                                                                          .pop();
+                                                                    });
                                                                   }
                                                                 }
                                                               },
@@ -397,12 +382,12 @@ class _TenantPopupState extends State<TenantPopup> {
                                                                         color: Colors
                                                                             .black,
                                                                         fontWeight:
-                                                                        FontWeight.bold)),
+                                                                            FontWeight.bold)),
                                                               )),
                                                           FlatButton(
                                                               onPressed: () {
                                                                 Navigator.of(
-                                                                    context)
+                                                                        context)
                                                                     .pop();
                                                               },
                                                               child: Text(
@@ -413,64 +398,73 @@ class _TenantPopupState extends State<TenantPopup> {
                                                                         color: Colors
                                                                             .red,
                                                                         fontWeight:
-                                                                        FontWeight.bold)),
+                                                                            FontWeight.bold)),
                                                               ))
                                                         ],
                                                       ),
-                                                );
-                                              },
-                                              child: Text(
-                                                'APPROVE',style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold
-                                                  )
-                                              ),),
-                                            ): Text('')
-                                          ],
-                                        ),
-                                        trailing: Column(
-                                          children: <Widget>[
-                                            Text(
-                                              'Status',
-                                              style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                      fontWeight: FontWeight.bold
-                                                  )
-                                              ),),
-                                            SizedBox(height: 5,),
-                                            Icon(Icons.cancel, color: Colors.red,)
-                                          ],
-                                        ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    'APPROVE',
+                                                    style: GoogleFonts.quicksand(
+                                                        textStyle: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                  ),
+                                                )
+                                              : Text('')
+                                        ],
                                       ),
-                                    );
-                                  }).toList(),
-                                );
-                              }
-                              break;
-                            case ConnectionState.waiting:
-                              return SpinKitFadingCircle(
-                                color: Colors.green[900],
-                                size: 100,
+                                      trailing: Column(
+                                        children: <Widget>[
+                                          Text(
+                                            'Status',
+                                            style: GoogleFonts.quicksand(
+                                                textStyle: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Icon(
+                                            Icons.cancel,
+                                            color: Colors.red,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                               );
-                              break;
-                            case ConnectionState.none:
-                              break;
-                            case ConnectionState.active:
-                              break;
-                          }
-                          return SpinKitFadingCircle(
-                            color: Colors.green[900],
-                            size: 100,
-                          );
+                            }
+                            break;
+                          case ConnectionState.waiting:
+                            return SpinKitFadingCircle(
+                              color: Colors.green[900],
+                              size: 100,
+                            );
+                            break;
+                          case ConnectionState.none:
+                            break;
+                          case ConnectionState.active:
+                            break;
+                        }
+                        return SpinKitFadingCircle(
+                          color: Colors.green[900],
+                          size: 100,
+                        );
                       }),
-                    )),
+                )),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FlatButton(
-                      color: Colors.red,
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        color: Colors.red,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         onPressed: () {
                           setState(() {
                             padd = MediaQuery.of(context).size.height * 0.5;
@@ -479,12 +473,10 @@ class _TenantPopupState extends State<TenantPopup> {
                         child: Text(
                           'CANCEL',
                           style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20
-                            )
-                          ),
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20)),
                         )),
                   ),
                 )

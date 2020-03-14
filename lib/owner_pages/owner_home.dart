@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:property_management/widgets/breakdown_widget.dart';
 import 'package:property_management/widgets/tenant_popup.dart';
 
 class OwnerHome extends StatefulWidget {
@@ -185,7 +184,10 @@ class _OwnerHomeState extends State<OwnerHome> {
                 ),
               ),
             ),
-            TenantPopup(apartment_name: data["apartment_name"],code: data["landlord_code"],)
+            TenantPopup(
+              apartment_name: data["apartment_name"],
+              code: data["landlord_code"],
+            )
           ],
         ),
       ),

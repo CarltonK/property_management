@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:property_management/widgets/breakdown_widget.dart';
 
 class ViewTenants extends StatefulWidget {
@@ -162,7 +161,10 @@ class _ViewTenantsState extends State<ViewTenants> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Expanded(
-                                  child: Breakdown(snapshot: snapshot.data,code: code,)),
+                                  child: Breakdown(
+                                snapshot: snapshot.data,
+                                code: code,
+                              )),
                             ],
                           );
                           break;

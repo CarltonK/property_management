@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:property_management/widgets/view_tenantsWidgets.dart';
 
 class OwnerSettings extends StatefulWidget {
   static Map<String, dynamic> data;
@@ -301,7 +298,8 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                                                     fontSize:
                                                                         13,
                                                                     fontWeight:
-                                                                        FontWeight.w600))),
+                                                                        FontWeight
+                                                                            .w600))),
                                                       ),
                                                     ),
                                                   ),
