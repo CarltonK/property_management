@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/widgets/tenant_popup.dart';
 
 class ManagerHome extends StatefulWidget {
   @override
@@ -8,8 +9,13 @@ class ManagerHome extends StatefulWidget {
 }
 
 class _ManagerHomeState extends State<ManagerHome> {
+  static Map<String, dynamic> data;
+
   @override
   Widget build(BuildContext context) {
+
+    data = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -36,6 +42,10 @@ class _ManagerHomeState extends State<ManagerHome> {
               height: double.infinity,
               width: double.infinity,
               color: Colors.green[900],
+            ),
+            TenantPopup(
+              apartment_name: data["apartment_name"],
+              code: data["landlord_code"],
             )
           ],
         ),

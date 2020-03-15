@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/manager_pages/manager_complaint.dart';
 import 'package:property_management/manager_pages/manager_home.dart';
+import 'package:property_management/manager_pages/manager_settings.dart';
 import 'package:property_management/manager_pages/manager_vacate.dart';
 
 class Manager extends StatefulWidget {
@@ -91,6 +92,7 @@ class _ManagerState extends State<Manager> {
     ManagerHome(),
     ManagerComplaint(),
     ManagerVacate(),
+    ManagerSettings()
   ];
 
   @override
@@ -154,6 +156,15 @@ class _ManagerState extends State<Manager> {
                         style: GoogleFonts.quicksand(
                             textStyle:
                                 TextStyle(fontWeight: FontWeight.w500)))),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.settings,
+                      color: Colors.green[900],
+                      size: 30,
+                    ),
+                    title: Text('Settings',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(fontWeight: FontWeight.w500))))
               ],
               currentIndex: _selectedIndex,
               onTap: _onIndexChanged,
