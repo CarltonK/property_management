@@ -30,7 +30,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: FutureBuilder(
           future: _getComplaints(),
@@ -42,9 +42,6 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(
-                    height: 50,
-                  ),
                   Text(
                     'Ooops! ${snapshot.error.toString()}',
                     textAlign: TextAlign.center,

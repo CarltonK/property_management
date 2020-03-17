@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:property_management/admin_pages/add_landlord.dart';
 import 'package:property_management/admin_pages/admin.dart';
@@ -14,10 +17,23 @@ import 'package:property_management/tenant_pages/add_complaint.dart';
 import 'package:property_management/tenant_pages/tenant.dart';
 import 'package:property_management/tenant_pages/tenant_prof.dart';
 import 'package:property_management/welcome.dart';
-import 'package:property_management/widgets/view_tenantsWidgets.dart';
 import 'package:property_management/widgets/view_listingsWidget.dart';
+import 'package:property_management/widgets/view_tenantsWidgets.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  //Set `enableInDevMode` to true to see reports while in debug mode
+  // This is only to be used for confirming that reports are being
+  // submitted as expected. It is not intended to be used for everyday
+  // development.
+  Crashlytics.instance.enableInDevMode = true;
+
+  // Pass all uncaught errors from the framework to Crashlytics.
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
+  runZoned<Future<void>>(() async {
+    runApp(MyApp());
+  }, onError: Crashlytics.instance.recordError);
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

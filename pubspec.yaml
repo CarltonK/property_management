@@ -44,6 +44,8 @@ dependencies:
   geolocator: any
   # Connection
   connection_status_bar: ^1.1.2
+  # Crashlytics
+  firebase_crashlytics: ^0.1.3+3
 #  # Unique ID
 #  uuid: 2.0.4
 

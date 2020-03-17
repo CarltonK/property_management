@@ -42,16 +42,13 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              height: double.infinity,
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    ViewComplaintsWidget(code: data["landlord_code"])
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(child: ViewComplaintsWidget(code: data["landlord_code"]))
+                ],
               ),
             )
           ],
