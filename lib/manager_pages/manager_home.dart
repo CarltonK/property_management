@@ -13,7 +13,6 @@ class _ManagerHomeState extends State<ManagerHome> {
 
   @override
   Widget build(BuildContext context) {
-
     data = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(

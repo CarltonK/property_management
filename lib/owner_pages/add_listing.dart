@@ -202,7 +202,8 @@ class _AddListingState extends State<AddListing> {
   /// Starts an upload task
   Future<String> _startUpload(File file) async {
     /// Unique file name for the file
-    filePath = 'images/${landlord_code.toString()}/coverPic.png';
+    filePath =
+        'images/${landlord_code.toString()}/${DateTime.now()}/coverPic.png';
     //Create a storage reference
     StorageReference reference = FirebaseStorage.instance.ref().child(filePath);
     //Create a task that will handle the upload

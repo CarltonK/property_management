@@ -116,6 +116,34 @@ class _ManagerVacateState extends State<ManagerVacate> {
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.data == null) {
+                      return Center(
+                        child: Text(
+                          'You have not received any vacation requests',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                            fontSize: 25,
+                          )),
+                        ),
+                      );
+                    }
+                    if (snapshot.data.documents.length == 0) {
+                      return Center(
+                        child: Text(
+                          'You have not received any vacation requests',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                            fontSize: 25,
+                          )),
+                        ),
+                      );
+                    }
                     if (snapshot.hasData) {
                       return ListView(
                         padding: const EdgeInsets.only(top: 20.0),

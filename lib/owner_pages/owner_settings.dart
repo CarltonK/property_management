@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/api/firebase_api.dart';
 
 class OwnerSettings extends StatefulWidget {
   static Map<String, dynamic> data;
@@ -30,6 +32,48 @@ class _OwnerSettingsState extends State<OwnerSettings> {
     return query.documents;
   }
 
+  Widget addManager() {
+    return MaterialButton(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
+      splashColor: Colors.greenAccent[700],
+      onPressed: () {
+        Navigator.of(context)
+            .pushNamed('/add-manager', arguments: OwnerSettings.data);
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            Icons.person_add,
+            size: 20,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            'Add a manager',
+            style: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            )),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _deleteManager(String docID) async {
+    print('The docId is $docID');
+    //Delete the document in "managers"
+    await Firestore.instance.collection("managers").document(docID).delete();
+    //Delete the document in "users"
+    await Firestore.instance.collection("users").document(docID).delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     OwnerSettings.data = ModalRoute.of(context).settings.arguments;
@@ -54,6 +98,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
         ),
+        actions: <Widget>[addManager()],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -76,55 +121,6 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                       child: Container(
                         child: Row(
                           children: <Widget>[
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  print('I want to view tenants');
-                                  Navigator.of(context)
-                                      .pushNamed('/view-tenants', arguments: {
-                                    "code": code,
-                                    "apartment": apartmentName
-                                  });
-                                },
-                                child: Card(
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 30),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.green,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.people,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          'Tenants',
-                                          style: GoogleFonts.quicksand(
-                                              textStyle: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  elevation: 20,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                ),
-                              ),
-                            ),
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
@@ -259,7 +255,6 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                                       vertical: 4),
                                                   color: Colors.grey[100],
                                                   child: Container(
-                                                    padding: EdgeInsets.all(4),
                                                     decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -273,11 +268,43 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                                     child: Container(
                                                       margin:
                                                           EdgeInsets.symmetric(
-                                                              vertical: 10),
+                                                              vertical: 6),
                                                       child: ListTile(
                                                         dense: true,
                                                         leading: Icon(Icons
                                                             .person_outline),
+                                                        trailing: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Text(
+                                                              'Delete',
+                                                              style: GoogleFonts.quicksand(
+                                                                  textStyle: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          15,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            GestureDetector(
+                                                                onTap: () {
+                                                                  _deleteManager(
+                                                                      map.documentID);
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.delete,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ))
+                                                          ],
+                                                        ),
                                                         title: Text(
                                                           '${map["fullName"]}',
                                                           style: GoogleFonts.quicksand(
@@ -320,36 +347,6 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                       )),
                 ],
               ),
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: MaterialButton(
-        padding: EdgeInsets.all(10),
-        color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        splashColor: Colors.greenAccent[700],
-        onPressed: () {
-          Navigator.of(context)
-              .pushNamed('/add-manager', arguments: OwnerSettings.data);
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(
-              Icons.person_add,
-              size: 20,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              'Add a manager',
-              style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14)),
             )
           ],
         ),

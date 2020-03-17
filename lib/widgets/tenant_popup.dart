@@ -16,8 +16,8 @@ class TenantPopup extends StatefulWidget {
 
 class _TenantPopupState extends State<TenantPopup> {
   double opacity = 1;
-  double padd = 100;
-  bool hasDataQuery = false;
+  double padd = 90;
+  bool hasDataQuery = true;
 
   Future<List<DocumentSnapshot>> _getTenants(String apartment) async {
     //This is the name of the collection containing tenants
@@ -31,113 +31,7 @@ class _TenantPopupState extends State<TenantPopup> {
         .getDocuments();
     print('How many: ${query.documents.length}');
     print('Docs: ${query.documents[0].data}');
-
-    query.documents.length != 0 ? hasDataQuery = true : false;
-
     return query.documents;
-  }
-
-  final _formKey = GlobalKey<FormState>();
-
-  String _hseNumber;
-
-  void _hseHandler(String value) {
-    _hseNumber = value.trim();
-    print('House Number: $_hseNumber');
-  }
-
-  int _floor;
-
-  List<int> floors = <int>[0, 1, 2, 3, 4, 5];
-
-  Widget _dropDownFloors(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Center(
-          child: DropdownButton<int>(
-              hint: Text(
-                'Floor',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18)),
-              ),
-              underline: Divider(
-                color: Colors.black,
-                height: 1,
-                thickness: 1,
-              ),
-              icon: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.black,
-                size: 30,
-              ),
-              items: floors.map((map) {
-                return DropdownMenuItem<int>(
-                    value: map,
-                    child: Text('${map.toString()}',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold))));
-              }).toList(),
-              isExpanded: true,
-              value: _floor,
-              onChanged: (value) {
-                setState(() {
-                  _floor = value;
-                });
-                print('Floor: $_floor');
-              }),
-        )
-      ],
-    );
-  }
-
-  Future _updateFields(String docId, int code, String hseNumber,
-      int floorNumber, String name) async {
-    //Update users first
-    await Firestore.instance.collection("users").document(docId).updateData({
-      "landlord_code": code,
-      "hseNumber": hseNumber,
-      "approved": true,
-      "floorNumber": floorNumber
-    });
-
-    await Firestore.instance.collection("tenants").document(docId).updateData({
-      "landlord_code": code,
-      "hseNumber": hseNumber,
-      "approved": true,
-      "floorNumber": floorNumber
-    });
-
-    await Firestore.instance
-        .collection("apartments")
-        .document(code.toString())
-        .collection("floors")
-        .document(floorNumber.toString())
-        .setData({"floorNumber": floorNumber});
-
-    await Firestore.instance
-        .collection("apartments")
-        .document(code.toString())
-        .collection("floors")
-        .document(floorNumber.toString())
-        .collection("tenants")
-        .document(docId)
-        .setData({
-      "name": name,
-      "uid": docId,
-      "hseNumber": hseNumber,
-    });
-
-    setState(() {
-      padd = MediaQuery.of(context).size.height * 0.5;
-    });
   }
 
   @override
@@ -174,6 +68,11 @@ class _TenantPopupState extends State<TenantPopup> {
                       builder: (BuildContext context,
                           AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
                         if (snapshot.hasError) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              padd = MediaQuery.of(context).size.height * 0.5;
+                            });
+                          });
                           return Center(
                             child: Text(
                               'You have no tenant approval requests',
@@ -190,6 +89,8 @@ class _TenantPopupState extends State<TenantPopup> {
                             if (snapshot.data.length == 0) {
                               setState(() {
                                 opacity = 0;
+                                hasDataQuery = false;
+                                padd = MediaQuery.of(context).size.height * 0.5;
                               });
                               return Center(
                                 child: Text(
@@ -209,6 +110,11 @@ class _TenantPopupState extends State<TenantPopup> {
                                   var formatter = new DateFormat('MMMd');
                                   String date =
                                       formatter.format(dateRetrieved.toDate());
+                                  //Placeholder map
+                                  Map<String, dynamic> requiredData = map.data;
+                                  requiredData["code"] = widget.code;
+                                  requiredData["docId"] = map.documentID;
+
                                   return Card(
                                     shape: RoundedRectangleBorder(
                                         side: BorderSide(
@@ -244,165 +150,11 @@ class _TenantPopupState extends State<TenantPopup> {
                                               ? FlatButton(
                                                   color: Colors.green[900],
                                                   onPressed: () {
-                                                    showCupertinoModalPopup(
-                                                      context: context,
-                                                      builder: (_) =>
-                                                          AlertDialog(
-                                                        elevation: 20,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16)),
-                                                        title: Text(
-                                                          'Assign house details',
-                                                          style: GoogleFonts.quicksand(
-                                                              textStyle: TextStyle(
-                                                                  fontSize: 22,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                        content: Form(
-                                                          key: _formKey,
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: <Widget>[
-                                                              TextFormField(
-                                                                keyboardType:
-                                                                    TextInputType
-                                                                        .text,
-                                                                onSaved:
-                                                                    _hseHandler,
-                                                                validator:
-                                                                    (value) {
-                                                                  if (value
-                                                                      .isEmpty) {
-                                                                    return 'This value is required';
-                                                                  }
-                                                                  return null;
-                                                                },
-                                                                decoration:
-                                                                    InputDecoration(
-                                                                        labelText:
-                                                                            'Enter the house number'),
-                                                                textInputAction:
-                                                                    TextInputAction
-                                                                        .done,
-                                                                onFieldSubmitted:
-                                                                    (value) {
-                                                                  FocusScope.of(
-                                                                          context)
-                                                                      .unfocus();
-                                                                },
-                                                              ),
-                                                              SizedBox(
-                                                                height: 20,
-                                                              ),
-                                                              _dropDownFloors(
-                                                                  context)
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        actions: <Widget>[
-                                                          FlatButton(
-                                                              onPressed: () {
-                                                                if (_floor ==
-                                                                    null) {
-                                                                  showCupertinoModalPopup(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return CupertinoActionSheet(
-                                                                          title:
-                                                                              Text(
-                                                                            'You have not selected a floor number',
-                                                                            style: GoogleFonts.quicksand(
-                                                                                textStyle: TextStyle(
-                                                                              fontWeight: FontWeight.w600,
-                                                                              fontSize: 20,
-                                                                              color: Colors.black,
-                                                                            )),
-                                                                          ),
-                                                                          cancelButton: CupertinoActionSheetAction(
-                                                                              onPressed: () {
-                                                                                Navigator.of(context).pop();
-                                                                                FocusScope.of(context).unfocus();
-                                                                              },
-                                                                              child: Text(
-                                                                                'CANCEL',
-                                                                                style: GoogleFonts.muli(textStyle: TextStyle(color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
-                                                                              )));
-                                                                    },
-                                                                  );
-                                                                } else {
-                                                                  if (_formKey
-                                                                      .currentState
-                                                                      .validate()) {
-                                                                    _formKey
-                                                                        .currentState
-                                                                        .save();
-                                                                    //Get the docId which is the uid of the tenant
-                                                                    String
-                                                                        docId =
-                                                                        map.documentID;
-                                                                    print(
-                                                                        'The docId is: $docId');
-                                                                    //Update necessary documents (tenants and users)
-                                                                    _updateFields(
-                                                                        docId,
-                                                                        widget
-                                                                            .code,
-                                                                        _hseNumber,
-                                                                        _floor,
-                                                                        map["fullName"]);
-                                                                    Future.delayed(
-                                                                        Duration(
-                                                                            seconds:
-                                                                                2),
-                                                                        () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    });
-                                                                  }
-                                                                }
-                                                              },
-                                                              child: Text(
-                                                                'Assign'
-                                                                    .toUpperCase(),
-                                                                style: GoogleFonts.quicksand(
-                                                                    textStyle: TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.bold)),
-                                                              )),
-                                                          FlatButton(
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                              child: Text(
-                                                                'Cancel'
-                                                                    .toUpperCase(),
-                                                                style: GoogleFonts.quicksand(
-                                                                    textStyle: TextStyle(
-                                                                        color: Colors
-                                                                            .red,
-                                                                        fontWeight:
-                                                                            FontWeight.bold)),
-                                                              ))
-                                                        ],
-                                                      ),
-                                                    );
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            '/tenant-verify',
+                                                            arguments:
+                                                                requiredData);
                                                   },
                                                   child: Text(
                                                     'APPROVE',

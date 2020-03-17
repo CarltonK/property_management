@@ -246,13 +246,50 @@ class _LoginState extends State<Login> {
         });
       }
       //Landlord Page
-      else {
+      else if (userdesignation == "Landlord") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context)
               .popAndPushNamed('/owner_home', arguments: userData);
         });
+      } else {
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              message: Text(
+                'This account is not registered',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
+              ),
+            );
+          },
+        );
       }
+    }).catchError((error) {
+      //Pop welcome dialog
+      Navigator.of(context).pop();
+
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text(
+              'This account is not available',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
+            ),
+          );
+        },
+      );
     });
   }
 

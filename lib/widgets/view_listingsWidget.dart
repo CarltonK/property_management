@@ -22,6 +22,7 @@ class _ViewListingsState extends State<ViewListings> {
     QuerySnapshot query = await _fireStore
         .collection(_collection)
         .where("landlord_code", isEqualTo: code)
+        .orderBy("price", descending: false)
         .getDocuments();
     print('How many: ${query.documents.length}');
     return query.documents;

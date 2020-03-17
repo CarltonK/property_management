@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class FloorTile extends StatefulWidget {
   final int code;
@@ -56,28 +57,63 @@ class _FloorTileState extends State<FloorTile> {
                     }
                     return ListView(
                       children: snapshot.data
-                          .map((map) => Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                elevation: 5,
-                                color: Colors.green[700],
-                                child: ListTile(
-                                  title: Text(
-                                    '${map["name"]}',
-                                    style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(
-                                            fontSize: 18, color: Colors.white)),
-                                  ),
-                                  leading: Text(
-                                    '${map["hseNumber"]}',
+                          .map((map) {
+
+                        //Date Parsing and Formatting
+                        var dateRetrieved = map["due"];
+                        var formatter = new DateFormat('MMMd');
+                        String date = formatter.format(dateRetrieved.toDate());
+
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 5,
+                          color: Colors.green[700],
+                          child: GestureDetector(
+                            onTap: () {
+                              print(map["due"].runtimeType);
+                            },
+                            child: ListTile(
+                              title: Text(
+                                '${map["name"]}',
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                        fontSize: 18, color: Colors.white)),
+                              ),
+                              subtitle: Text(
+                                'Due date : $date',
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(color: Colors.white)),
+                              ),
+                              leading: Text(
+                                '${map["hseNumber"]}',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                        fontSize: 18, color: Colors.white)),
+                              ),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'Amount',
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(
-                                            fontSize: 18, color: Colors.white)),
+                                        textStyle: TextStyle(color: Colors.white)),
                                   ),
-                                ),
-                              ))
+                                  Text(
+                                    '${map["rent"]}',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.quicksand(
+                                        textStyle: TextStyle(color: Colors.white)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      })
                           .toList(),
                     );
                     break;

@@ -166,7 +166,7 @@ class _AddComplaintState extends State<AddComplaint> {
           "hse": data["hseNumber"],
           "title": _message,
           "landlord_code": data["landlord_code"],
-          "tenant": "${data["firstName"]} ${data["lastName"]}",
+          "tenant": "${data["fullName"]}",
           "date": DateTime.now().toLocal().toIso8601String(),
         };
         _postComplaint(newData).catchError((error) {

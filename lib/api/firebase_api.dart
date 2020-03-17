@@ -151,6 +151,12 @@ class API with ChangeNotifier {
     }
   }
 
+//  //Delete a user account from firebase authentication
+//  Future deleteUser() async {
+//    FirebaseUser user = await _auth.currentUser();
+//    user.delete();
+//  }
+
   //Save the User as a document in the "users" collection
   Future saveUser(User user, String uid) async {
     //Retrieve fields

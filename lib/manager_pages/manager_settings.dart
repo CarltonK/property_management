@@ -8,14 +8,12 @@ class ManagerSettings extends StatefulWidget {
 }
 
 class _ManagerSettingsState extends State<ManagerSettings> {
-
   static Map<String, dynamic> data;
   int code;
   String apartmentName;
 
   @override
   Widget build(BuildContext context) {
-
     data = ModalRoute.of(context).settings.arguments;
     print('Settings Page Data: ${data}');
     code = data["landlord_code"];
@@ -80,9 +78,9 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Icon(
                                           Icons.people,
@@ -127,9 +125,9 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Icon(
                                           Icons.location_city,
@@ -162,10 +160,7 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                   Divider(
                     thickness: 1,
                   ),
-                  Expanded(
-                    flex: 3,
-                      child: Container(
-                      )),
+                  Expanded(flex: 3, child: Container()),
                 ],
               ),
             )
