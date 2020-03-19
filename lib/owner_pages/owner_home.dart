@@ -90,7 +90,7 @@ class _OwnerHomeState extends State<OwnerHome> {
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    print('Owner data: $data');
+    //print('Owner data: $data');
     code = data["landlord_code"];
     //apartmentName = data["apartment"];
 

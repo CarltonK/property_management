@@ -54,59 +54,10 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                      flex: 2,
+                      flex: 1,
                       child: Container(
                         child: Row(
                           children: <Widget>[
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  print('I want to view tenants');
-                                  Navigator.of(context)
-                                      .pushNamed('/view-tenants', arguments: {
-                                    "code": code,
-                                    "apartment": apartmentName
-                                  });
-                                },
-                                child: Card(
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 30),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.green,
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.people,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          'Tenants',
-                                          style: GoogleFonts.quicksand(
-                                              textStyle: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  elevation: 20,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                ),
-                              ),
-                            ),
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {

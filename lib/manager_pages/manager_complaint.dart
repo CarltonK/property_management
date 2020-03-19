@@ -43,14 +43,11 @@ class _ManagerComplaintState extends State<ManagerComplaint> {
               margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               height: double.infinity,
               width: MediaQuery.of(context).size.width,
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    ViewComplaintsWidget(code: data["landlord_code"])
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(child: ViewComplaintsWidget(code: data["landlord_code"]))
+                ],
               ),
             )
           ],
