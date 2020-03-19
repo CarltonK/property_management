@@ -47,7 +47,8 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Expanded(child: ViewComplaintsWidget(code: data["landlord_code"]))
+                  Expanded(
+                      child: ViewComplaintsWidget(code: data["landlord_code"]))
                 ],
               ),
             )

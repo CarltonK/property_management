@@ -54,7 +54,7 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Container(
                         child: Row(
                           children: <Widget>[

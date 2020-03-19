@@ -87,25 +87,26 @@ class _ManagerHomeState extends State<ManagerHome> {
                           builder: (BuildContext context,
                               AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
                             if (snapshot.hasError) {
-                              print('Snapshot Error: ${snapshot.error.toString()}');
+                              print(
+                                  'Snapshot Error: ${snapshot.error.toString()}');
                               return Center(
                                   child: Column(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 50,
-                                      ),
-                                      Text(
-                                        'There is an error ${snapshot.error.toString()}',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.quicksand(
-                                            textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                            )),
-                                      )
-                                    ],
-                                  ));
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Text(
+                                    'There is an error ${snapshot.error.toString()}',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.quicksand(
+                                        textStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    )),
+                                  )
+                                ],
+                              ));
                             } else {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.done:
@@ -116,18 +117,20 @@ class _ManagerHomeState extends State<ManagerHome> {
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.quicksand(
                                             textStyle: TextStyle(
-                                                fontSize: 28, color: Colors.white)),
+                                                fontSize: 28,
+                                                color: Colors.white)),
                                       ),
                                     );
                                   }
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Expanded(
                                           child: Breakdown(
-                                            snapshot: snapshot.data,
-                                            code: code,
-                                          )),
+                                        snapshot: snapshot.data,
+                                        code: code,
+                                      )),
                                     ],
                                   );
                                   break;
@@ -162,6 +165,23 @@ class _ManagerHomeState extends State<ManagerHome> {
               code: data["landlord_code"],
             )
           ],
+        ),
+      ),
+      floatingActionButton: MaterialButton(
+        color: Colors.green,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        splashColor: Colors.greenAccent[700],
+        onPressed: () {
+          Navigator.of(context).pushNamed('/record-cash', arguments: code);
+        },
+        child: Text(
+          'Cash payment',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          )),
         ),
       ),
     );

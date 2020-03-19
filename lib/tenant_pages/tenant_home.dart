@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -18,7 +18,7 @@ class TenantHome extends StatefulWidget {
 }
 
 class _TenantHomeState extends State<TenantHome> {
-  final GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
+  //final GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
   Map<String, dynamic> user;
   int _code;
   String uid, file_path, url_result;
@@ -49,7 +49,8 @@ class _TenantHomeState extends State<TenantHome> {
     /// Unique file name for the file
     file_path = 'payments/$_code/$uid/$dateFormatted/$date/bankslip.png';
     //Create a storage reference
-    StorageReference reference = FirebaseStorage.instance.ref().child(file_path);
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child(file_path);
     //Create a task that will handle the upload
     storageUploadTask = reference.putFile(
       file,
@@ -62,38 +63,7 @@ class _TenantHomeState extends State<TenantHome> {
   }
 
   Future _addBankPayment() async {
-    _startUpload(_imageFile).then((value) async {
-      //Change value in firebase users collection
-      await Firestore.instance
-          .collection("payments")
-          .document(_code.toString())
-          .collection("received")
-          .document()
-          .setData(
-          {"url": value,
-            "fullName":user["fullName"],
-            "mode":"bank",
-            "approved":false,
-            "uid":uid,
-            "date":date,
-          });
-
-      await Firestore.instance
-          .collection("users")
-          .document(uid)
-          .collection("payments_history")
-          .document(dateFormatted)
-          .setData({
-        "url": value,
-        "mode":"bank",
-        "approved":false,
-        "date":date,
-      });
-
-    }).whenComplete(() {
-      Navigator.of(context).pop();
-    });
-
+    //Action sheet to show upload status
     showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
@@ -102,10 +72,10 @@ class _TenantHomeState extends State<TenantHome> {
               'Uploading',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
             ),
             message: SpinKitDualRing(
               color: Colors.red,
@@ -113,6 +83,54 @@ class _TenantHomeState extends State<TenantHome> {
             ),
           );
         });
+
+    _startUpload(_imageFile).then((value) async {
+      //Change value in firebase users collection
+
+      await Firestore.instance
+          .collection("payments")
+          .document(_code.toString())
+          .collection("received")
+          .document()
+          .setData({
+        "url": value,
+        "fullName": user["fullName"],
+        "mode": "bank",
+        "approved": false,
+        "uid": uid,
+        "date": date,
+      });
+
+      await Firestore.instance
+          .collection("users")
+          .document(uid)
+          .collection("payments_history")
+          .document(dateFormatted)
+          .setData({
+        "url": value,
+        "mode": "bank",
+        "approved": false,
+        "date": date,
+      });
+    }).whenComplete(() {
+      Navigator.of(context).pop();
+      //Show a success message
+      showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: Text(
+                'Your slip was uploaded successfully',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
+              ),
+            );
+          });
+    });
   }
 
   void _mpesaPay() {
@@ -125,10 +143,10 @@ class _TenantHomeState extends State<TenantHome> {
                 'Please wait for the landlord to approve your application before submitting a request to vacate',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
               ),
               cancelButton: CupertinoActionSheetAction(
                   onPressed: () {
@@ -145,8 +163,7 @@ class _TenantHomeState extends State<TenantHome> {
                   )));
         },
       );
-    }
-    else {
+    } else {
       print('I want to pay via M-PESA');
     }
   }
@@ -161,10 +178,10 @@ class _TenantHomeState extends State<TenantHome> {
                 'Please wait for the landlord to approve your application before submitting a request to vacate',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
               ),
               cancelButton: CupertinoActionSheetAction(
                   onPressed: () {
@@ -181,8 +198,7 @@ class _TenantHomeState extends State<TenantHome> {
                   )));
         },
       );
-    }
-    else {
+    } else {
       print('I want to upload a bank slip');
       _pickImage(ImageSource.camera);
     }
@@ -192,23 +208,22 @@ class _TenantHomeState extends State<TenantHome> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
-  Future<List<DocumentSnapshot>> _getPayments(String uid) async {
-    //This is the name of the collection containing complaints
-    final String _collection = 'users';
-    //Create a variable to store Firestore instance
-    final Firestore _fireStore = Firestore.instance;
-    QuerySnapshot query = await _fireStore
-        .collection(_collection)
-        .document(uid)
-        .collection("payments_history")
-        .orderBy("date", descending: true)
-        .getDocuments();
-    print('Here are the documents ${query.documents}');
-    return query.documents;
-  }
+//  Future<List<DocumentSnapshot>> _getPayments(String uid) async {
+//    //This is the name of the collection containing complaints
+//    final String _collection = 'users';
+//    //Create a variable to store Firestore instance
+//    final Firestore _fireStore = Firestore.instance;
+//    QuerySnapshot query = await _fireStore
+//        .collection(_collection)
+//        .document(uid)
+//        .collection("payments_history")
+//        .orderBy("date", descending: true)
+//        .getDocuments();
+//    print('Here are the documents ${query.documents}');
+//    return query.documents;
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +232,6 @@ class _TenantHomeState extends State<TenantHome> {
     uid = user["uid"];
 
     return Scaffold(
-      key: scaffoldState,
       appBar: AppBar(
         backgroundColor: Colors.green[900],
         elevation: 0.0,
@@ -263,218 +277,219 @@ class _TenantHomeState extends State<TenantHome> {
                         textStyle: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                        color: Colors.white)),
+                            color: Colors.white)),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Expanded(
                     child: Container(
-                      child: FutureBuilder<List<DocumentSnapshot>>(
-                        future: _getPayments(uid),
-                        builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+                      child: StreamBuilder(
+                        stream: Firestore.instance
+                            .collection("users")
+                            .document(uid)
+                            .collection("payments_history")
+                            .orderBy("date", descending: true)
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
                           if (snapshot.hasError) {
-                            print('Snapshot Error: ${snapshot.error.toString()}');
+                            print(
+                                'Snapshot Error: ${snapshot.error.toString()}');
                             return Center(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 50,
-                                    ),
-                                    Text(
-                                      'Ooops! You need a code from your landlord to view your previous payments',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.quicksand(
-                                          textStyle: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                          )),
-                                    )
-                                  ],
-                                ));
+                                child: Text(
+                              'Ooops! You need a code from your landlord to view your previous payments',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 20,
+                              )),
+                            ));
                           }
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Center(
-                                  child: SpinKitFadingCircle(
-                                    color: Colors.white,
-                                    size: 150.0,
-                                  ));
-                              break;
-                            case ConnectionState.none:
-                              return Text('none');
-                              break;
-                            case ConnectionState.active:
-                              break;
-                            case ConnectionState.done:
-                              if (snapshot.data.length == 0) {
-                                return Center(
-                                  child: Text(
-                                    'You have no previous payments',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                        )),
-                                  ),
-                                );
-                              }
-                              return ListView(
-                                children: snapshot.data.map((map) {
-                                  var date = map["date"];
-                                  var formatter = new DateFormat('yMMMd');
-                                  String dateFormatted = formatter.format(date.toDate());
+                          if (snapshot.data == null) {
+                            return Center(
+                              child: Text(
+                                'You have no previous payments',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                )),
+                              ),
+                            );
+                          }
+                          if (snapshot.data.documents.length == 0) {}
+                          if (snapshot.hasData) {
+                            return ListView(
+                              children: snapshot.data.documents.map((map) {
+                                var date = map["date"];
+                                var formatter = new DateFormat('yMMMd');
+                                String dateFormatted =
+                                    formatter.format(date.toDate());
 
-                                  //Difference in days
-                                  DateTime dateDue = user["due"].toDate();
-                                  DateTime datePaid = map["date"].toDate();
-                                  var difference = dateDue.day - datePaid.day;
-                                  print(difference);
+                                //Difference in days
+                                DateTime dateDue = user["due"].toDate();
+                                DateTime datePaid = map["date"].toDate();
+                                var difference = dateDue.day - datePaid.day;
+                                print(difference);
 
-                                  dynamic durationTaken = "early";
+                                dynamic durationTaken = "early";
 
-                                  if (difference < 0) {
-                                    difference = difference.abs();
-                                    durationTaken = "early";
-                                  }
-                                  else {
-                                    durationTaken = "late";
-                                  }
+                                if (difference < 0) {
+                                  difference = difference.abs();
+                                  durationTaken = "early";
+                                } else {
+                                  durationTaken = "late";
+                                }
 
-                                  return Card(
-                                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    color: Colors.green[900],
-                                    shape: RoundedRectangleBorder(
+                                return Card(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  color: Colors.green[900],
+                                  shape: RoundedRectangleBorder(
                                       side: BorderSide(
-                                        color: Colors.white,
-                                        width: 1.5
-                                      ),
-                                      borderRadius: BorderRadius.circular(8)
-                                    ),
-                                    child: map["mode"] != "bank"
-                                    ? ListTile(
-                                      isThreeLine: true,
-                                      title: Text(
-                                        '$dateFormatted',
-                                        style: GoogleFonts.quicksand(
-                                            textStyle: TextStyle(
+                                          color: Colors.white, width: 1.5),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: map["mode"] != "bank"
+                                      ? ListTile(
+                                          isThreeLine: true,
+                                          title: Text(
+                                            '$dateFormatted',
+                                            style: GoogleFonts.quicksand(
+                                                textStyle: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
                                             )),
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            'Paid via: ${map["mode"]}',
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                'Paid via: ${map["mode"]}',
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 )),
-                                          ),
-                                          Text(
-                                            '$difference days $durationTaken',
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
+                                              ),
+                                              Text(
+                                                '$difference days $durationTaken',
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 )),
-                                          )
-                                        ],
-                                      ),
-                                      leading: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            'Approved',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
+                                              )
+                                            ],
+                                          ),
+                                          leading: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                'Approved',
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 )),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Icon(
+                                                map["approved"]
+                                                    ? Icons.done_outline
+                                                    : Icons.cancel,
+                                                color: map["approved"]
+                                                    ? Colors.white
+                                                    : Colors.red,
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Icon(
-                                            map["approved"] ? Icons.done_outline : Icons.cancel,
-                                            color: map["approved"] ? Colors.white : Colors.red,
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                    : ExpansionTile(
-                                      title: Text(
-                                        '$dateFormatted',
-                                        style: GoogleFonts.quicksand(
-                                            textStyle: TextStyle(
+                                        )
+                                      : ExpansionTile(
+                                          title: Text(
+                                            '$dateFormatted',
+                                            style: GoogleFonts.quicksand(
+                                                textStyle: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
                                             )),
-                                      ),
-                                      subtitle: Text(
-                                        'Paid via: ${map["mode"]}',
-                                        style: GoogleFonts.quicksand(
-                                            textStyle: TextStyle(
+                                          ),
+                                          subtitle: Text(
+                                            'Paid via: ${map["mode"]}',
+                                            style: GoogleFonts.quicksand(
+                                                textStyle: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
                                             )),
-                                      ),
-                                      children: <Widget>[
-                                        Text(
-                                          '$difference days $durationTaken',
-                                          style: GoogleFonts.quicksand(
-                                              textStyle: TextStyle(
+                                          ),
+                                          children: <Widget>[
+                                            Text(
+                                              '$difference days $durationTaken',
+                                              style: GoogleFonts.quicksand(
+                                                  textStyle: TextStyle(
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                               )),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Image.network(
-                                          map["url"],
-                                        fit: BoxFit.fitWidth,
-                                        height: 200,
-                                        width: MediaQuery.of(context).size.width,)
-                                      ],
-                                      leading: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            'Approved',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Image.network(
+                                              map["url"],
+                                              fit: BoxFit.fitWidth,
+                                              height: 200,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                            )
+                                          ],
+                                          leading: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                'Approved',
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 )),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Icon(
+                                                map["approved"]
+                                                    ? Icons.done_outline
+                                                    : Icons.cancel,
+                                                color: map["approved"]
+                                                    ? Colors.white
+                                                    : Colors.red,
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Icon(
-                                            map["approved"] ? Icons.done_outline : Icons.cancel,
-                                            color: map["approved"] ? Colors.white : Colors.red,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                              break;
+                                        ),
+                                );
+                              }).toList(),
+                            );
                           }
                           return Center(
                               child: SpinKitFadingCircle(
-                                color: Colors.white,
-                                size: 150.0,
-                              ));
+                            color: Colors.white,
+                            size: 150.0,
+                          ));
                         },
                       ),
                     ),
@@ -491,7 +506,8 @@ class _TenantHomeState extends State<TenantHome> {
           MaterialButton(
             padding: EdgeInsets.all(6),
             color: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             splashColor: Colors.greenAccent[700],
             onPressed: _bankPay,
             child: Row(
@@ -508,8 +524,9 @@ class _TenantHomeState extends State<TenantHome> {
                   'Upload bank slip',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,)),
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )),
                 )
               ],
             ),
@@ -517,7 +534,8 @@ class _TenantHomeState extends State<TenantHome> {
           MaterialButton(
             padding: EdgeInsets.all(6),
             color: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             splashColor: Colors.greenAccent[700],
             onPressed: _mpesaPay,
             child: Row(
@@ -534,8 +552,9 @@ class _TenantHomeState extends State<TenantHome> {
                   'Lipa na M-PESA',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,)),
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )),
                 )
               ],
             ),

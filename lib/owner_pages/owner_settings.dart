@@ -34,10 +34,8 @@ class _OwnerSettingsState extends State<OwnerSettings> {
 
   Widget addManager() {
     return MaterialButton(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
+      color: Colors.green,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       splashColor: Colors.greenAccent[700],
       onPressed: () {
         Navigator.of(context)
@@ -49,6 +47,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
           Icon(
             Icons.person_add,
             size: 20,
+            color: Colors.white,
           ),
           SizedBox(
             width: 5,
@@ -57,7 +56,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
             'Add a manager',
             style: GoogleFonts.quicksand(
                 textStyle: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             )),
           )
@@ -98,7 +97,6 @@ class _OwnerSettingsState extends State<OwnerSettings> {
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
         ),
-        actions: <Widget>[addManager()],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -351,6 +349,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
           ],
         ),
       ),
+      floatingActionButton: addManager(),
     );
   }
 }

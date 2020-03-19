@@ -141,6 +141,7 @@ class _TenantProfileState extends State<TenantProfile> {
       setState(() {
         _imageFile = selected;
       });
+      _changePic();
     }
   }
 
@@ -167,25 +168,13 @@ class _TenantProfileState extends State<TenantProfile> {
   }
 
   Future _changePic() async {
-    _startUpload(_imageFile).then((value) {
-      //Change value in firebase users collection
-      Firestore.instance
-          .collection("users")
-          .document(uid)
-          .updateData({"url": value});
-    }).whenComplete(() {
-      setState(() {
-        user["url"] = url_result;
-      });
-      Navigator.of(context).pop();
-    });
-
+    //Action sheet to show upload status
     showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
           return CupertinoActionSheet(
             title: Text(
-              'Uploading',
+              'Updating your profile',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
                 fontWeight: FontWeight.w600,
@@ -199,6 +188,36 @@ class _TenantProfileState extends State<TenantProfile> {
             ),
           );
         });
+
+    _startUpload(_imageFile).then((value) {
+      //Change value in firebase users collection
+      Firestore.instance
+          .collection("users")
+          .document(uid)
+          .updateData({"url": value});
+    }).whenComplete(() {
+      setState(() {
+        user["url"] = url_result;
+      });
+
+      Navigator.of(context).pop();
+      //Show a success message
+      showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: Text(
+                'Your profile has been updated',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
+              ),
+            );
+          });
+    });
   }
 
   @override
@@ -524,62 +543,58 @@ class _TenantProfileState extends State<TenantProfile> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         splashColor: Colors.greenAccent[700],
         onPressed: () {
-          _imageFile == null
-              ? showCupertinoModalPopup(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CupertinoActionSheet(
-                        title: Text(
-                          'Select a source',
-                          style: GoogleFonts.quicksand(
+          showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoActionSheet(
+                  title: Text(
+                    'Select a source',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
+                  actions: <Widget>[
+                    CupertinoActionSheetAction(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _pickImage(ImageSource.camera);
+                        },
+                        child: Text(
+                          'CAMERA',
+                          style: GoogleFonts.muli(
                               textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            color: Colors.black,
-                          )),
-                        ),
-                        actions: <Widget>[
-                          CupertinoActionSheetAction(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                _pickImage(ImageSource.camera);
-                              },
-                              child: Text(
-                                'CAMERA',
-                                style: GoogleFonts.muli(
-                                    textStyle: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold)),
-                              )),
-                          CupertinoActionSheetAction(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                _pickImage(ImageSource.gallery);
-                              },
-                              child: Text(
-                                'GALLERY',
-                                style: GoogleFonts.muli(
-                                    textStyle: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold)),
-                              ))
-                        ],
-                        cancelButton: CupertinoActionSheetAction(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              FocusScope.of(context).unfocus();
-                            },
-                            child: Text(
-                              'CANCEL',
-                              style: GoogleFonts.muli(
-                                  textStyle: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold)),
-                            )));
-                  },
-                )
-              : _changePic();
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        )),
+                    CupertinoActionSheetAction(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _pickImage(ImageSource.gallery);
+                        },
+                        child: Text(
+                          'GALLERY',
+                          style: GoogleFonts.muli(
+                              textStyle: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ))
+                  ],
+                  cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold)),
+                      )));
+            },
+          );
         },
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -589,12 +604,12 @@ class _TenantProfileState extends State<TenantProfile> {
               width: 5,
             ),
             Text(
-              _imageFile == null ? 'Add a picture' : 'Upload',
+              'Change picture',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)),
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              )),
             )
           ],
         ),

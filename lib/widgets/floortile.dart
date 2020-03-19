@@ -56,9 +56,7 @@ class _FloorTileState extends State<FloorTile> {
                       );
                     }
                     return ListView(
-                      children: snapshot.data
-                          .map((map) {
-
+                      children: snapshot.data.map((map) {
                         //Date Parsing and Formatting
                         var dateRetrieved = map["due"];
                         var formatter = new DateFormat('MMMd');
@@ -100,21 +98,22 @@ class _FloorTileState extends State<FloorTile> {
                                     'Amount',
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(color: Colors.white)),
+                                        textStyle:
+                                            TextStyle(color: Colors.white)),
                                   ),
                                   Text(
                                     '${map["rent"]}',
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(color: Colors.white)),
+                                        textStyle:
+                                            TextStyle(color: Colors.white)),
                                   ),
                                 ],
                               ),
                             ),
                           ),
                         );
-                      })
-                          .toList(),
+                      }).toList(),
                     );
                     break;
                   case ConnectionState.waiting:

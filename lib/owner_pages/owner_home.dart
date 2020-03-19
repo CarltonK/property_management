@@ -208,25 +208,26 @@ class _OwnerHomeState extends State<OwnerHome> {
                           builder: (BuildContext context,
                               AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
                             if (snapshot.hasError) {
-                              print('Snapshot Error: ${snapshot.error.toString()}');
+                              print(
+                                  'Snapshot Error: ${snapshot.error.toString()}');
                               return Center(
                                   child: Column(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 50,
-                                      ),
-                                      Text(
-                                        'There is an error ${snapshot.error.toString()}',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.quicksand(
-                                            textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                            )),
-                                      )
-                                    ],
-                                  ));
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Text(
+                                    'There is an error ${snapshot.error.toString()}',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.quicksand(
+                                        textStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    )),
+                                  )
+                                ],
+                              ));
                             } else {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.done:
@@ -237,18 +238,20 @@ class _OwnerHomeState extends State<OwnerHome> {
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.quicksand(
                                             textStyle: TextStyle(
-                                                fontSize: 28, color: Colors.white)),
+                                                fontSize: 28,
+                                                color: Colors.white)),
                                       ),
                                     );
                                   }
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Expanded(
                                           child: Breakdown(
-                                            snapshot: snapshot.data,
-                                            code: code,
-                                          )),
+                                        snapshot: snapshot.data,
+                                        code: code,
+                                      )),
                                     ],
                                   );
                                   break;
