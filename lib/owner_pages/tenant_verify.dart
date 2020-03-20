@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -89,6 +90,9 @@ class _TenantVerifyState extends State<TenantVerify> {
     );
   }
 
+  //create instance of Firebase Messaging
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+
   Future _updateFields(String docId, int code, String amt, DateTime due,
       String hseNumber, int floorNumber, String name) async {
     //Update users first
@@ -131,6 +135,8 @@ class _TenantVerifyState extends State<TenantVerify> {
       "rent": amt,
       "due": due
     });
+
+    _fcm.subscribeToTopic(code.toString());
 
     setState(() {
       isLoading = true;

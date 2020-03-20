@@ -269,83 +269,12 @@ class _TenantHomeState extends State<TenantHome> {
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
 
-        showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoAlertDialog(
-                title: Text(
-                  '${message["notification"]["title"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      )),
-                ),
-                content: Text(
-                  '${message["notification"]["body"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      )),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )),
-                      ))
-                ],
-              );
-            }
-        );
+        Navigator.of(context).pushNamed('/announcement', arguments: _code);
 
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-
-        showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoAlertDialog(
-                title: Text(
-                  '${message["notification"]["title"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      )),
-                ),
-                content: Text(
-                  '${message["notification"]["body"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      )),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )),
-                      ))
-                ],
-              );
-            }
-        );
+        Navigator.of(context).pushNamed('/announcement', arguments: _code);
       },
     );
 

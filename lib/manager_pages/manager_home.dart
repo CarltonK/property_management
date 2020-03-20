@@ -43,123 +43,123 @@ class _ManagerHomeState extends State<ManagerHome> {
       onMessage: (Map<String, dynamic> message) async {
         print('onMessage: $message');
 
-        showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoAlertDialog(
-                title: Text(
-                  '${message["notification"]["title"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      )),
-                ),
-                content: Text(
-                  '${message["notification"]["body"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      )),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )),
-                      ))
-                ],
-              );
-            }
-        );
+//        showCupertinoModalPopup(
+//            context: context,
+//            builder: (BuildContext context) {
+//              return CupertinoAlertDialog(
+//                title: Text(
+//                  '${message["notification"]["title"]}',
+//                  style: GoogleFonts.quicksand(
+//                      textStyle: TextStyle(
+//                        fontWeight: FontWeight.w600,
+//                        fontSize: 20,
+//                      )),
+//                ),
+//                content: Text(
+//                  '${message["notification"]["body"]}',
+//                  style: GoogleFonts.quicksand(
+//                      textStyle: TextStyle(
+//                        fontWeight: FontWeight.w600,
+//                        fontSize: 16,
+//                      )),
+//                ),
+//                actions: <Widget>[
+//                  FlatButton(
+//                      onPressed: () => Navigator.of(context).pop(),
+//                      child: Text(
+//                        'CANCEL',
+//                        style: GoogleFonts.muli(
+//                            textStyle: TextStyle(
+//                              color: Colors.red,
+//                              fontWeight: FontWeight.bold,
+//                              fontSize: 20,
+//                            )),
+//                      ))
+//                ],
+//              );
+//            }
+//        );
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
 
-        showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoAlertDialog(
-                title: Text(
-                  '${message["notification"]["title"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      )),
-                ),
-                content: Text(
-                  '${message["notification"]["body"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      )),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )),
-                      ))
-                ],
-              );
-            }
-        );
+//        showCupertinoModalPopup(
+//            context: context,
+//            builder: (BuildContext context) {
+//              return CupertinoAlertDialog(
+//                title: Text(
+//                  '${message["notification"]["title"]}',
+//                  style: GoogleFonts.quicksand(
+//                      textStyle: TextStyle(
+//                        fontWeight: FontWeight.w600,
+//                        fontSize: 20,
+//                      )),
+//                ),
+//                content: Text(
+//                  '${message["notification"]["body"]}',
+//                  style: GoogleFonts.quicksand(
+//                      textStyle: TextStyle(
+//                        fontWeight: FontWeight.w600,
+//                        fontSize: 16,
+//                      )),
+//                ),
+//                actions: <Widget>[
+//                  FlatButton(
+//                      onPressed: () => Navigator.of(context).pop(),
+//                      child: Text(
+//                        'CANCEL',
+//                        style: GoogleFonts.muli(
+//                            textStyle: TextStyle(
+//                              color: Colors.red,
+//                              fontWeight: FontWeight.bold,
+//                              fontSize: 20,
+//                            )),
+//                      ))
+//                ],
+//              );
+//            }
+//        );
 
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
 
-        showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoAlertDialog(
-                title: Text(
-                  '${message["notification"]["title"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      )),
-                ),
-                content: Text(
-                  '${message["notification"]["body"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      )),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )),
-                      ))
-                ],
-              );
-            }
-        );
+//        showCupertinoModalPopup(
+//            context: context,
+//            builder: (BuildContext context) {
+//              return CupertinoAlertDialog(
+//                title: Text(
+//                  '${message["notification"]["title"]}',
+//                  style: GoogleFonts.quicksand(
+//                      textStyle: TextStyle(
+//                        fontWeight: FontWeight.w600,
+//                        fontSize: 20,
+//                      )),
+//                ),
+//                content: Text(
+//                  '${message["notification"]["body"]}',
+//                  style: GoogleFonts.quicksand(
+//                      textStyle: TextStyle(
+//                        fontWeight: FontWeight.w600,
+//                        fontSize: 16,
+//                      )),
+//                ),
+//                actions: <Widget>[
+//                  FlatButton(
+//                      onPressed: () => Navigator.of(context).pop(),
+//                      child: Text(
+//                        'CANCEL',
+//                        style: GoogleFonts.muli(
+//                            textStyle: TextStyle(
+//                              color: Colors.red,
+//                              fontWeight: FontWeight.bold,
+//                              fontSize: 20,
+//                            )),
+//                      ))
+//                ],
+//              );
+//            }
+//        );
       },
     );
 
@@ -216,7 +216,8 @@ class _ManagerHomeState extends State<ManagerHome> {
         .document()
         .setData({
       "message": message,
-      "sentDate": DateTime.now()
+      "sentDate": DateTime.now(),
+      "code": code.toString()
     });
 
   }
