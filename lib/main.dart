@@ -16,6 +16,7 @@ import 'package:property_management/owner_pages/add_manager.dart';
 import 'package:property_management/owner_pages/owner.dart';
 import 'package:property_management/owner_pages/tenant_verify.dart';
 import 'package:property_management/tenant_pages/add_complaint.dart';
+import 'package:property_management/tenant_pages/announcement.dart';
 import 'package:property_management/tenant_pages/tenant.dart';
 import 'package:property_management/tenant_pages/tenant_prof.dart';
 import 'package:property_management/welcome.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/tenant-home': (context) => TenantBase(),
         '/tenant-profile': (context) => TenantProfile(),
         '/add-complaint': (context) => AddComplaint(),
+        '/announcement': (context) => Announcement(),
         //Owner
         '/owner_home': (context) => OwnerBase(),
         '/add-manager': (context) => AddManager(),

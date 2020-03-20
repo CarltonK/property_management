@@ -16,7 +16,7 @@ class _TenSearchState extends State<TenSearch> {
   int resultsFound = 0;
 
   Future<int> _getListings(int rooms, int min, int max) async {
-    print('We want to perform this query');
+    //print('We want to perform this query');
     final String collection = "listings";
     QuerySnapshot query = await Firestore.instance
         .collection(collection)
@@ -26,7 +26,7 @@ class _TenSearchState extends State<TenSearch> {
         .orderBy("price", descending: true)
         .getDocuments();
     resultsFound = query.documents.length;
-    print('Listings found: $resultsFound');
+    //print('Listings found: $resultsFound');
     return resultsFound;
   }
 
@@ -218,7 +218,7 @@ class _TenSearchState extends State<TenSearch> {
                     children: <Widget>[
                       _bedroomSelector(),
                       SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
                       _dropDownRanges(),
                       SizedBox(
@@ -281,7 +281,6 @@ class _TenSearchState extends State<TenSearch> {
                       cancelButton: CupertinoActionSheetAction(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            FocusScope.of(context).unfocus();
                           },
                           child: Text(
                             'CANCEL',
@@ -367,8 +366,7 @@ void _viewResults(BuildContext context, int results) {
           actions: <Widget>[
             CupertinoActionSheetAction(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  FocusScope.of(context).unfocus();
+                  //Navigator.of(context).pop();
                 },
                 child: Text(
                   'OK I UNDERSTAND',

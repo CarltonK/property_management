@@ -114,52 +114,11 @@ class _OwnerHomeState extends State<OwnerHome> {
         actions: <Widget>[
           IconButton(
               icon: Icon(
-                CupertinoIcons.ellipsis,
+                Icons.message,
+                size: 30,
                 color: Colors.white,
               ),
-              onPressed: () {
-                //This filter selects the appropriate month
-                showCupertinoModalPopup(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CupertinoActionSheet(
-                        title: Text(
-                          'Select the month',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            color: Colors.black,
-                          )),
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                              onPressed: () {},
-                              child: Text(
-                                'January 2020',
-                                style: GoogleFonts.quicksand(fontSize: 20),
-                              )),
-                          FlatButton(
-                              onPressed: () {},
-                              child: Text(
-                                'February 2020',
-                                style: GoogleFonts.quicksand(fontSize: 20),
-                              ))
-                        ],
-                        cancelButton: CupertinoActionSheetAction(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              FocusScope.of(context).unfocus();
-                            },
-                            child: Text(
-                              'CANCEL',
-                              style: GoogleFonts.muli(
-                                  textStyle: TextStyle(
-                                      color: Colors.red, fontSize: 25)),
-                            )));
-                  },
-                );
-              })
+              onPressed: () {})
         ],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(

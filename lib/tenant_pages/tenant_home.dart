@@ -24,6 +24,8 @@ class _TenantHomeState extends State<TenantHome> {
   int _code;
   String uid, file_path, url_result;
 
+  //int notificationCount = 0;
+
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
   static var date = DateTime.now();
@@ -207,10 +209,21 @@ class _TenantHomeState extends State<TenantHome> {
     }
   }
 
+//  Future _getMessagesCount() async {
+//    QuerySnapshot query = await Firestore.instance.collection("apartments").document(_code.toString()).collection("announcements").getDocuments();
+//    setState(() {
+//      notificationCount = query.documents.length;
+//    });
+//    print(query.documents[0].data.toString());
+//    return query.documents.length;
+//  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    //_getMessagesCount();
 
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -378,6 +391,13 @@ class _TenantHomeState extends State<TenantHome> {
           style: GoogleFonts.quicksand(
               textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.mail, size: 30,),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/announcement', arguments: _code);
+              })
+        ],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,

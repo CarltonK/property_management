@@ -130,7 +130,7 @@ class _TenantBaseState extends State<TenantBase> {
                 ),
                 Container(
                   height: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(),
                   width: MediaQuery.of(context).size.width,
                   child: _widgetTenants[_selectedIndex],
                 )

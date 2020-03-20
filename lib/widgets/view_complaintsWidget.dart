@@ -60,7 +60,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
           labelStyle:
           GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.black)),
           ),
-      keyboardType: TextInputType.phone,
+      keyboardType: TextInputType.text,
       validator: (value) {
         if (value.isEmpty) {
           return 'A message is required';
@@ -77,7 +77,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
 
   bool isLoading = true;
 
-  void _replyComplaint() async {
+  void _replyComplaint() {
 
     showCupertinoModalPopup(
         context:
