@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:property_management/models/usermodel.dart';
 
@@ -14,6 +17,8 @@ class API with ChangeNotifier {
 
   //create instance of FirebaseAuth
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //create instance of Firebase Messaging
+  final FirebaseMessaging _fcm = FirebaseMessaging();
 
   //Return a user
   Future getUser() {
@@ -167,6 +172,9 @@ class API with ChangeNotifier {
     DateTime registerDate = user.registerDate;
     int landlordCode = user.lordCode;
 
+    //Retrieve Device Token
+    String fcmToken = await _fcm.getToken();
+
     try {
       await Firestore.instance.collection("users").document(uid).setData({
         "email": email,
@@ -174,11 +182,16 @@ class API with ChangeNotifier {
         "designation": designation,
         "registerDate": registerDate,
         "landlord_code": landlordCode,
+        "token":fcmToken,
+        "platform": Platform.operatingSystem
       });
 
       print("The user was successfully saved");
 
       if (designation == "Tenant") {
+        //Subscribe the tenant to the topic of the apartment
+        _fcm.subscribeToTopic(apartmentName);
+
         await Firestore.instance.collection("tenants").document(uid).setData({
           "email": email,
           "fullName": fullName,
@@ -189,6 +202,7 @@ class API with ChangeNotifier {
         });
         print("The tenant was successfully saved");
       }
+
     } catch (e) {
       print("The user was not successfully saved");
       print("This is the error ${e.toString()}");

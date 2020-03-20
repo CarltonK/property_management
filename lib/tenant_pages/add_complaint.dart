@@ -84,18 +84,10 @@ class _AddComplaintState extends State<AddComplaint> {
 
   Future<bool> _postComplaint(Map<String, dynamic> entryData) async {
     //Relevant collections
-    final String _collectionUser = 'users';
     final String _collectionComplaints = "complaints";
     //Create a variable to store Firestore instance
     final Firestore _fireStore = Firestore.instance;
     try {
-      //Update the user collection first
-      await _fireStore
-          .collection(_collectionUser)
-          .document(data["uid"])
-          .collection("complaints_history")
-          .document()
-          .setData(entryData);
       //Add data to the complaints collection
       await _fireStore
           .collection(_collectionComplaints)
@@ -164,6 +156,7 @@ class _AddComplaintState extends State<AddComplaint> {
         Map<String, dynamic> newData = {
           "fixed": false,
           "hse": data["hseNumber"],
+          "uid": data["uid"],
           "title": _message,
           "landlord_code": data["landlord_code"],
           "tenant": "${data["fullName"]}",

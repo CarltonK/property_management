@@ -46,6 +46,10 @@ dependencies:
   connection_status_bar: ^1.1.2
   # Crashlytics
   firebase_crashlytics: ^0.1.3+3
+  # Messaging
+  firebase_messaging: any
+  # Firebase Core
+  firebase_core: any
 #  # Unique ID
 #  uuid: 2.0.4
 

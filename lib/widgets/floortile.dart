@@ -51,7 +51,7 @@ class _FloorTileState extends State<FloorTile> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.quicksand(
                               textStyle:
-                                  TextStyle(fontSize: 28, color: Colors.white)),
+                                  TextStyle(fontSize: 18, color: Colors.white)),
                         ),
                       );
                     }
@@ -59,7 +59,7 @@ class _FloorTileState extends State<FloorTile> {
                       children: snapshot.data.map((map) {
                         //Date Parsing and Formatting
                         var dateRetrieved = map["due"];
-                        var formatter = new DateFormat('MMMd');
+                        var formatter = new DateFormat('d');
                         String date = formatter.format(dateRetrieved.toDate());
 
                         return Card(
@@ -80,7 +80,7 @@ class _FloorTileState extends State<FloorTile> {
                                         fontSize: 18, color: Colors.white)),
                               ),
                               subtitle: Text(
-                                'Due date : $date',
+                                'Due: $date',
                                 style: GoogleFonts.quicksand(
                                     textStyle: TextStyle(color: Colors.white)),
                               ),

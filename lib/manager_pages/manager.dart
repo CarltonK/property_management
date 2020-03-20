@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,8 @@ class Manager extends StatefulWidget {
 
 class _ManagerState extends State<Manager> {
   int _selectedIndex = 0;
+
+  final FirebaseMessaging _fcm = FirebaseMessaging();
 
   Future _buildLogOutSheet(BuildContext context) {
     return showCupertinoModalPopup(
@@ -95,8 +98,37 @@ class _ManagerState extends State<Manager> {
     ManagerSettings()
   ];
 
+//  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+//    if (message.containsKey('data')) {
+//      // Handle data message
+//      final dynamic data = message['data'];
+//    }
+//
+//    if (message.containsKey('notification')) {
+//      // Handle notification message
+//      final dynamic notification = message['notification'];
+//
+//      final snack = SnackBar(
+//        content: Text(
+//          '$notification["title"]}',
+//          style: GoogleFonts.quicksand(
+//              textStyle: TextStyle(
+//                fontWeight: FontWeight.w600,
+//                fontSize: 20,
+//              )),
+//        ),
+//        action: SnackBarAction(
+//            label: 'VIEW', onPressed: () {}),);
+//
+//      Scaffold.of(context).showSnackBar(snack);
+//    }
+//
+//    // Or do other work.
+//  }
+
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

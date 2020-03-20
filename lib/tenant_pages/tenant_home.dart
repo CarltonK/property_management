@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ class _TenantHomeState extends State<TenantHome> {
   Map<String, dynamic> user;
   int _code;
   String uid, file_path, url_result;
+
+  final FirebaseMessaging _fcm = FirebaseMessaging();
 
   static var date = DateTime.now();
   static var formatter = new DateFormat('yMMM');
@@ -208,6 +211,131 @@ class _TenantHomeState extends State<TenantHome> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+
+        showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                  '${message["notification"]["title"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      )),
+                ),
+                content: Text(
+                  '${message["notification"]["body"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      )),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            )),
+                      ))
+                ],
+              );
+            }
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+
+        showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                  '${message["notification"]["title"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      )),
+                ),
+                content: Text(
+                  '${message["notification"]["body"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      )),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            )),
+                      ))
+                ],
+              );
+            }
+        );
+
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+
+        showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                  '${message["notification"]["title"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      )),
+                ),
+                content: Text(
+                  '${message["notification"]["body"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      )),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            )),
+                      ))
+                ],
+              );
+            }
+        );
+      },
+    );
+
   }
 
 //  Future<List<DocumentSnapshot>> _getPayments(String uid) async {
@@ -317,12 +445,25 @@ class _TenantHomeState extends State<TenantHome> {
                                     textStyle: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
-                                  fontSize: 25,
+                                  fontSize: 18,
                                 )),
                               ),
                             );
                           }
-                          if (snapshot.data.documents.length == 0) {}
+                          if (snapshot.data.documents.length == 0) {
+                            return Center(
+                              child: Text(
+                                'You have no previous payments',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.quicksand(
+                                    textStyle: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    )),
+                              ),
+                            );
+                          }
                           if (snapshot.hasData) {
                             return ListView(
                               children: snapshot.data.documents.map((map) {

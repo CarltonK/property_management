@@ -37,6 +37,7 @@ void main() {
   }, onError: Crashlytics.instance.recordError);
 }
 
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
