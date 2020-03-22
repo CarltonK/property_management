@@ -23,6 +23,7 @@ class _TenantHomeState extends State<TenantHome> {
   Map<String, dynamic> user;
   int _code;
   String uid, file_path, url_result;
+  String phone, natId, rent;
 
   //int notificationCount = 0;
 
@@ -54,16 +55,15 @@ class _TenantHomeState extends State<TenantHome> {
     /// Unique file name for the file
     file_path = 'payments/$_code/$uid/$dateFormatted/$date/bankslip.png';
     //Create a storage reference
-    StorageReference reference =
-        FirebaseStorage.instance.ref().child(file_path);
+    StorageReference reference = FirebaseStorage.instance.ref().child(file_path);
     //Create a task that will handle the upload
     storageUploadTask = reference.putFile(
       file,
     );
+    //Snapshot of the completed result
     taskSnapshot = await storageUploadTask.onComplete;
-
     url_result = await taskSnapshot.ref.getDownloadURL();
-    print('URL is $url_result');
+    //print('URL is $url_result');
     return url_result;
   }
 
@@ -101,6 +101,7 @@ class _TenantHomeState extends State<TenantHome> {
         "url": value,
         "fullName": user["fullName"],
         "mode": "bank",
+        "code":_code.toString(),
         "approved": false,
         "uid": uid,
         "date": date,
@@ -170,7 +171,89 @@ class _TenantHomeState extends State<TenantHome> {
       );
     } else {
       print('I want to pay via M-PESA');
+      if (phone == null && natId == null) {
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+                title: Text(
+                  'Please complete your profile',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold)),
+                    )));
+          },
+        );
+      }
+      else {
+        _lipaNaMpesa(phone, natId, int.parse(rent)).whenComplete(() {
+          //Show a success message
+          showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                  title: Text(
+                    'Your M-PESA payment is being processed',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        )),
+                  ),
+                );
+              });
+        });
+      }
     }
+  }
+
+  Future _lipaNaMpesa(String phone, String ID, int rent) async {
+
+    await Firestore.instance
+        .collection("payments")
+        .document(_code.toString())
+        .collection("received")
+        .document()
+        .setData({
+      "fullName": user["fullName"],
+      "mode": "M-PESA",
+      "approved": false,
+      "phone":phone,
+      "code":_code.toString(),
+      "natId": natId,
+      "amount": rent,
+      "uid": uid,
+      "date": date,
+    });
+
+    await Firestore.instance
+        .collection("users")
+        .document(uid)
+        .collection("payments_history")
+        .document(dateFormatted)
+        .setData({
+      "fullName": user["fullName"],
+      "mode": "M-PESA",
+      "approved": false,
+      "uid": uid,
+      "date": date,
+    });
   }
 
   void _bankPay() {
@@ -204,7 +287,7 @@ class _TenantHomeState extends State<TenantHome> {
         },
       );
     } else {
-      print('I want to upload a bank slip');
+      //print('I want to upload a bank slip');
       _pickImage(ImageSource.camera);
     }
   }
@@ -299,6 +382,9 @@ class _TenantHomeState extends State<TenantHome> {
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
     _code = user["landlord_code"];
+    phone = user["phone"];
+    natId = user["natId"];
+    rent = user["rent"];
     uid = user["uid"];
 
     return Scaffold(
@@ -590,7 +676,8 @@ class _TenantHomeState extends State<TenantHome> {
           ],
         ),
       ),
-      floatingActionButton: Column(
+      floatingActionButton: _code != 0
+      ? Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           MaterialButton(
@@ -650,7 +737,8 @@ class _TenantHomeState extends State<TenantHome> {
             ),
           )
         ],
-      ),
+      )
+      : Text(''),
     );
   }
 
@@ -693,111 +781,111 @@ class _TenantHomeState extends State<TenantHome> {
 //     });
 //  }
 }
-
-Widget _landlordDetails(BuildContext context) {
-  return Container(
-    //This container shows the landlord details
-    width: MediaQuery.of(context).size.width,
-    decoration: BoxDecoration(
-        color: Colors.green[900],
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-    padding: EdgeInsets.all(30),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Landlord Information',
-          style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                  color: Colors.white, fontSize: 22, letterSpacing: .5)),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Row(
-          children: <Widget>[
-            CircleAvatar(
-              radius: 45,
-              backgroundColor: Colors.white,
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Stannis Baratheon',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: .5)),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'stannisbarry@gmail.com',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          letterSpacing: .5)),
-                ),
-              ],
-            )
-          ],
-        ),
-        SizedBox(
-          height: 30,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            MaterialButton(
-              color: Colors.white,
-              onPressed: () {
-                print('I want to call the landlord');
-              },
-              minWidth: MediaQuery.of(context).size.width * 0.35,
-              padding: EdgeInsets.all(16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              child: Text(
-                'Call',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.indigo[900],
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: .5)),
-              ),
-            ),
-            MaterialButton(
-              color: Colors.indigo[900],
-              onPressed: () {
-                print('I want to send an sms to the landlord');
-              },
-              minWidth: MediaQuery.of(context).size.width * 0.35,
-              padding: EdgeInsets.all(16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(color: Colors.white)),
-              child: Text(
-                'Send SMS',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: .5)),
-              ),
-            )
-          ],
-        )
-      ],
-    ),
-  );
-}
+//
+//Widget _landlordDetails(BuildContext context) {
+//  return Container(
+//    //This container shows the landlord details
+//    width: MediaQuery.of(context).size.width,
+//    decoration: BoxDecoration(
+//        color: Colors.green[900],
+//        borderRadius: BorderRadius.only(
+//            topLeft: Radius.circular(40), topRight: Radius.circular(40))),
+//    padding: EdgeInsets.all(30),
+//    child: Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+//        Text(
+//          'Landlord Information',
+//          style: GoogleFonts.muli(
+//              textStyle: TextStyle(
+//                  color: Colors.white, fontSize: 22, letterSpacing: .5)),
+//        ),
+//        SizedBox(
+//          height: 20,
+//        ),
+//        Row(
+//          children: <Widget>[
+//            CircleAvatar(
+//              radius: 45,
+//              backgroundColor: Colors.white,
+//            ),
+//            SizedBox(
+//              width: 15,
+//            ),
+//            Column(
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              children: <Widget>[
+//                Text(
+//                  'Stannis Baratheon',
+//                  style: GoogleFonts.muli(
+//                      textStyle: TextStyle(
+//                          color: Colors.white,
+//                          fontSize: 20,
+//                          fontWeight: FontWeight.bold,
+//                          letterSpacing: .5)),
+//                ),
+//                SizedBox(
+//                  height: 10,
+//                ),
+//                Text(
+//                  'stannisbarry@gmail.com',
+//                  style: GoogleFonts.muli(
+//                      textStyle: TextStyle(
+//                          color: Colors.white,
+//                          fontSize: 16,
+//                          letterSpacing: .5)),
+//                ),
+//              ],
+//            )
+//          ],
+//        ),
+//        SizedBox(
+//          height: 30,
+//        ),
+//        Row(
+//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//          children: <Widget>[
+//            MaterialButton(
+//              color: Colors.white,
+//              onPressed: () {
+//                print('I want to call the landlord');
+//              },
+//              minWidth: MediaQuery.of(context).size.width * 0.35,
+//              padding: EdgeInsets.all(16),
+//              shape: RoundedRectangleBorder(
+//                  borderRadius: BorderRadius.circular(8)),
+//              child: Text(
+//                'Call',
+//                style: GoogleFonts.quicksand(
+//                    textStyle: TextStyle(
+//                        color: Colors.indigo[900],
+//                        fontSize: 18,
+//                        fontWeight: FontWeight.bold,
+//                        letterSpacing: .5)),
+//              ),
+//            ),
+//            MaterialButton(
+//              color: Colors.indigo[900],
+//              onPressed: () {
+//                print('I want to send an sms to the landlord');
+//              },
+//              minWidth: MediaQuery.of(context).size.width * 0.35,
+//              padding: EdgeInsets.all(16),
+//              shape: RoundedRectangleBorder(
+//                  borderRadius: BorderRadius.circular(8),
+//                  side: BorderSide(color: Colors.white)),
+//              child: Text(
+//                'Send SMS',
+//                style: GoogleFonts.quicksand(
+//                    textStyle: TextStyle(
+//                        color: Colors.white,
+//                        fontWeight: FontWeight.bold,
+//                        letterSpacing: .5)),
+//              ),
+//            )
+//          ],
+//        )
+//      ],
+//    ),
+//  );
+//}

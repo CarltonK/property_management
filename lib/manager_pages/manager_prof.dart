@@ -132,7 +132,8 @@ class _ManagerProfState extends State<ManagerProf> {
                                     return ListView(
                                       scrollDirection: Axis.horizontal,
                                       children: snapshot.data.documents
-                                          .map((map) => Card(
+                                          .map((map) => map["mode"] == "bank"
+                                          ? Card(
                                                 child: Container(
                                                   height: MediaQuery.of(context)
                                                       .size
@@ -244,7 +245,116 @@ class _ManagerProfState extends State<ManagerProf> {
                                                     ],
                                                   ),
                                                 ),
-                                              ))
+                                              )
+                                      : Card(
+                                        color: Colors.greenAccent[400],
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width: 200,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              Positioned(
+                                                bottom: 10,
+                                                left: 10,
+                                                child: map["approved"] ==
+                                                    false
+                                                    ? FlatButton(
+                                                    color: Colors
+                                                        .white,
+                                                    onPressed:
+                                                        () async {
+                                                      //Update payments collection
+                                                      var docId = map
+                                                          .documentID;
+                                                      await Firestore
+                                                          .instance
+                                                          .collection(
+                                                          "payments")
+                                                          .document(code
+                                                          .toString())
+                                                          .collection(
+                                                          "received")
+                                                          .document(
+                                                          docId)
+                                                          .updateData({
+                                                        "approved":
+                                                        true,
+                                                      });
+                                                      //Update users collection
+                                                      await Firestore
+                                                          .instance
+                                                          .collection(
+                                                          "users")
+                                                          .document(map[
+                                                      "uid"])
+                                                          .collection(
+                                                          "payments_history")
+                                                          .document(
+                                                          dateFormatted)
+                                                          .updateData({
+                                                        "approved":
+                                                        true,
+                                                      });
+
+                                                      showCupertinoModalPopup(
+                                                          context:
+                                                          context,
+                                                          builder:
+                                                              (BuildContext
+                                                          context) {
+                                                            return CupertinoActionSheet(
+                                                              title:
+                                                              Text(
+                                                                'Payment approved',
+                                                                style: GoogleFonts.quicksand(
+                                                                    textStyle: TextStyle(
+                                                                      fontWeight: FontWeight.w600,
+                                                                      fontSize: 20,
+                                                                      color: Colors.black,
+                                                                    )),
+                                                              ),
+                                                            );
+                                                          });
+                                                    },
+                                                    child: Text(
+                                                      'Approve',
+                                                      style: GoogleFonts.quicksand(
+                                                          textStyle: TextStyle(
+                                                              color: Colors
+                                                                  .black,
+                                                              fontWeight:
+                                                              FontWeight.bold)),
+                                                    ))
+                                                    : Text(''),
+                                              ),
+                                              Positioned(
+                                                top: 10,
+                                                left: 10,
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  padding:
+                                                  EdgeInsets.all(8),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        '${map["fullName"]}\n${map["mode"]}\n${map["amount"]}',
+                                                        style: GoogleFonts.quicksand(
+                                                            textStyle: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                FontWeight.bold)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ))
                                           .toList(),
                                     );
                                   }
