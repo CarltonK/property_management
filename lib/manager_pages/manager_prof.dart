@@ -17,16 +17,16 @@ class _ManagerProfState extends State<ManagerProf> {
   final String _collectionUpper = "payments";
   final String _collectionLower = "received";
 
-  Future<List<DocumentSnapshot>> _getPayments(int code) async {
-    QuerySnapshot query = await Firestore.instance
-        .collection(_collectionUpper)
-        .document(code.toString())
-        .collection(_collectionLower)
-        .where("approved", isEqualTo: false)
-        .orderBy("date", descending: true)
-        .getDocuments();
-    return query.documents;
-  }
+  // Future<List<DocumentSnapshot>> _getPayments(int code) async {
+  //   QuerySnapshot query = await Firestore.instance
+  //       .collection(_collectionUpper)
+  //       .document(code.toString())
+  //       .collection(_collectionLower)
+  //       .where("approved", isEqualTo: false)
+  //       .orderBy("date", descending: true)
+  //       .getDocuments();
+  //   return query.documents;
+  // }
 
   static var date = DateTime.now();
   static var formatter = new DateFormat('yMMM');
@@ -133,228 +133,202 @@ class _ManagerProfState extends State<ManagerProf> {
                                       scrollDirection: Axis.horizontal,
                                       children: snapshot.data.documents
                                           .map((map) => map["mode"] == "bank"
-                                          ? Card(
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: 200,
-                                                  child: Stack(
-                                                    children: <Widget>[
-                                                      Positioned(
-                                                        child: Image.network(
-                                                            map["url"]),
-                                                        width: 200,
-                                                      ),
-                                                      Positioned(
-                                                        bottom: 10,
-                                                        left: 10,
-                                                        child: map["approved"] ==
-                                                                false
-                                                            ? FlatButton(
-                                                                color: Colors
-                                                                    .white,
-                                                                onPressed:
-                                                                    () async {
-                                                                  //Update payments collection
-                                                                  var docId = map
-                                                                      .documentID;
-                                                                  await Firestore
-                                                                      .instance
-                                                                      .collection(
-                                                                          "payments")
-                                                                      .document(code
-                                                                          .toString())
-                                                                      .collection(
-                                                                          "received")
-                                                                      .document(
-                                                                          docId)
-                                                                      .updateData({
-                                                                    "approved":
-                                                                        true,
-                                                                  });
-                                                                  //Update users collection
-                                                                  await Firestore
-                                                                      .instance
-                                                                      .collection(
-                                                                          "users")
-                                                                      .document(map[
-                                                                          "uid"])
-                                                                      .collection(
-                                                                          "payments_history")
-                                                                      .document(
-                                                                          dateFormatted)
-                                                                      .updateData({
-                                                                    "approved":
-                                                                        true,
-                                                                  });
+                                              ? Card(
+                                                  child: Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height,
+                                                    width: 200,
+                                                    child: Stack(
+                                                      children: <Widget>[
+                                                        Positioned(
+                                                          child: Image.network(
+                                                              map["url"]),
+                                                          width: 200,
+                                                        ),
+                                                        Positioned(
+                                                          bottom: 10,
+                                                          left: 10,
+                                                          child: map["approved"] ==
+                                                                  false
+                                                              ? FlatButton(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  onPressed:
+                                                                      () async {
+                                                                    //Update payments collection
+                                                                    var docId =
+                                                                        map.documentID;
+                                                                    await Firestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            "payments")
+                                                                        .document(code
+                                                                            .toString())
+                                                                        .collection(
+                                                                            "received")
+                                                                        .document(
+                                                                            docId)
+                                                                        .updateData({
+                                                                      "approved":
+                                                                          true,
+                                                                    });
 
-                                                                  showCupertinoModalPopup(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                              context) {
-                                                                        return CupertinoActionSheet(
-                                                                          title:
-                                                                              Text(
-                                                                            'Payment approved',
-                                                                            style: GoogleFonts.quicksand(
-                                                                                textStyle: TextStyle(
-                                                                              fontWeight: FontWeight.w600,
-                                                                              fontSize: 20,
-                                                                              color: Colors.black,
-                                                                            )),
-                                                                          ),
-                                                                        );
-                                                                      });
-                                                                },
-                                                                child: Text(
-                                                                  'Approve',
+                                                                    showCupertinoModalPopup(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (BuildContext
+                                                                                context) {
+                                                                          return CupertinoActionSheet(
+                                                                            title:
+                                                                                Text(
+                                                                              'Payment approved',
+                                                                              style: GoogleFonts.quicksand(
+                                                                                  textStyle: TextStyle(
+                                                                                fontWeight: FontWeight.w600,
+                                                                                fontSize: 20,
+                                                                                color: Colors.black,
+                                                                              )),
+                                                                            ),
+                                                                          );
+                                                                        });
+                                                                  },
+                                                                  child: Text(
+                                                                    'Approve',
+                                                                    style: GoogleFonts.quicksand(
+                                                                        textStyle: TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontWeight: FontWeight.bold)),
+                                                                  ))
+                                                              : Text(''),
+                                                        ),
+                                                        Positioned(
+                                                          top: 10,
+                                                          left: 10,
+                                                          child: Container(
+                                                            color: Colors.white,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8),
+                                                            child: Column(
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  '${map["fullName"]}',
                                                                   style: GoogleFonts.quicksand(
                                                                       textStyle: TextStyle(
                                                                           color: Colors
                                                                               .black,
                                                                           fontWeight:
                                                                               FontWeight.bold)),
-                                                                ))
-                                                            : Text(''),
-                                                      ),
-                                                      Positioned(
-                                                        top: 10,
-                                                        left: 10,
-                                                        child: Container(
-                                                          color: Colors.white,
-                                                          padding:
-                                                              EdgeInsets.all(8),
-                                                          child: Column(
-                                                            children: <Widget>[
-                                                              Text(
-                                                                '${map["fullName"]}',
-                                                                style: GoogleFonts.quicksand(
-                                                                    textStyle: TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.bold)),
-                                                              ),
-                                                            ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              : Card(
+                                                  color:
+                                                      Colors.greenAccent[400],
+                                                  child: Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height,
+                                                    width: 200,
+                                                    child: Stack(
+                                                      children: <Widget>[
+                                                        Positioned(
+                                                          bottom: 10,
+                                                          left: 10,
+                                                          child: map["approved"] ==
+                                                                  false
+                                                              ? FlatButton(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  onPressed:
+                                                                      () async {
+                                                                    //Update payments collection
+                                                                    var docId =
+                                                                        map.documentID;
+                                                                    await Firestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            "payments")
+                                                                        .document(code
+                                                                            .toString())
+                                                                        .collection(
+                                                                            "received")
+                                                                        .document(
+                                                                            docId)
+                                                                        .updateData({
+                                                                      "approved":
+                                                                          true,
+                                                                    });
+                                                                    showCupertinoModalPopup(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (BuildContext
+                                                                                context) {
+                                                                          return CupertinoActionSheet(
+                                                                            title:
+                                                                                Text(
+                                                                              'Payment approved',
+                                                                              style: GoogleFonts.quicksand(
+                                                                                  textStyle: TextStyle(
+                                                                                fontWeight: FontWeight.w600,
+                                                                                fontSize: 20,
+                                                                                color: Colors.black,
+                                                                              )),
+                                                                            ),
+                                                                          );
+                                                                        });
+                                                                  },
+                                                                  child: Text(
+                                                                    'Approve',
+                                                                    style: GoogleFonts.quicksand(
+                                                                        textStyle: TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontWeight: FontWeight.bold)),
+                                                                  ))
+                                                              : Text(''),
                                                         ),
-                                                      )
-                                                    ],
+                                                        Positioned(
+                                                          top: 10,
+                                                          left: 10,
+                                                          child: Container(
+                                                            color: Colors.white,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8),
+                                                            child: Column(
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  '${map["fullName"]}\n${map["mode"]}\n${map["amount"]}',
+                                                                  style: GoogleFonts.quicksand(
+                                                                      textStyle: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold)),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              )
-                                      : Card(
-                                        color: Colors.greenAccent[400],
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width: 200,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Positioned(
-                                                bottom: 10,
-                                                left: 10,
-                                                child: map["approved"] ==
-                                                    false
-                                                    ? FlatButton(
-                                                    color: Colors
-                                                        .white,
-                                                    onPressed:
-                                                        () async {
-                                                      //Update payments collection
-                                                      var docId = map
-                                                          .documentID;
-                                                      await Firestore
-                                                          .instance
-                                                          .collection(
-                                                          "payments")
-                                                          .document(code
-                                                          .toString())
-                                                          .collection(
-                                                          "received")
-                                                          .document(
-                                                          docId)
-                                                          .updateData({
-                                                        "approved":
-                                                        true,
-                                                      });
-                                                      //Update users collection
-                                                      await Firestore
-                                                          .instance
-                                                          .collection(
-                                                          "users")
-                                                          .document(map[
-                                                      "uid"])
-                                                          .collection(
-                                                          "payments_history")
-                                                          .document(
-                                                          dateFormatted)
-                                                          .updateData({
-                                                        "approved":
-                                                        true,
-                                                      });
-
-                                                      showCupertinoModalPopup(
-                                                          context:
-                                                          context,
-                                                          builder:
-                                                              (BuildContext
-                                                          context) {
-                                                            return CupertinoActionSheet(
-                                                              title:
-                                                              Text(
-                                                                'Payment approved',
-                                                                style: GoogleFonts.quicksand(
-                                                                    textStyle: TextStyle(
-                                                                      fontWeight: FontWeight.w600,
-                                                                      fontSize: 20,
-                                                                      color: Colors.black,
-                                                                    )),
-                                                              ),
-                                                            );
-                                                          });
-                                                    },
-                                                    child: Text(
-                                                      'Approve',
-                                                      style: GoogleFonts.quicksand(
-                                                          textStyle: TextStyle(
-                                                              color: Colors
-                                                                  .black,
-                                                              fontWeight:
-                                                              FontWeight.bold)),
-                                                    ))
-                                                    : Text(''),
-                                              ),
-                                              Positioned(
-                                                top: 10,
-                                                left: 10,
-                                                child: Container(
-                                                  color: Colors.white,
-                                                  padding:
-                                                  EdgeInsets.all(8),
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      Text(
-                                                        '${map["fullName"]}\n${map["mode"]}\n${map["amount"]}',
-                                                        style: GoogleFonts.quicksand(
-                                                            textStyle: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                FontWeight.bold)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ))
+                                                ))
                                           .toList(),
                                     );
                                   }

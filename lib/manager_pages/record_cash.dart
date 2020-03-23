@@ -25,7 +25,6 @@ class _RecordCashState extends State<RecordCash> {
   String dateFormatted = formatter.format(date);
 
   void _cashPayment() async {
-
     showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
@@ -34,10 +33,10 @@ class _RecordCashState extends State<RecordCash> {
               'Processing payment',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
             ),
             message: SpinKitDualRing(
               color: Colors.red,
@@ -54,19 +53,9 @@ class _RecordCashState extends State<RecordCash> {
         .setData({
       "fullName": name,
       "mode": "cash",
+      "code": code.toString(),
       "approved": true,
       "uid": docId,
-      "date": date,
-    });
-
-    await Firestore.instance
-        .collection("users")
-        .document(docId)
-        .collection("payments_history")
-        .document(dateFormatted)
-        .setData({
-      "mode": "cash",
-      "approved": true,
       "date": date,
     });
 
@@ -80,20 +69,17 @@ class _RecordCashState extends State<RecordCash> {
               'Payment approved',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
             ),
           );
         });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     code = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
@@ -128,9 +114,11 @@ class _RecordCashState extends State<RecordCash> {
                       child: StreamBuilder(
                         stream: Firestore.instance
                             .collection("tenants")
-                            .where("approved",isEqualTo: true)
-                            .where("landlord_code",isEqualTo: code).snapshots(),
-                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            .where("approved", isEqualTo: true)
+                            .where("landlord_code", isEqualTo: code)
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
                           if (snapshot.hasError) {
                             return Center(
                               child: Text(
@@ -150,10 +138,10 @@ class _RecordCashState extends State<RecordCash> {
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.quicksand(
                                     textStyle: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    )),
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                )),
                               ),
                             );
                           }
@@ -174,12 +162,9 @@ class _RecordCashState extends State<RecordCash> {
                               children: snapshot.data.documents.map((map) {
                                 return Card(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                    side: BorderSide(
-                                      color: Colors.green,
-                                      width: 3
-                                    )
-                                  ),
+                                      borderRadius: BorderRadius.circular(6),
+                                      side: BorderSide(
+                                          color: Colors.green, width: 3)),
                                   color: _color,
                                   child: ListTile(
                                     isThreeLine: true,
@@ -187,31 +172,26 @@ class _RecordCashState extends State<RecordCash> {
                                       '${map["fullName"]}',
                                       style: GoogleFonts.quicksand(
                                           textStyle: TextStyle(
-                                              color: Colors
-                                                  .black,
-                                              fontWeight:
-                                              FontWeight.bold)),
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold)),
                                     ),
                                     subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           '${map["email"]}',
                                           style: GoogleFonts.quicksand(
                                               textStyle: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                         Text(
                                           '${map["apartment_name"]}',
                                           style: GoogleFonts.quicksand(
                                               textStyle: TextStyle(
-                                                  color: Colors
-                                                      .black,
-                                                  fontWeight:
-                                                  FontWeight.bold)),
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)),
                                         )
                                       ],
                                     ),
@@ -219,11 +199,9 @@ class _RecordCashState extends State<RecordCash> {
                                       '${map["hseNumber"]}',
                                       style: GoogleFonts.quicksand(
                                           textStyle: TextStyle(
-                                              color: Colors
-                                                  .black,
+                                              color: Colors.black,
                                               fontSize: 16,
-                                              fontWeight:
-                                              FontWeight.bold)),
+                                              fontWeight: FontWeight.bold)),
                                     ),
                                     onTap: () {
                                       print(map.documentID);
@@ -265,10 +243,10 @@ class _RecordCashState extends State<RecordCash> {
                       'Please select a tenant',
                       style: GoogleFonts.quicksand(
                           textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            color: Colors.black,
-                          )),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
                     ),
                     cancelButton: CupertinoActionSheetAction(
                         onPressed: () {
@@ -285,8 +263,7 @@ class _RecordCashState extends State<RecordCash> {
                         )));
               },
             );
-          }
-          else {
+          } else {
             showCupertinoModalPopup(
               context: context,
               builder: (BuildContext context) {
@@ -295,10 +272,10 @@ class _RecordCashState extends State<RecordCash> {
                       'This is to confirm payment of KES $rentAmt from $name',
                       style: GoogleFonts.quicksand(
                           textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            color: Colors.black,
-                          )),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
                     ),
                     actions: <Widget>[
                       CupertinoActionSheetAction(
@@ -310,8 +287,7 @@ class _RecordCashState extends State<RecordCash> {
                             'PROCEED',
                             style: GoogleFonts.muli(
                                 textStyle: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold)),
+                                    fontSize: 25, fontWeight: FontWeight.bold)),
                           ))
                     ],
                     cancelButton: CupertinoActionSheetAction(
@@ -341,5 +317,3 @@ class _RecordCashState extends State<RecordCash> {
     );
   }
 }
-
-

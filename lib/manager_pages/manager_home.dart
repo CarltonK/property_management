@@ -18,6 +18,7 @@ class ManagerHome extends StatefulWidget {
 class _ManagerHomeState extends State<ManagerHome> {
   static Map<String, dynamic> data;
   int code;
+  String apartment_name;
 
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
@@ -36,53 +37,53 @@ class _ManagerHomeState extends State<ManagerHome> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print('onMessage: $message');
 
-//        showCupertinoModalPopup(
-//            context: context,
-//            builder: (BuildContext context) {
-//              return CupertinoAlertDialog(
-//                title: Text(
-//                  '${message["notification"]["title"]}',
-//                  style: GoogleFonts.quicksand(
-//                      textStyle: TextStyle(
-//                        fontWeight: FontWeight.w600,
-//                        fontSize: 20,
-//                      )),
-//                ),
-//                content: Text(
-//                  '${message["notification"]["body"]}',
-//                  style: GoogleFonts.quicksand(
-//                      textStyle: TextStyle(
-//                        fontWeight: FontWeight.w600,
-//                        fontSize: 16,
-//                      )),
-//                ),
-//                actions: <Widget>[
-//                  FlatButton(
-//                      onPressed: () => Navigator.of(context).pop(),
-//                      child: Text(
-//                        'CANCEL',
-//                        style: GoogleFonts.muli(
-//                            textStyle: TextStyle(
-//                              color: Colors.red,
-//                              fontWeight: FontWeight.bold,
-//                              fontSize: 20,
-//                            )),
-//                      ))
-//                ],
-//              );
-//            }
-//        );
+        showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                  '${message["notification"]["title"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  )),
+                ),
+                content: Text(
+                  '${message["notification"]["body"]}',
+                  style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  )),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                            textStyle: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        )),
+                      ))
+                ],
+              );
+            });
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
 
+        Navigator.of(context).pushNamed('/manager-prof', arguments: data);
+
 //        showCupertinoModalPopup(
 //            context: context,
 //            builder: (BuildContext context) {
@@ -119,10 +120,11 @@ class _ManagerHomeState extends State<ManagerHome> {
 //              );
 //            }
 //        );
-
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
+
+        Navigator.of(context).pushNamed('/manager-prof', arguments: data);
 
 //        showCupertinoModalPopup(
 //            context: context,
@@ -162,9 +164,7 @@ class _ManagerHomeState extends State<ManagerHome> {
 //        );
       },
     );
-
   }
-
 
   bool isLoading = true;
 
@@ -186,11 +186,11 @@ class _ManagerHomeState extends State<ManagerHome> {
           textStyle: TextStyle(color: Colors.black),
         ),
         enabledBorder:
-        OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black, width: 1.5)),
         errorBorder:
-        OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
       ),
       keyboardType: TextInputType.text,
       validator: (value) {
@@ -208,7 +208,6 @@ class _ManagerHomeState extends State<ManagerHome> {
   }
 
   Future serverCall() async {
-
     await Firestore.instance
         .collection("apartments")
         .document(code.toString())
@@ -217,9 +216,8 @@ class _ManagerHomeState extends State<ManagerHome> {
         .setData({
       "message": message,
       "sentDate": DateTime.now(),
-      "code": code.toString()
+      "code": code.toString(),
     });
-
   }
 
   void _completeBtnPressed() async {
@@ -245,10 +243,10 @@ class _ManagerHomeState extends State<ManagerHome> {
                   '$error',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
                 cancelButton: CupertinoActionSheetAction(
                     onPressed: () {
@@ -274,10 +272,10 @@ class _ManagerHomeState extends State<ManagerHome> {
                 'Your message has been sent',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
               ),
             );
           },
@@ -294,34 +292,27 @@ class _ManagerHomeState extends State<ManagerHome> {
 
   void _announceBtnPressed() {
     showCupertinoModalPopup(
-        context:
-        context,
-        builder:
-            (BuildContext
-        context) {
+        context: context,
+        builder: (BuildContext context) {
           return AlertDialog(
-            title:
-            Text(
+            title: Text(
               'Send a message to all tenants',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  )),
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
-                side: BorderSide(
-                    color: Colors.greenAccent[700],
-                    width: 1.5)),
+                side: BorderSide(color: Colors.greenAccent[700], width: 1.5)),
             content: Container(
               width: MediaQuery.of(context).size.width,
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _addMessage(context),
                   ],
@@ -330,8 +321,7 @@ class _ManagerHomeState extends State<ManagerHome> {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   'CANCEL',
                   style: GoogleFonts.quicksand(
@@ -344,24 +334,23 @@ class _ManagerHomeState extends State<ManagerHome> {
               ),
               isLoading
                   ? FlatButton(
-                onPressed: _completeBtnPressed,
-                child: Text(
-                  'SEND',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          fontWeight:
-                          FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 18)),
-                ),
-                color: Colors.green,
-              )
+                      onPressed: _completeBtnPressed,
+                      child: Text(
+                        'SEND',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18)),
+                      ),
+                      color: Colors.green,
+                    )
                   : Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                  strokeWidth: 3,
-                ),
-              )
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                        strokeWidth: 3,
+                      ),
+                    )
             ],
           );
         });
@@ -371,6 +360,7 @@ class _ManagerHomeState extends State<ManagerHome> {
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
     code = data["landlord_code"];
+    apartment_name = data["apartment_name"];
 
     return Scaffold(
       appBar: AppBar(
@@ -513,7 +503,8 @@ class _ManagerHomeState extends State<ManagerHome> {
         children: <Widget>[
           MaterialButton(
             color: Colors.green,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             splashColor: Colors.greenAccent[700],
             onPressed: () {
               Navigator.of(context).pushNamed('/record-cash', arguments: code);
@@ -530,17 +521,18 @@ class _ManagerHomeState extends State<ManagerHome> {
           ),
           MaterialButton(
             color: Colors.green,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             splashColor: Colors.greenAccent[700],
             onPressed: _announceBtnPressed,
             child: Text(
               'Announcements',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  )),
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              )),
             ),
           )
         ],

@@ -55,7 +55,8 @@ class _TenantHomeState extends State<TenantHome> {
     /// Unique file name for the file
     file_path = 'payments/$_code/$uid/$dateFormatted/$date/bankslip.png';
     //Create a storage reference
-    StorageReference reference = FirebaseStorage.instance.ref().child(file_path);
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child(file_path);
     //Create a task that will handle the upload
     storageUploadTask = reference.putFile(
       file,
@@ -101,21 +102,9 @@ class _TenantHomeState extends State<TenantHome> {
         "url": value,
         "fullName": user["fullName"],
         "mode": "bank",
-        "code":_code.toString(),
+        "code": _code.toString(),
         "approved": false,
         "uid": uid,
-        "date": date,
-      });
-
-      await Firestore.instance
-          .collection("users")
-          .document(uid)
-          .collection("payments_history")
-          .document(dateFormatted)
-          .setData({
-        "url": value,
-        "mode": "bank",
-        "approved": false,
         "date": date,
       });
     }).whenComplete(() {
@@ -146,7 +135,7 @@ class _TenantHomeState extends State<TenantHome> {
         builder: (BuildContext context) {
           return CupertinoActionSheet(
               title: Text(
-                'Please wait for the landlord to approve your application before submitting a request to vacate',
+                'Please wait for the landlord to approve your application',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -180,10 +169,10 @@ class _TenantHomeState extends State<TenantHome> {
                   'Please complete your profile',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
                 cancelButton: CupertinoActionSheetAction(
                     onPressed: () {
@@ -199,8 +188,7 @@ class _TenantHomeState extends State<TenantHome> {
                     )));
           },
         );
-      }
-      else {
+      } else {
         _lipaNaMpesa(phone, natId, int.parse(rent)).whenComplete(() {
           //Show a success message
           showCupertinoModalPopup(
@@ -211,10 +199,19 @@ class _TenantHomeState extends State<TenantHome> {
                     'Your M-PESA payment is being processed',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        )),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
+                  message: Text(
+                    'Please enter your M-PESA pin in the popup',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
                   ),
                 );
               });
@@ -224,7 +221,6 @@ class _TenantHomeState extends State<TenantHome> {
   }
 
   Future _lipaNaMpesa(String phone, String ID, int rent) async {
-
     await Firestore.instance
         .collection("payments")
         .document(_code.toString())
@@ -234,23 +230,10 @@ class _TenantHomeState extends State<TenantHome> {
       "fullName": user["fullName"],
       "mode": "M-PESA",
       "approved": false,
-      "phone":phone,
-      "code":_code.toString(),
+      "phone": phone,
+      "code": _code.toString(),
       "natId": natId,
       "amount": rent,
-      "uid": uid,
-      "date": date,
-    });
-
-    await Firestore.instance
-        .collection("users")
-        .document(uid)
-        .collection("payments_history")
-        .document(dateFormatted)
-        .setData({
-      "fullName": user["fullName"],
-      "mode": "M-PESA",
-      "approved": false,
       "uid": uid,
       "date": date,
     });
@@ -263,7 +246,7 @@ class _TenantHomeState extends State<TenantHome> {
         builder: (BuildContext context) {
           return CupertinoActionSheet(
               title: Text(
-                'Please wait for the landlord to approve your application before submitting a request to vacate',
+                'Please wait for the landlord to approve your application',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -303,7 +286,6 @@ class _TenantHomeState extends State<TenantHome> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     //_getMessagesCount();
@@ -320,17 +302,17 @@ class _TenantHomeState extends State<TenantHome> {
                   '${message["notification"]["title"]}',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  )),
                 ),
                 content: Text(
                   '${message["notification"]["body"]}',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  )),
                 ),
                 actions: <Widget>[
                   FlatButton(
@@ -339,28 +321,25 @@ class _TenantHomeState extends State<TenantHome> {
                         'CANCEL',
                         style: GoogleFonts.muli(
                             textStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )),
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        )),
                       ))
                 ],
               );
-            }
-        );
+            });
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
 
         Navigator.of(context).pushNamed('/announcement', arguments: _code);
-
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         Navigator.of(context).pushNamed('/announcement', arguments: _code);
       },
     );
-
   }
 
 //  Future<List<DocumentSnapshot>> _getPayments(String uid) async {
@@ -408,9 +387,13 @@ class _TenantHomeState extends State<TenantHome> {
         ),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.mail, size: 30,),
+              icon: Icon(
+                Icons.mail,
+                size: 30,
+              ),
               onPressed: () {
-                Navigator.of(context).pushNamed('/announcement', arguments: _code);
+                Navigator.of(context)
+                    .pushNamed('/announcement', arguments: _code);
               })
         ],
       ),
@@ -449,9 +432,10 @@ class _TenantHomeState extends State<TenantHome> {
                     child: Container(
                       child: StreamBuilder(
                         stream: Firestore.instance
-                            .collection("users")
-                            .document(uid)
-                            .collection("payments_history")
+                            .collection("payments")
+                            .document(_code.toString())
+                            .collection("received")
+                            .where("uid", isEqualTo: uid)
                             .orderBy("date", descending: true)
                             .snapshots(),
                         builder: (BuildContext context,
@@ -492,10 +476,10 @@ class _TenantHomeState extends State<TenantHome> {
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.quicksand(
                                     textStyle: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    )),
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                )),
                               ),
                             );
                           }
@@ -677,68 +661,68 @@ class _TenantHomeState extends State<TenantHome> {
         ),
       ),
       floatingActionButton: _code != 0
-      ? Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          MaterialButton(
-            padding: EdgeInsets.all(6),
-            color: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            splashColor: Colors.greenAccent[700],
-            onPressed: _bankPay,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Icon(
-                  Icons.add_a_photo,
-                  size: 20,
+                MaterialButton(
+                  padding: EdgeInsets.all(6),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  splashColor: Colors.greenAccent[700],
+                  onPressed: _bankPay,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(
+                        Icons.add_a_photo,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Upload bank slip',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                      )
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'Upload bank slip',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  )),
+                MaterialButton(
+                  padding: EdgeInsets.all(6),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  splashColor: Colors.greenAccent[700],
+                  onPressed: _mpesaPay,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(
+                        Icons.send,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Lipa na M-PESA',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                      )
+                    ],
+                  ),
                 )
               ],
-            ),
-          ),
-          MaterialButton(
-            padding: EdgeInsets.all(6),
-            color: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            splashColor: Colors.greenAccent[700],
-            onPressed: _mpesaPay,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(
-                  Icons.send,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'Lipa na M-PESA',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  )),
-                )
-              ],
-            ),
-          )
-        ],
-      )
-      : Text(''),
+            )
+          : Text(''),
     );
   }
 

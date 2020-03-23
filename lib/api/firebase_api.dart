@@ -182,7 +182,8 @@ class API with ChangeNotifier {
         "designation": designation,
         "registerDate": registerDate,
         "landlord_code": landlordCode,
-        "token":fcmToken,
+        "apartment_name": apartmentName,
+        "token": fcmToken,
         "platform": Platform.operatingSystem
       });
 
@@ -190,7 +191,6 @@ class API with ChangeNotifier {
 
       if (designation == "Tenant") {
         //Subscribe the tenant to the topic of the apartment
-        _fcm.subscribeToTopic(apartmentName);
 
         await Firestore.instance.collection("tenants").document(uid).setData({
           "email": email,
@@ -198,11 +198,12 @@ class API with ChangeNotifier {
           "designation": designation,
           "registerDate": registerDate,
           "landlord_code": landlordCode,
-          "apartment_name": apartmentName
+          "apartment_name": apartmentName,
+          "token": fcmToken,
+          "platform": Platform.operatingSystem
         });
         print("The tenant was successfully saved");
       }
-
     } catch (e) {
       print("The user was not successfully saved");
       print("This is the error ${e.toString()}");
@@ -230,6 +231,10 @@ class API with ChangeNotifier {
       DateTime registerDate = user.registerDate;
       int landlordCode = user.lordCode;
       String apartment = user.apartmentName;
+
+      //Retrieve Device Token
+      String fcmToken = await _fcm.getToken();
+
       //Add data to firebase collection "users"
       await Firestore.instance
           .collection("users")
@@ -243,6 +248,7 @@ class API with ChangeNotifier {
         "registerDate": registerDate,
         "landlord_code": landlordCode,
         "apartment_name": apartment,
+        "token": fcmToken,
       });
       //Add data to Firestore collection "landlords"
       await Firestore.instance
@@ -256,7 +262,8 @@ class API with ChangeNotifier {
         "designation": designation,
         "registerDate": registerDate,
         "landlord_code": landlordCode,
-        "apartment_name": apartment
+        "apartment_name": apartment,
+        "token": fcmToken,
       });
       //Add data to Firestore collection "apartments"
       await Firestore.instance
@@ -308,6 +315,9 @@ class API with ChangeNotifier {
       DateTime registerDate = user.registerDate;
       int landlordCode = user.lordCode;
       String apartment = user.apartmentName;
+      //Subscribe to a topic
+      String topic = landlordCode.toString() + "Manager";
+      await _fcm.subscribeToTopic(topic);
       //Add data to firebase collection "users"
       await Firestore.instance
           .collection("users")

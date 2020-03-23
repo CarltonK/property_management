@@ -16,7 +16,6 @@ class ViewComplaintsWidget extends StatefulWidget {
 }
 
 class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
-
   String docId;
   String uid;
   String message;
@@ -47,19 +46,19 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
       style: GoogleFonts.quicksand(
           textStyle: TextStyle(color: Colors.black, fontSize: 18)),
       decoration: InputDecoration(
-          errorStyle: GoogleFonts.quicksand(
-            textStyle: TextStyle(color: Colors.black),
-          ),
-          enabledBorder:
-          OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black, width: 1.5)),
-          errorBorder:
-          OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-          labelText: 'Status of the issue',
-          labelStyle:
-          GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.black)),
-          ),
+        errorStyle: GoogleFonts.quicksand(
+          textStyle: TextStyle(color: Colors.black),
+        ),
+        enabledBorder:
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: 1.5)),
+        errorBorder:
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+        labelText: 'Status of the issue',
+        labelStyle:
+            GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.black)),
+      ),
       keyboardType: TextInputType.text,
       validator: (value) {
         if (value.isEmpty) {
@@ -78,37 +77,29 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
   bool isLoading = true;
 
   void _replyComplaint() {
-
     showCupertinoModalPopup(
-        context:
-        context,
-        builder:
-            (BuildContext
-        context) {
+        context: context,
+        builder: (BuildContext context) {
           return AlertDialog(
-            title:
-            Text(
+            title: Text(
               'Send a quick message',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
             ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(
-                      color: Colors.greenAccent[700],
-                      width: 1.5)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(color: Colors.greenAccent[700], width: 1.5)),
             content: Container(
               width: MediaQuery.of(context).size.width,
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _addMessage(context),
                   ],
@@ -117,8 +108,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   'CANCEL',
                   style: GoogleFonts.quicksand(
@@ -130,39 +120,34 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                 color: Colors.red,
               ),
               isLoading
-              ? FlatButton(
-                onPressed: _completeBtnPressed,
-                child: Text(
-                  'SEND',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          fontWeight:
-                          FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 18)),
-                ),
-                color: Colors.green,
-              )
+                  ? FlatButton(
+                      onPressed: _completeBtnPressed,
+                      child: Text(
+                        'SEND',
+                        style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18)),
+                      ),
+                      color: Colors.green,
+                    )
                   : Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                  strokeWidth: 3,
-                ),
-              )
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                        strokeWidth: 3,
+                      ),
+                    )
             ],
           );
         });
   }
 
   Future serverCall() async {
-
     await Firestore.instance
         .collection("complaints")
         .document(docId)
-        .updateData({
-      "message": message
-    });
-
+        .updateData({"message": message});
   }
 
   void _completeBtnPressed() async {
@@ -188,10 +173,10 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                   '$error',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  )),
                 ),
                 cancelButton: CupertinoActionSheetAction(
                     onPressed: () {
@@ -217,10 +202,10 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                 'Your message has been sent',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
               ),
             );
           },
@@ -236,29 +221,23 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
   }
 
   void _closeComplaint() async {
-
     await Firestore.instance
         .collection("complaints")
-        .document(docId).updateData({
-      "fixed":true
-    });
+        .document(docId)
+        .updateData({"fixed": true});
 
     showCupertinoModalPopup(
-        context:
-        context,
-        builder:
-            (BuildContext
-        context) {
+        context: context,
+        builder: (BuildContext context) {
           return CupertinoActionSheet(
-            title:
-            Text(
+            title: Text(
               'You have marked the issue as fixed',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
             ),
           );
         });
@@ -271,10 +250,12 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
       width: MediaQuery.of(context).size.width,
       child: StreamBuilder(
           stream: Firestore.instance
-          .collection("complaints")
-          .where("landlord_code",isEqualTo: widget.code)
-          .orderBy("date", descending: true).snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              .collection("complaints")
+              .where("landlord_code", isEqualTo: widget.code)
+              .orderBy("date", descending: true)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             //There is an error loading the data
             if (snapshot.hasError) {
               print('Snapshot Error: ${snapshot.error.toString()}');
@@ -305,12 +286,14 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                          fontSize: 25,
-                        )),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 25,
+                    )),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   SpinKitFadingCircle(
                     color: Colors.white,
                     size: 150.0,
@@ -325,10 +308,10 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                        fontSize: 25,
-                      )),
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    fontSize: 25,
+                  )),
                 ),
               );
             }
@@ -395,41 +378,44 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                                     fontWeight: FontWeight.w500)),
                           ),
                           reply == null
-                          ? SizedBox(height: 1,)
-                          : Text(
-                            'Reply: $reply',
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold)),
-                          ),
+                              ? SizedBox(
+                                  height: 1,
+                                )
+                              : Text(
+                                  'Reply: $reply',
+                                  style: GoogleFonts.quicksand(
+                                      textStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                ),
                           fixed == false
-                          ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              FlatButton(
-                                  color: Colors.red,
-                                  onPressed: _replyComplaint,
-                                  child: Text(
-                                    'REPLY',
-                                    style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500)),
-                                  )),
-                              FlatButton(
-                                  color: Colors.green,
-                                  onPressed: _closeComplaint,
-                                  child: Text(
-                                    'CLOSE',
-                                    style: GoogleFonts.quicksand(
-                                        textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
-                                  ))
-                            ],
-                          )
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    FlatButton(
+                                        color: Colors.red,
+                                        onPressed: _replyComplaint,
+                                        child: Text(
+                                          'REPLY',
+                                          style: GoogleFonts.quicksand(
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500)),
+                                        )),
+                                    FlatButton(
+                                        color: Colors.green,
+                                        onPressed: _closeComplaint,
+                                        child: Text(
+                                          'CLOSE',
+                                          style: GoogleFonts.quicksand(
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold)),
+                                        ))
+                                  ],
+                                )
                               : Text('')
                         ],
                       ),

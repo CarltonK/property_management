@@ -1,7 +1,9 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
 import 'package:property_management/widgets/delayed_animation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthStatus {
   NOT_DETERMINED,
@@ -25,8 +27,28 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   String _userId;
 
+  Future checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+
+    if (_seen) {
+      Navigator.of(context).pushReplacementNamed('/login');
+    } else {
+      await prefs.setBool('seen', true);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
   @override
   void initState() {
+    new Timer(new Duration(milliseconds: 1), () {
+      checkFirstSeen();
+    });
     _controller = AnimationController(
       vsync: this,
       duration: Duration(
@@ -38,6 +60,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
         setState(() {});
       });
     super.initState();
+
     // widget.api.getCurrentUser().then((user) {
     //   setState(() {
     //     if (user != null) {

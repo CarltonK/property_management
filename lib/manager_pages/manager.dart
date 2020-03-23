@@ -128,7 +128,6 @@ class _ManagerState extends State<Manager> {
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

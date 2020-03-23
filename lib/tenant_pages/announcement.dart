@@ -11,24 +11,22 @@ class Announcement extends StatefulWidget {
 }
 
 class _AnnouncementState extends State<Announcement> {
-  
   int code;
-  
+
   @override
   Widget build(BuildContext context) {
-    
     code = ModalRoute.of(context).settings.arguments;
-    
+
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green[900],
-          elevation: 0.0,
-          title: Text(
-            'Messages',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.green[900],
+        elevation: 0.0,
+        title: Text(
+          'Messages',
+          style: GoogleFonts.quicksand(
+              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
           child: Stack(
             children: <Widget>[
@@ -41,22 +39,26 @@ class _AnnouncementState extends State<Announcement> {
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: StreamBuilder(
-                  stream: Firestore.instance.collection("apartments").document(code.toString()).collection("announcements").snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    stream: Firestore.instance
+                        .collection("apartments")
+                        .document(code.toString())
+                        .collection("announcements")
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
-                        print(
-                            'Snapshot Error: ${snapshot.error.toString()}');
+                        print('Snapshot Error: ${snapshot.error.toString()}');
                         return Center(
                             child: Text(
-                              'Ooops! You need approval from your landlord before you can view messages',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  )),
-                            ));
+                          'Ooops! You need approval from your landlord before you can view messages',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20,
+                          )),
+                        ));
                       }
                       if (snapshot.data == null) {
                         return Center(
@@ -65,10 +67,10 @@ class _AnnouncementState extends State<Announcement> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.quicksand(
                                 textStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                )),
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              fontSize: 18,
+                            )),
                           ),
                         );
                       }
@@ -79,65 +81,67 @@ class _AnnouncementState extends State<Announcement> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.quicksand(
                                 textStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                )),
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              fontSize: 18,
+                            )),
                           ),
                         );
                       }
                       if (snapshot.hasData) {
                         return ListView(
                           children: snapshot.data.documents.map((map) {
-
                             var date = map["sentDate"];
                             var formatter = new DateFormat('yMMMd');
                             String dateFormatted =
-                            formatter.format(date.toDate());
+                                formatter.format(date.toDate());
 
                             return Card(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  borderRadius: BorderRadius.circular(8)),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
                               elevation: 20,
                               child: Container(
                                 width: MediaQuery.of(context).size.height,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8)
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                                    borderRadius: BorderRadius.circular(8)),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 20),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Center(
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 20),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20),
                                         child: Text(
                                           '${map["message"]}',
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.quicksand(
                                               textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                                wordSpacing: 1,
-                                                fontSize: 17,
-                                              )),
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black,
+                                            wordSpacing: 1,
+                                            fontSize: 17,
+                                          )),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 20,),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
                                     Text(
                                       '$dateFormatted',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.quicksand(
                                           textStyle: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue,
-                                            letterSpacing: 1,
-                                            fontSize: 20,
-                                          )),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue,
+                                        letterSpacing: 1,
+                                        fontSize: 20,
+                                      )),
                                     ),
                                   ],
                                 ),
@@ -148,13 +152,13 @@ class _AnnouncementState extends State<Announcement> {
                       }
                       return Center(
                           child: SpinKitFadingCircle(
-                            color: Colors.white,
-                            size: 150.0,
-                          ));
+                        color: Colors.white,
+                        size: 150.0,
+                      ));
                     }),
               )
             ],
-          ), 
+          ),
           value: SystemUiOverlayStyle.light),
     );
   }

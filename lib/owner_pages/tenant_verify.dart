@@ -136,7 +136,7 @@ class _TenantVerifyState extends State<TenantVerify> {
       "due": due
     });
 
-    _fcm.subscribeToTopic(code.toString());
+    await _fcm.subscribeToTopic(code.toString());
 
     setState(() {
       isLoading = true;

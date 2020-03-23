@@ -11,6 +11,9 @@ class TenSearch extends StatefulWidget {
 
 class _TenSearchState extends State<TenSearch> {
   double _bedroomCount = 1;
+  Map<String, dynamic> data;
+  String phone;
+  String apartment_name;
 
   RangeValues range = RangeValues(0, 15000);
   int resultsFound = 0;
@@ -178,6 +181,10 @@ class _TenSearchState extends State<TenSearch> {
 
   @override
   Widget build(BuildContext context) {
+    data = ModalRoute.of(context).settings.arguments;
+    phone = data['phone'];
+    apartment_name = data['apartment_name'];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -308,7 +315,60 @@ class _TenSearchState extends State<TenSearch> {
               });
             }
           } else {
-            _viewResults(context, resultsFound);
+            if (phone == null) {
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    title: Text(
+                      'Please complete your profile to continue',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+
+                            Navigator.of(context)
+                                .pushNamed('/tenant-profile', arguments: data);
+                          },
+                          child: Text(
+                            'OK',
+                            style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Colors.black,
+                            )),
+                          )),
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'CANCEL',
+                            style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Colors.red,
+                            )),
+                          ))
+                    ],
+                  );
+                },
+              );
+            } else {
+              _viewResults(context, resultsFound, phone, apartment_name,_bedroomCount.toInt(), range.start.toInt(),
+                      range.end.toInt());
+            }
           }
         },
         child: Row(
@@ -336,9 +396,9 @@ class _TenSearchState extends State<TenSearch> {
   }
 }
 
-void _viewResults(BuildContext context, int results) {
+void _viewResults(BuildContext context, int results, String phone, String apartment, int beds, int min, int max) {
   print('We will pay to view results');
-  //Show that one maust pay before proceeding
+  //Show that one must pay before proceeding
   showCupertinoModalPopup(
     context: context,
     builder: (BuildContext context) {
@@ -366,7 +426,33 @@ void _viewResults(BuildContext context, int results) {
           actions: <Widget>[
             CupertinoActionSheetAction(
                 onPressed: () {
-                  //Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  payToView(phone, apartment, beds, min, max).then((value) {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoActionSheet(
+                            title: Text(
+                              'Your booking request is being processed',
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.black,
+                              )),
+                            ),
+                            message: Text(
+                              'Please enter your M-PESA pin in the popup',
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.black,
+                              )),
+                            ),
+                          );
+                        });
+                  });
                 },
                 child: Text(
                   'OK I UNDERSTAND',
@@ -391,4 +477,19 @@ void _viewResults(BuildContext context, int results) {
               )));
     },
   );
+}
+
+Future payToView(String phone, String apartment, int beds, int min, int max) async {
+  await Firestore.instance
+      .collection("bookings")
+      .document()
+      .setData({
+        "phone": phone,
+        "apartment_name": apartment,
+        "approved": false,
+        "bedrooms": beds,
+        "min": min,
+        "max": max});
+
+        
 }

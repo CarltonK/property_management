@@ -15,8 +15,8 @@ class TenantComplain extends StatelessWidget {
     final Firestore _fireStore = Firestore.instance;
     QuerySnapshot query = await _fireStore
         .collection(_collection)
-        .where("landlord_code",isEqualTo: tenantdata["landlord_code"])
-        .where("uid",isEqualTo: tenantdata["uid"])
+        .where("landlord_code", isEqualTo: tenantdata["landlord_code"])
+        .where("uid", isEqualTo: tenantdata["uid"])
         .orderBy("date", descending: true)
         .getDocuments();
     print('Here are the documents ${query.documents}');
@@ -88,26 +88,28 @@ class TenantComplain extends StatelessWidget {
                         child: StreamBuilder(
                             stream: Firestore.instance
                                 .collection("complaints")
-                                .where("landlord_code",isEqualTo: tenantdata["landlord_code"])
-                                .where("uid",isEqualTo: tenantdata["uid"])
-                                .orderBy("date", descending: true).snapshots(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                .where("landlord_code",
+                                    isEqualTo: tenantdata["landlord_code"])
+                                .where("uid", isEqualTo: tenantdata["uid"])
+                                .orderBy("date", descending: true)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
                               //There is an error loading the data
                               if (snapshot.hasError) {
                                 print(
                                     'Snapshot Error: ${snapshot.error.toString()}');
                                 return Center(
                                     child: Text(
-                                      'Ooops! You need a code from your landlord to view and post complaints',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.quicksand(
-                                          textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                      )),
-                                    ));
+                                  'Ooops! You need a code from your landlord to view and post complaints',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.quicksand(
+                                      textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  )),
+                                ));
                               }
                               if (snapshot.data == null) {
                                 return Column(
@@ -119,16 +121,18 @@ class TenantComplain extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.quicksand(
                                           textStyle: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white,
-                                            fontSize: 25,
-                                          )),
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        fontSize: 25,
+                                      )),
                                     ),
-                                    SizedBox(height: 10,),
-                                SpinKitFadingCircle(
-                                  color: Colors.white,
-                                  size: 150.0,
-                                )
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SpinKitFadingCircle(
+                                      color: Colors.white,
+                                      size: 150.0,
+                                    )
                                   ],
                                 );
                               }
@@ -139,10 +143,10 @@ class TenantComplain extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.quicksand(
                                         textStyle: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                        )),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                    )),
                                   ),
                                 );
                               }
@@ -152,32 +156,33 @@ class TenantComplain extends StatelessWidget {
                                   child: ListView.separated(
                                     separatorBuilder: (context, index) =>
                                         Divider(
-                                          color: Colors.white,
-                                        ),
+                                      color: Colors.white,
+                                    ),
                                     itemCount: snapshot.data.documents.length,
                                     itemBuilder: (context, index) {
-                                      var date =
-                                      snapshot.data.documents[index].data['date'];
-                                      var tenant =
-                                      snapshot.data.documents[index].data['tenant'];
-                                      var hse =
-                                      snapshot.data.documents[index].data['hse'];
-                                      var title =
-                                      snapshot.data.documents[index].data['title'];
-                                      bool fixed =
-                                      snapshot.data.documents[index].data['fixed'];
-                                      var reply = snapshot.data.documents[index].data['message'];
+                                      var date = snapshot
+                                          .data.documents[index].data['date'];
+                                      var tenant = snapshot
+                                          .data.documents[index].data['tenant'];
+                                      var hse = snapshot
+                                          .data.documents[index].data['hse'];
+                                      var title = snapshot
+                                          .data.documents[index].data['title'];
+                                      bool fixed = snapshot
+                                          .data.documents[index].data['fixed'];
+                                      var reply = snapshot.data.documents[index]
+                                          .data['message'];
 
                                       //Date Parsing and Formatting
                                       var parsedDate = DateTime.parse(date);
                                       var formatter = new DateFormat('yMMMd');
                                       String dateFormatted =
-                                      formatter.format(parsedDate);
+                                          formatter.format(parsedDate);
 
                                       return Card(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                            BorderRadius.circular(12)),
+                                                BorderRadius.circular(12)),
                                         color: Colors.grey[100],
                                         margin: EdgeInsets.symmetric(
                                             horizontal: 5, vertical: 5),
@@ -187,43 +192,47 @@ class TenantComplain extends StatelessWidget {
                                             style: GoogleFonts.quicksand(
                                                 textStyle: TextStyle(
                                                     color: Colors.green[900],
-                                                    fontWeight:
-                                                    FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 20)),
                                           ),
                                           isThreeLine: true,
                                           subtitle: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Text(
                                                 '$title',
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(
                                                         color:
-                                                        Colors.green[900],
+                                                            Colors.green[900],
                                                         fontWeight:
-                                                        FontWeight.w500)),
+                                                            FontWeight.w500)),
                                               ),
                                               Text(
                                                 '$dateFormatted',
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(
                                                         color:
-                                                        Colors.green[900],
+                                                            Colors.green[900],
                                                         fontWeight:
-                                                        FontWeight.w500)),
+                                                            FontWeight.w500)),
                                               ),
                                               reply == null
-                                                  ? SizedBox(height: 1,)
+                                                  ? SizedBox(
+                                                      height: 1,
+                                                    )
                                                   : Text(
-                                                'Manager: $reply',
-                                                style: GoogleFonts.quicksand(
-                                                    textStyle: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)),
-                                              )
+                                                      'Manager: $reply',
+                                                      style: GoogleFonts.quicksand(
+                                                          textStyle: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                    )
                                             ],
                                           ),
                                           title: Text(
@@ -232,7 +241,7 @@ class TenantComplain extends StatelessWidget {
                                                 textStyle: TextStyle(
                                                     color: Colors.green[900],
                                                     fontWeight:
-                                                    FontWeight.bold)),
+                                                        FontWeight.bold)),
                                           ),
                                           trailing: Column(
                                             children: <Widget>[
@@ -241,9 +250,9 @@ class TenantComplain extends StatelessWidget {
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(
                                                         color:
-                                                        Colors.green[900],
+                                                            Colors.green[900],
                                                         fontWeight:
-                                                        FontWeight.bold)),
+                                                            FontWeight.bold)),
                                               ),
                                               SizedBox(
                                                 height: 5,
@@ -266,9 +275,9 @@ class TenantComplain extends StatelessWidget {
                               }
                               return Center(
                                   child: SpinKitFadingCircle(
-                                    color: Colors.white,
-                                    size: 150.0,
-                                  ));
+                                color: Colors.white,
+                                size: 150.0,
+                              ));
                             }),
                       )
                     ],
