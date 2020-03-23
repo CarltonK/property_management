@@ -366,8 +366,8 @@ class _TenSearchState extends State<TenSearch> {
                 },
               );
             } else {
-              _viewResults(context, resultsFound, phone, apartment_name,_bedroomCount.toInt(), range.start.toInt(),
-                      range.end.toInt());
+              _viewResults(context, resultsFound, phone, _bedroomCount.toInt(),
+                  range.start.toInt(), range.end.toInt());
             }
           }
         },
@@ -396,7 +396,8 @@ class _TenSearchState extends State<TenSearch> {
   }
 }
 
-void _viewResults(BuildContext context, int results, String phone, String apartment, int beds, int min, int max) {
+void _viewResults(BuildContext context, int results, String phone, int beds,
+    int min, int max) {
   print('We will pay to view results');
   //Show that one must pay before proceeding
   showCupertinoModalPopup(
@@ -427,7 +428,7 @@ void _viewResults(BuildContext context, int results, String phone, String apartm
             CupertinoActionSheetAction(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  payToView(phone, apartment, beds, min, max).then((value) {
+                  payToView(phone, beds, min, max).then((value) {
                     showCupertinoModalPopup(
                         context: context,
                         builder: (BuildContext context) {
@@ -479,17 +480,12 @@ void _viewResults(BuildContext context, int results, String phone, String apartm
   );
 }
 
-Future payToView(String phone, String apartment, int beds, int min, int max) async {
-  await Firestore.instance
-      .collection("bookings")
-      .document()
-      .setData({
-        "phone": phone,
-        "apartment_name": apartment,
-        "approved": false,
-        "bedrooms": beds,
-        "min": min,
-        "max": max});
-
-        
+Future payToView(String phone, int beds, int min, int max) async {
+  await Firestore.instance.collection("bookings").document().setData({
+    "phone": phone,
+    "approved": false,
+    "bedrooms": beds,
+    "min": min,
+    "max": max
+  });
 }

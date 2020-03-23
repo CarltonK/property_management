@@ -178,6 +178,61 @@ class _NewbieState extends State<Newbie> {
     );
   }
 
+  Future payToView(String phone, int beds, int min, int max) async {
+  await Firestore.instance.collection("bookings").document().setData({
+    "phone": phone,
+    "approved": false,
+    "bedrooms": beds,
+    "min": min,
+    "max": max
+  });
+}
+
+String phone;
+final _formKey = GlobalKey<FormState>();
+
+void _phoneHandler(String value) {
+  phone = value.trim();
+  print('Phone: $phone');
+}
+
+Widget _addPhone(BuildContext context) {
+  return TextFormField(
+    autofocus: false,
+    style: GoogleFonts.quicksand(
+        textStyle: TextStyle(color: Colors.black, fontSize: 18)),
+    decoration: InputDecoration(
+      errorStyle: GoogleFonts.quicksand(
+        textStyle: TextStyle(color: Colors.black),
+      ),
+      enabledBorder:
+          OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+      focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 1.5)),
+      errorBorder:
+          OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+    ),
+    keyboardType: TextInputType.phone,
+    validator: (value) {
+      if (value.isEmpty) {
+        return 'Phone number is required';
+      }
+      if (!value.startsWith('07')) {
+        return 'Phone number should start with "07"';
+      }
+      if (value.length != 10) {
+        return 'Phone number should be 10 characters';
+      }
+      return null;
+    },
+    onFieldSubmitted: (value) {
+      FocusScope.of(context).unfocus();
+    },
+    textInputAction: TextInputAction.done,
+    onSaved: _phoneHandler,
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,7 +358,167 @@ class _NewbieState extends State<Newbie> {
               });
             }
           } else {
-            _viewResults(context, resultsFound);
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                    title: Text(
+                      'We found $resultsFound listings',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Colors.black,
+                      )),
+                    ),
+                    message: Text(
+                      'To view results you will be required to pay a small fee of KES 50',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                    ),
+                    actions: <Widget>[
+                      CupertinoActionSheetAction(
+                          onPressed: () {
+                            //Navigator.of(context).pop();
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (BuildContext buildContext) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    title: Text(
+                                      'Your phone number is required. We will be in touch with you',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.quicksand(
+                                          textStyle: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      )),
+                                    ),
+                                    content: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            _addPhone(context),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text(
+                                          'CANCEL',
+                                          style: GoogleFonts.quicksand(
+                                              textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 18)),
+                                        ),
+                                        color: Colors.red,
+                                      ),
+                                      FlatButton(
+                                              onPressed: () {
+                                                if (_formKey.currentState.validate()) {
+                                                  _formKey.currentState.save();
+
+                                                  payToView(
+                                                        phone,
+                                                        _bedroomCount.toInt(),
+                                                        range.start.toInt(),
+                                                        range.end.toInt())
+                                                    .then((value) {
+                                                  Navigator.of(context).pop();
+                                                  showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return CupertinoActionSheet(
+                                                          title: Text(
+                                                            'Your booking request is being processed',
+                                                            style: GoogleFonts
+                                                                .quicksand(
+                                                                    textStyle:
+                                                                        TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 20,
+                                                              color:
+                                                                  Colors.black,
+                                                            )),
+                                                          ),
+                                                          message: Text(
+                                                            'Please enter your M-PESA pin in the popup',
+                                                            style: GoogleFonts
+                                                                .quicksand(
+                                                                    textStyle:
+                                                                        TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 20,
+                                                              color:
+                                                                  Colors.black,
+                                                            )),
+                                                          ),
+                                                        );
+                                                      });
+                                                });
+                                                }
+                                                
+                                              },
+                                              child: Text(
+                                                'SEND',
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                        fontSize: 18)),
+                                              ),
+                                              color: Colors.green,
+                                            )
+                                    ],
+                                  );
+                                });
+                          },
+                          child: Text(
+                            'OK I UNDERSTAND',
+                            style: GoogleFonts.muli(
+                                textStyle: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold)),
+                          ))
+                    ],
+                    cancelButton: CupertinoActionSheetAction(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'CANCEL',
+                          style: GoogleFonts.muli(
+                              textStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
+                        )));
+              },
+            );
           }
         },
         child: Row(
@@ -331,60 +546,4 @@ class _NewbieState extends State<Newbie> {
   }
 }
 
-void _viewResults(BuildContext context, int results) {
-  print('We will pay to view results');
-  //Show that one maust pay before proceeding
-  showCupertinoModalPopup(
-    context: context,
-    builder: (BuildContext context) {
-      return CupertinoActionSheet(
-          title: Text(
-            'We found $results listings',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-              color: Colors.black,
-            )),
-          ),
-          message: Text(
-            'To view results you will be required to pay a small fee of KES 50',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Colors.black,
-            )),
-          ),
-          actions: <Widget>[
-            CupertinoActionSheetAction(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  FocusScope.of(context).unfocus();
-                },
-                child: Text(
-                  'OK I UNDERSTAND',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                ))
-          ],
-          cancelButton: CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'CANCEL',
-                style: GoogleFonts.muli(
-                    textStyle: TextStyle(
-                        color: Colors.red,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-              )));
-    },
-  );
-}
+
