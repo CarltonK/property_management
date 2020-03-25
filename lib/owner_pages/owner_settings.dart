@@ -19,19 +19,6 @@ class _OwnerSettingsState extends State<OwnerSettings> {
   String apartmentName;
   String tenName;
 
-  Future<List<DocumentSnapshot>> _getManagers(String apartment) async {
-    //This is the name of the collection containing managers
-    final String _collection = 'managers';
-    //Create a variable to store Firestore instance
-    final Firestore _fireStore = Firestore.instance;
-    QuerySnapshot query = await _fireStore
-        .collection(_collection)
-        .where("apartment_name", isEqualTo: apartment)
-        .getDocuments();
-    print('How many: ${query.documents.length}');
-    return query.documents;
-  }
-
   Widget addManager() {
     return MaterialButton(
       color: Colors.green,
@@ -76,7 +63,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
   @override
   Widget build(BuildContext context) {
     OwnerSettings.data = ModalRoute.of(context).settings.arguments;
-    print('Settings Page Data: ${OwnerSettings.data}');
+    //print('Settings Page Data: ${OwnerSettings.data}');
     code = OwnerSettings.data["landlord_code"];
     apartmentName = OwnerSettings.data["apartment_name"];
 
@@ -95,7 +82,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
         title: Text(
           'Kejani',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -189,11 +176,14 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                             SizedBox(
                               height: 10,
                             ),
-                            FutureBuilder<List<DocumentSnapshot>>(
-                                future: _getManagers(apartmentName),
+                            StreamBuilder<QuerySnapshot>(
+                                stream: Firestore.instance
+                                    .collection("managers")
+                                    .where("apartment_name",
+                                        isEqualTo: apartmentName)
+                                    .snapshots(),
                                 builder: (BuildContext context,
-                                    AsyncSnapshot<List<DocumentSnapshot>>
-                                        snapshot) {
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasError) {
                                     print(
                                         'Snapshot Error: ${snapshot.error.toString()}');
@@ -216,123 +206,125 @@ class _OwnerSettingsState extends State<OwnerSettings> {
                                       ],
                                     ));
                                   }
-                                  switch (snapshot.connectionState) {
-                                    case ConnectionState.waiting:
-                                      break;
-                                    case ConnectionState.active:
-                                      break;
-                                    case ConnectionState.none:
-                                      break;
-                                    case ConnectionState.done:
-                                      if (snapshot.data.length == 0) {
-                                        return Expanded(
-                                          child: Center(
-                                            child: Text(
-                                              'You have no managers',
-                                              style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                      fontSize: 24,
-                                                      color: Colors.white)),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return Expanded(
-                                        child: Container(
-                                          width: double.infinity,
-                                          child: ListView(
-                                              scrollDirection: Axis.vertical,
-                                              children:
-                                                  snapshot.data.map((map) {
-                                                return Card(
-                                                  shape: RoundedRectangleBorder(
+                                  if (snapshot.data == null) {
+                                    return Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'You have no managers',
+                                          style: GoogleFonts.quicksand(
+                                              textStyle: TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.white)),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  if (snapshot.data.documents.length == 0) {
+                                    return Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'You have no managers',
+                                          style: GoogleFonts.quicksand(
+                                              textStyle: TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.white)),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  if (snapshot.hasData) {
+                                    return Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        child: ListView(
+                                            scrollDirection: Axis.vertical,
+                                            children: snapshot.data.documents
+                                                .map((map) {
+                                              return Card(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                margin: EdgeInsets.symmetric(
+                                                    vertical: 4),
+                                                color: Colors.grey[100],
+                                                child: Container(
+                                                  decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              12)),
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: 4),
-                                                  color: Colors.grey[100],
+                                                              10),
+                                                      color: Colors.grey[100]),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   child: Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        color:
-                                                            Colors.grey[100]),
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Container(
-                                                      margin:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 6),
-                                                      child: ListTile(
-                                                        dense: true,
-                                                        leading: Icon(Icons
-                                                            .person_outline),
-                                                        trailing: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: <Widget>[
-                                                            Text(
-                                                              'Delete',
-                                                              style: GoogleFonts.quicksand(
-                                                                  textStyle: TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          15,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold)),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            GestureDetector(
-                                                                onTap: () {
-                                                                  _deleteManager(
-                                                                      map.documentID);
-                                                                },
-                                                                child: Icon(
-                                                                  Icons.delete,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ))
-                                                          ],
-                                                        ),
-                                                        title: Text(
-                                                          '${map["fullName"]}',
-                                                          style: GoogleFonts.quicksand(
-                                                              textStyle: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        subtitle: Text(
-                                                            '${map["apartment_name"]}',
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 6),
+                                                    child: ListTile(
+                                                      dense: true,
+                                                      leading: Icon(
+                                                          Icons.person_outline),
+                                                      trailing: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            'Delete',
                                                             style: GoogleFonts.quicksand(
                                                                 textStyle: TextStyle(
                                                                     color: Colors
                                                                         .black,
                                                                     fontSize:
-                                                                        13,
+                                                                        15,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w600))),
+                                                                            .bold)),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          GestureDetector(
+                                                              onTap: () {
+                                                                _deleteManager(map
+                                                                    .documentID);
+                                                              },
+                                                              child: Icon(
+                                                                Icons.delete,
+                                                                color:
+                                                                    Colors.red,
+                                                              ))
+                                                        ],
                                                       ),
+                                                      title: Text(
+                                                        '${map["fullName"]}',
+                                                        style: GoogleFonts.quicksand(
+                                                            textStyle: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      subtitle: Text(
+                                                          '${map["apartment_name"]}',
+                                                          style: GoogleFonts.quicksand(
+                                                              textStyle: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 13,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600))),
                                                     ),
                                                   ),
-                                                );
-                                              }).toList()),
-                                        ),
-                                      );
-                                      break;
+                                                ),
+                                              );
+                                            }).toList()),
+                                      ),
+                                    );
                                   }
                                   return Center(
                                     child: LinearProgressIndicator(

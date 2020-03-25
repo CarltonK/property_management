@@ -114,7 +114,7 @@ class _TenantBaseState extends State<TenantBase> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
-    print('$data');
+    //print('$data');
 
     return WillPopScope(
       onWillPop: _onWillPop,

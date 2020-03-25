@@ -16,7 +16,6 @@ class ViewComplaintsWidget extends StatefulWidget {
 }
 
 class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
-  String docId;
   String uid;
   String message;
   final _formKey = GlobalKey<FormState>();
@@ -76,7 +75,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
 
   bool isLoading = true;
 
-  void _replyComplaint() {
+  void _replyComplaint(String doc) {
     showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
@@ -121,7 +120,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
               ),
               isLoading
                   ? FlatButton(
-                      onPressed: _completeBtnPressed,
+                      onPressed: () => _completeBtnPressed(doc),
                       child: Text(
                         'SEND',
                         style: GoogleFonts.quicksand(
@@ -143,14 +142,14 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
         });
   }
 
-  Future serverCall() async {
+  Future serverCall(String doc) async {
     await Firestore.instance
         .collection("complaints")
-        .document(docId)
+        .document(doc)
         .updateData({"message": message});
   }
 
-  void _completeBtnPressed() async {
+  void _completeBtnPressed(String doc) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
@@ -158,7 +157,7 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
         isLoading = false;
       });
 
-      serverCall().catchError((error) {
+      serverCall(doc).catchError((error) {
         print('This is the error $error');
         //Disable the circular progress dialog
         setState(() {
@@ -220,27 +219,11 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
     }
   }
 
-  void _closeComplaint() async {
+  Future _closeComplaint(String doc) async {
     await Firestore.instance
         .collection("complaints")
-        .document(docId)
-        .updateData({"fixed": true});
-
-    showCupertinoModalPopup(
-        context: context,
-        builder: (BuildContext context) {
-          return CupertinoActionSheet(
-            title: Text(
-              'You have marked the issue as fixed',
-              style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                color: Colors.black,
-              )),
-            ),
-          );
-        });
+        .document(doc)
+        .updateData({"fixed": true, "fixedDate": DateTime.now()});
   }
 
   @override
@@ -316,22 +299,13 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
               );
             }
             if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  var date = snapshot.data.documents[index].data['date'];
-                  var tenant = snapshot.data.documents[index].data['tenant'];
-                  var hse = snapshot.data.documents[index].data['hse'];
-                  var title = snapshot.data.documents[index].data['title'];
-                  var reply = snapshot.data.documents[index].data['message'];
-                  bool fixed = snapshot.data.documents[index].data['fixed'];
-                  docId = snapshot.data.documents[index].documentID;
-                  uid = snapshot.data.documents[index].data["uid"];
-
+              return ListView(
+                children: snapshot.data.documents.map((map) {
                   //Date Parsing and Formatting
-                  var parsedDate = DateTime.parse(date);
+                  var parsedDate = DateTime.parse(map['date']);
                   var formatter = new DateFormat('yMMMd');
                   String dateFormatted = formatter.format(parsedDate);
+
                   return Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -343,19 +317,19 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                         children: <Widget>[
                           Icon(
                             Icons.home,
-                            color: Colors.green[900],
+                            color: Colors.black,
                             size: 20,
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           Text(
-                            '$hse',
+                            '${map['hse']}',
                             style: GoogleFonts.quicksand(
                                 textStyle: TextStyle(
-                                    color: Colors.green[900],
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16)),
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            )),
                           ),
                         ],
                       ),
@@ -364,49 +338,75 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            '$title',
+                            '${map['title']}',
                             style: GoogleFonts.quicksand(
                                 textStyle: TextStyle(
-                                    color: Colors.green[900],
+                                    color: Colors.black,
                                     fontWeight: FontWeight.w500)),
                           ),
                           Text(
                             '$dateFormatted',
                             style: GoogleFonts.quicksand(
                                 textStyle: TextStyle(
-                                    color: Colors.green[900],
+                                    color: Colors.black,
                                     fontWeight: FontWeight.w500)),
                           ),
-                          reply == null
+                          map['message'] == null
                               ? SizedBox(
                                   height: 1,
                                 )
                               : Text(
-                                  'Reply: $reply',
+                                  'Reply: ${map['message']}',
                                   style: GoogleFonts.quicksand(
                                       textStyle: TextStyle(
                                           color: Colors.black,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold)),
                                 ),
-                          fixed == false
+                          map['fixed'] == false
                               ? Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     FlatButton(
                                         color: Colors.red,
-                                        onPressed: _replyComplaint,
+                                        onPressed: () =>
+                                            _replyComplaint(map.documentID),
                                         child: Text(
                                           'REPLY',
                                           style: GoogleFonts.quicksand(
                                               textStyle: TextStyle(
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.w500)),
+                                                  fontWeight: FontWeight.bold)),
                                         )),
                                     FlatButton(
                                         color: Colors.green,
-                                        onPressed: _closeComplaint,
+                                        onPressed: () {
+                                          _closeComplaint(map.documentID)
+                                              .catchError((error) {
+                                            print('Error: $error');
+                                          }).whenComplete(() {
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return CupertinoActionSheet(
+                                                    title: Text(
+                                                      'You have marked the issue as fixed',
+                                                      style:
+                                                          GoogleFonts.quicksand(
+                                                              textStyle:
+                                                                  TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 20,
+                                                        color: Colors.black,
+                                                      )),
+                                                    ),
+                                                  );
+                                                });
+                                          });
+                                        },
                                         child: Text(
                                           'CLOSE',
                                           style: GoogleFonts.quicksand(
@@ -420,33 +420,35 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
                         ],
                       ),
                       title: Text(
-                        '$tenant',
+                        '${map['tenant']}',
                         style: GoogleFonts.quicksand(
                             textStyle: TextStyle(
-                                color: Colors.green[900],
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold)),
                       ),
                       trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Done',
+                            'Status',
                             style: GoogleFonts.quicksand(
                                 textStyle: TextStyle(
-                                    color: Colors.green[900],
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold)),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           Icon(
-                            fixed ? Icons.done : Icons.cancel,
-                            color: fixed ? Colors.green[900] : Colors.red,
+                            map['fixed'] ? Icons.done : Icons.cancel,
+                            color:
+                                map['fixed'] ? Colors.green[900] : Colors.red,
                           ),
                         ],
                       ),
                     ),
                   );
-                },
+                }).toList(),
               );
             }
             return Center(

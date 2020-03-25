@@ -192,7 +192,7 @@ class _TenantSettingsState extends State<TenantSettings> {
           .updateData({"landlord_code": code});
       //Update the settings page map to reflect immediately
       data["landlord_code"] = code;
-      print('Updated data: $data');
+      //print('Updated data: $data');
       callResponse = true;
       return true;
     }

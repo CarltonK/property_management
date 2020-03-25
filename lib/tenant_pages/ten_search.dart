@@ -427,8 +427,7 @@ void _viewResults(BuildContext context, int results, String phone, int beds,
           actions: <Widget>[
             CupertinoActionSheetAction(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  payToView(phone, beds, min, max).then((value) {
+                  payToView(phone, beds, min, max).whenComplete(() {
                     showCupertinoModalPopup(
                         context: context,
                         builder: (BuildContext context) {

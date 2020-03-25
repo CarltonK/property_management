@@ -92,7 +92,8 @@ class _AnnouncementState extends State<Announcement> {
                         return ListView(
                           children: snapshot.data.documents.map((map) {
                             var date = map["sentDate"];
-                            var formatter = new DateFormat('yMMMd');
+                            var formatter =
+                                new DateFormat('y MMM d \'at\' HH:mm');
                             String dateFormatted =
                                 formatter.format(date.toDate());
 
@@ -100,14 +101,14 @@ class _AnnouncementState extends State<Announcement> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
                               margin: EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
+                                  horizontal: 10, vertical: 5),
                               elevation: 20,
                               child: Container(
                                 width: MediaQuery.of(context).size.height,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8)),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 20),
+                                    horizontal: 10, vertical: 10),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -121,7 +122,7 @@ class _AnnouncementState extends State<Announcement> {
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.quicksand(
                                               textStyle: TextStyle(
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.black,
                                             wordSpacing: 1,
                                             fontSize: 17,
@@ -137,10 +138,9 @@ class _AnnouncementState extends State<Announcement> {
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.quicksand(
                                           textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
                                         letterSpacing: 1,
-                                        fontSize: 20,
                                       )),
                                     ),
                                   ],

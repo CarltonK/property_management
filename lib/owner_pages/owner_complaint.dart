@@ -12,7 +12,7 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
-    print('Complaints Page Data: $data');
+    //print('Complaints Page Data: $data');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -28,7 +28,7 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
         title: Text(
           'Kejani',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -41,7 +41,7 @@ class _OwnerComplaintState extends State<OwnerComplaint> {
               decoration: BoxDecoration(color: Colors.green[900]),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Column(

@@ -408,7 +408,7 @@ class _TenantHomeState extends State<TenantHome> {
             ),
             Container(
               //This Container lays out the UI
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -507,8 +507,7 @@ class _TenantHomeState extends State<TenantHome> {
                                 }
 
                                 return Card(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
+                                  margin: EdgeInsets.symmetric(vertical: 5),
                                   color: Colors.green[900],
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
@@ -553,7 +552,7 @@ class _TenantHomeState extends State<TenantHome> {
                                                 MainAxisAlignment.center,
                                             children: <Widget>[
                                               Text(
-                                                'Approved',
+                                                'Status',
                                                 textAlign: TextAlign.center,
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(

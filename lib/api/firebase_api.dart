@@ -317,6 +317,7 @@ class API with ChangeNotifier {
       String apartment = user.apartmentName;
       //Subscribe to a topic
       String topic = landlordCode.toString() + "Manager";
+      print('Subscribed to topic - $topic');
       await _fcm.subscribeToTopic(topic);
       //Add data to firebase collection "users"
       await Firestore.instance

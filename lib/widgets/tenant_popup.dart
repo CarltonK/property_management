@@ -16,7 +16,7 @@ class TenantPopup extends StatefulWidget {
 
 class _TenantPopupState extends State<TenantPopup> {
   double opacity = 1;
-  double padd = 90;
+  double padd = 130;
   bool hasDataQuery = true;
 
   Future<List<DocumentSnapshot>> _getTenants(String apartment) async {

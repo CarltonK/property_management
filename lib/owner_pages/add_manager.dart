@@ -23,7 +23,6 @@ class _AddManagerState extends State<AddManager> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final _focuslname = FocusNode();
   final _focusnatid = FocusNode();
   final _focusemail = FocusNode();
   final _focusphone = FocusNode();
@@ -459,7 +458,7 @@ class _AddManagerState extends State<AddManager> {
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    print('Add Manager Data: $data');
+    //print('Add Manager Data: $data');
     code = data["landlord_code"];
     apartment = data["apartment_name"];
 

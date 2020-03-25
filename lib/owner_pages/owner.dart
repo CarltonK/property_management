@@ -110,7 +110,7 @@ class _OwnerBaseState extends State<OwnerBase> {
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    print('Data pulled: $data');
+    //print('Data pulled: $data');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

@@ -223,7 +223,7 @@ class _TenantProfileState extends State<TenantProfile> {
   @override
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
-    print('Data received in profile page $user');
+    //print('Data received in profile page $user');
     uid = user["uid"];
 
     //Date Parsing and Formatting
@@ -323,6 +323,10 @@ class _TenantProfileState extends State<TenantProfile> {
                 );
               },
             );
+            //Temporary changes
+            user["phone"] = _phone;
+            user["natId"] = _natId;
+            
             //Disable the circular progress dialog
             setState(() {
               isLoading = true;

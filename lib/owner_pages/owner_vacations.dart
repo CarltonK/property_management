@@ -21,22 +21,22 @@ class _OwnerVacationsState extends State<OwnerVacations> {
     String dateFormatted = formatter.format(_date.toDate());
 
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       color: Colors.grey[100],
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 1.5),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: ListTile(
           isThreeLine: true,
           leading: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Icon(
                 Icons.home,
-                color: Colors.green[900],
+                color: Colors.black,
               ),
               SizedBox(
                 height: 5,
@@ -45,7 +45,7 @@ class _OwnerVacationsState extends State<OwnerVacations> {
                 '${data["hse"]}',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                        color: Colors.green[900], fontWeight: FontWeight.bold)),
+                        color: Colors.black, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -53,7 +53,7 @@ class _OwnerVacationsState extends State<OwnerVacations> {
             '${data["name"]}',
             style: GoogleFonts.quicksand(
                 textStyle: TextStyle(
-                    color: Colors.green[900], fontWeight: FontWeight.bold)),
+                    color: Colors.black, fontWeight: FontWeight.bold)),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,12 +61,12 @@ class _OwnerVacationsState extends State<OwnerVacations> {
               Text(
                 'Exit date - $dateFormatted',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: Colors.green[900])),
+                    textStyle: TextStyle(color: Colors.black)),
               ),
               Text(
                 '${data["reason"]}',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: Colors.green[900])),
+                    textStyle: TextStyle(color: Colors.black)),
               ),
             ],
           ),
@@ -79,8 +79,7 @@ class _OwnerVacationsState extends State<OwnerVacations> {
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
     _code = data["landlord_code"];
-    print('Vacations Page Data: $data');
-
+    //print('Vacations Page Data: $data');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -96,7 +95,7 @@ class _OwnerVacationsState extends State<OwnerVacations> {
         title: Text(
           'Kejani',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -147,7 +146,7 @@ class _OwnerVacationsState extends State<OwnerVacations> {
                     }
                     if (snapshot.hasData) {
                       return ListView(
-                        padding: const EdgeInsets.only(top: 20.0),
+                        padding: const EdgeInsets.only(top: 10.0),
                         children: snapshot.data.documents
                             .map((data) => _buildListItem(context, data))
                             .toList(),

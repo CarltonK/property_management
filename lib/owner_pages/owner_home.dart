@@ -118,7 +118,10 @@ class _OwnerHomeState extends State<OwnerHome> {
                 size: 30,
                 color: Colors.white,
               ),
-              onPressed: () {})
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed('/announcement', arguments: code);
+              })
         ],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(

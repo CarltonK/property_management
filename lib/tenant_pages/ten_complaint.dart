@@ -19,14 +19,14 @@ class TenantComplain extends StatelessWidget {
         .where("uid", isEqualTo: tenantdata["uid"])
         .orderBy("date", descending: true)
         .getDocuments();
-    print('Here are the documents ${query.documents}');
+    //print('Here are the documents ${query.documents}');
     return query.documents;
   }
 
   @override
   Widget build(BuildContext context) {
     tenantdata = ModalRoute.of(context).settings.arguments;
-    print('Complaints Page Data: $tenantdata');
+    //print('Complaints Page Data: $tenantdata');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -191,7 +191,7 @@ class TenantComplain extends StatelessWidget {
                                             '$hse',
                                             style: GoogleFonts.quicksand(
                                                 textStyle: TextStyle(
-                                                    color: Colors.green[900],
+                                                    color: Colors.black,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 20)),
                                           ),
@@ -204,8 +204,7 @@ class TenantComplain extends StatelessWidget {
                                                 '$title',
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(
-                                                        color:
-                                                            Colors.green[900],
+                                                        color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.w500)),
                                               ),
@@ -213,8 +212,7 @@ class TenantComplain extends StatelessWidget {
                                                 '$dateFormatted',
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(
-                                                        color:
-                                                            Colors.green[900],
+                                                        color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.w500)),
                                               ),
@@ -239,18 +237,19 @@ class TenantComplain extends StatelessWidget {
                                             '$tenant',
                                             style: GoogleFonts.quicksand(
                                                 textStyle: TextStyle(
-                                                    color: Colors.green[900],
+                                                    color: Colors.black,
                                                     fontWeight:
                                                         FontWeight.bold)),
                                           ),
                                           trailing: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: <Widget>[
                                               Text(
-                                                'Done',
+                                                'Status',
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(
-                                                        color:
-                                                            Colors.green[900],
+                                                        color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold)),
                                               ),

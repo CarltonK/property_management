@@ -179,59 +179,59 @@ class _NewbieState extends State<Newbie> {
   }
 
   Future payToView(String phone, int beds, int min, int max) async {
-  await Firestore.instance.collection("bookings").document().setData({
-    "phone": phone,
-    "approved": false,
-    "bedrooms": beds,
-    "min": min,
-    "max": max
-  });
-}
+    await Firestore.instance.collection("bookings").document().setData({
+      "phone": phone,
+      "approved": false,
+      "bedrooms": beds,
+      "min": min,
+      "max": max
+    });
+  }
 
-String phone;
-final _formKey = GlobalKey<FormState>();
+  String phone;
+  final _formKey = GlobalKey<FormState>();
 
-void _phoneHandler(String value) {
-  phone = value.trim();
-  print('Phone: $phone');
-}
+  void _phoneHandler(String value) {
+    phone = value.trim();
+    print('Phone: $phone');
+  }
 
-Widget _addPhone(BuildContext context) {
-  return TextFormField(
-    autofocus: false,
-    style: GoogleFonts.quicksand(
-        textStyle: TextStyle(color: Colors.black, fontSize: 18)),
-    decoration: InputDecoration(
-      errorStyle: GoogleFonts.quicksand(
-        textStyle: TextStyle(color: Colors.black),
+  Widget _addPhone(BuildContext context) {
+    return TextFormField(
+      autofocus: false,
+      style: GoogleFonts.quicksand(
+          textStyle: TextStyle(color: Colors.black, fontSize: 18)),
+      decoration: InputDecoration(
+        errorStyle: GoogleFonts.quicksand(
+          textStyle: TextStyle(color: Colors.black),
+        ),
+        enabledBorder:
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: 1.5)),
+        errorBorder:
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
       ),
-      enabledBorder:
-          OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-      focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black, width: 1.5)),
-      errorBorder:
-          OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-    ),
-    keyboardType: TextInputType.phone,
-    validator: (value) {
-      if (value.isEmpty) {
-        return 'Phone number is required';
-      }
-      if (!value.startsWith('07')) {
-        return 'Phone number should start with "07"';
-      }
-      if (value.length != 10) {
-        return 'Phone number should be 10 characters';
-      }
-      return null;
-    },
-    onFieldSubmitted: (value) {
-      FocusScope.of(context).unfocus();
-    },
-    textInputAction: TextInputAction.done,
-    onSaved: _phoneHandler,
-  );
-}
+      keyboardType: TextInputType.phone,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Phone number is required';
+        }
+        if (!value.startsWith('07')) {
+          return 'Phone number should start with "07"';
+        }
+        if (value.length != 10) {
+          return 'Phone number should be 10 characters';
+        }
+        return null;
+      },
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).unfocus();
+      },
+      textInputAction: TextInputAction.done,
+      onSaved: _phoneHandler,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -431,67 +431,62 @@ Widget _addPhone(BuildContext context) {
                                         color: Colors.red,
                                       ),
                                       FlatButton(
-                                              onPressed: () {
-                                                if (_formKey.currentState.validate()) {
-                                                  _formKey.currentState.save();
+                                        onPressed: () {
+                                          if (_formKey.currentState
+                                              .validate()) {
+                                            _formKey.currentState.save();
 
-                                                  payToView(
-                                                        phone,
-                                                        _bedroomCount.toInt(),
-                                                        range.start.toInt(),
-                                                        range.end.toInt())
-                                                    .then((value) {
-                                                  Navigator.of(context).pop();
-                                                  showCupertinoModalPopup(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return CupertinoActionSheet(
-                                                          title: Text(
-                                                            'Your booking request is being processed',
-                                                            style: GoogleFonts
-                                                                .quicksand(
-                                                                    textStyle:
-                                                                        TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 20,
-                                                              color:
-                                                                  Colors.black,
-                                                            )),
-                                                          ),
-                                                          message: Text(
-                                                            'Please enter your M-PESA pin in the popup',
-                                                            style: GoogleFonts
-                                                                .quicksand(
-                                                                    textStyle:
-                                                                        TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 20,
-                                                              color:
-                                                                  Colors.black,
-                                                            )),
-                                                          ),
-                                                        );
-                                                      });
-                                                });
-                                                }
-                                                
-                                              },
-                                              child: Text(
-                                                'SEND',
-                                                style: GoogleFonts.quicksand(
-                                                    textStyle: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white,
-                                                        fontSize: 18)),
-                                              ),
-                                              color: Colors.green,
-                                            )
+                                            payToView(
+                                                    phone,
+                                                    _bedroomCount.toInt(),
+                                                    range.start.toInt(),
+                                                    range.end.toInt())
+                                                .then((value) {
+                                              Navigator.of(context).pop();
+                                              showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return CupertinoActionSheet(
+                                                      title: Text(
+                                                        'Your booking request is being processed',
+                                                        style: GoogleFonts
+                                                            .quicksand(
+                                                                textStyle:
+                                                                    TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 20,
+                                                          color: Colors.black,
+                                                        )),
+                                                      ),
+                                                      message: Text(
+                                                        'Please enter your M-PESA pin in the popup',
+                                                        style: GoogleFonts
+                                                            .quicksand(
+                                                                textStyle:
+                                                                    TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 20,
+                                                          color: Colors.black,
+                                                        )),
+                                                      ),
+                                                    );
+                                                  });
+                                            });
+                                          }
+                                        },
+                                        child: Text(
+                                          'SEND',
+                                          style: GoogleFonts.quicksand(
+                                              textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 18)),
+                                        ),
+                                        color: Colors.green,
+                                      )
                                     ],
                                   );
                                 });
@@ -545,5 +540,3 @@ Widget _addPhone(BuildContext context) {
     );
   }
 }
-
-
