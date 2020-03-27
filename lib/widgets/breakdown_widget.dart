@@ -16,7 +16,7 @@ class Breakdown extends StatefulWidget {
 class _BreakdownState extends State<Breakdown> {
   @override
   Widget build(BuildContext context) {
-    print('Data: ${widget.snapshot[0].data}');
+    //print('Data: ${widget.snapshot[0].data}');
     return Container(
       height: MediaQuery.of(context).size.height,
       child: ListView(

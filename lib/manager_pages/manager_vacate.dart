@@ -33,10 +33,11 @@ class _ManagerVacateState extends State<ManagerVacate> {
         child: ListTile(
           isThreeLine: true,
           leading: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Icon(
                 Icons.home,
-                color: Colors.green[900],
+                color: Colors.black,
               ),
               SizedBox(
                 height: 5,
@@ -45,7 +46,7 @@ class _ManagerVacateState extends State<ManagerVacate> {
                 '${data["hse"]}',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                        color: Colors.green[900], fontWeight: FontWeight.bold)),
+                        color: Colors.black, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -53,7 +54,7 @@ class _ManagerVacateState extends State<ManagerVacate> {
             '${data["name"]}',
             style: GoogleFonts.quicksand(
                 textStyle: TextStyle(
-                    color: Colors.green[900], fontWeight: FontWeight.bold)),
+                    color: Colors.black, fontWeight: FontWeight.bold)),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,12 +62,14 @@ class _ManagerVacateState extends State<ManagerVacate> {
               Text(
                 'Exit date - $dateFormatted',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: Colors.green[900])),
+                    textStyle: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w500)),
               ),
               Text(
                 '${data["reason"]}',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: Colors.green[900])),
+                    textStyle: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w500)),
               ),
             ],
           ),
@@ -95,7 +98,7 @@ class _ManagerVacateState extends State<ManagerVacate> {
         title: Text(
           'Kejani',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(

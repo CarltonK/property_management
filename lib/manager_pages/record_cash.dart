@@ -16,8 +16,6 @@ class _RecordCashState extends State<RecordCash> {
   String name;
   String rentAmt;
 
-  Color _color = Colors.white;
-
   int code;
 
   static var date = DateTime.now();
@@ -87,9 +85,9 @@ class _RecordCashState extends State<RecordCash> {
         backgroundColor: Colors.green[900],
         elevation: 0.0,
         title: Text(
-          'Kejani',
+          'Select a tenant',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
+              textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
         ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -106,7 +104,7 @@ class _RecordCashState extends State<RecordCash> {
               Container(
                 height: double.infinity,
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -164,8 +162,7 @@ class _RecordCashState extends State<RecordCash> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6),
                                       side: BorderSide(
-                                          color: Colors.green, width: 3)),
-                                  color: _color,
+                                          color: Colors.green, width: 1.5)),
                                   child: ListTile(
                                     isThreeLine: true,
                                     title: Text(
@@ -210,6 +207,55 @@ class _RecordCashState extends State<RecordCash> {
                                         name = map["fullName"];
                                         rentAmt = map["rent"];
                                       });
+                                      //Show a cupertino action sheet
+                                      showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CupertinoActionSheet(
+                                              message: Text(
+                                                'This is to confirm payment of KES $rentAmt from $name',
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 20,
+                                                  color: Colors.black,
+                                                )),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      _cashPayment();
+                                                    },
+                                                    child: Text(
+                                                      'PROCEED',
+                                                      style: GoogleFonts.muli(
+                                                          textStyle: TextStyle(
+                                                              fontSize: 25,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                    ))
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text(
+                                                        'CANCEL',
+                                                        style: GoogleFonts.muli(
+                                                            textStyle: TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 25,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      )));
+                                        },
+                                      );
                                     },
                                   ),
                                 );
@@ -229,88 +275,6 @@ class _RecordCashState extends State<RecordCash> {
                 ),
               )
             ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (docId == null) {
-            showCupertinoModalPopup(
-              context: context,
-              builder: (BuildContext context) {
-                return CupertinoActionSheet(
-                    title: Text(
-                      'Please select a tenant',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
-                    ),
-                    cancelButton: CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: Text(
-                          'CANCEL',
-                          style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold)),
-                        )));
-              },
-            );
-          } else {
-            showCupertinoModalPopup(
-              context: context,
-              builder: (BuildContext context) {
-                return CupertinoActionSheet(
-                    message: Text(
-                      'This is to confirm payment of KES $rentAmt from $name',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
-                    ),
-                    actions: <Widget>[
-                      CupertinoActionSheetAction(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            _cashPayment();
-                          },
-                          child: Text(
-                            'PROCEED',
-                            style: GoogleFonts.muli(
-                                textStyle: TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.bold)),
-                          ))
-                    ],
-                    cancelButton: CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          'CANCEL',
-                          style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold)),
-                        )));
-              },
-            );
-          }
-        },
-        splashColor: Colors.greenAccent[700],
-        child: Center(
-          child: Icon(
-            Icons.add,
-            size: 30,
           ),
         ),
       ),

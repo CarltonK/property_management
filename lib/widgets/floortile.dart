@@ -70,7 +70,7 @@ class _FloorTileState extends State<FloorTile> {
                           color: Colors.green[700],
                           child: GestureDetector(
                             onTap: () {
-                              print(map["due"].runtimeType);
+                              //print(map["due"].runtimeType);
                             },
                             child: ListTile(
                               title: Text(

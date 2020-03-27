@@ -40,7 +40,7 @@ class _ViewListingsState extends State<ViewListings> {
         title: Text(
           'Listings',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -98,118 +98,109 @@ class _ViewListingsState extends State<ViewListings> {
                           }
                           return ListView(
                             children: snapshot.data
-                                .map((map) => Card(
-                                      elevation: 10,
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 5),
-                                      shape: RoundedRectangleBorder(
+                                .map((map) => Container(
+                                      decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(12)),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
-                                        height: 200,
-                                        child: Stack(
-                                          children: <Widget>[
-                                            Positioned(
-                                              child: Container(
-                                                child: Image.network(
-                                                  map["url"],
-                                                  fit: BoxFit.fill,
-                                                ),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 5, horizontal: 10),
+                                      height: 200,
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Positioned(
+                                            child: Container(
+                                              child: Image.network(
+                                                map["url"],
+                                                fit: BoxFit.fill,
                                               ),
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
                                             ),
-                                            Positioned(
-                                                bottom: 10,
-                                                left: 20,
-                                                child: Opacity(
-                                                  opacity: 0.75,
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 15,
-                                                            vertical: 10),
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Text(
-                                                          'Bedrooms',
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                          ),
+                                          Positioned(
+                                              bottom: 10,
+                                              left: 20,
+                                              child: Opacity(
+                                                opacity: 0.8,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15,
+                                                      vertical: 10),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        'Bedrooms',
+                                                        style: GoogleFonts.quicksand(
+                                                            textStyle: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text('${map["bedrooms"]}',
                                                           style: GoogleFonts.quicksand(
                                                               textStyle: TextStyle(
                                                                   color: Colors
                                                                       .black,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text(
-                                                            '${map["bedrooms"]}',
-                                                            style: GoogleFonts.quicksand(
-                                                                textStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)))
-                                                      ],
-                                                    ),
+                                                                          .bold)))
+                                                    ],
                                                   ),
-                                                )),
-                                            Positioned(
-                                                bottom: 10,
-                                                right: 20,
-                                                child: Opacity(
-                                                  opacity: 0.75,
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 15,
-                                                            vertical: 10),
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Text('Price',
-                                                            style: GoogleFonts.quicksand(
-                                                                textStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold))),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text('${map["price"]}',
-                                                            style: GoogleFonts.quicksand(
-                                                                textStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)))
-                                                      ],
-                                                    ),
+                                                ),
+                                              )),
+                                          Positioned(
+                                              bottom: 10,
+                                              right: 20,
+                                              child: Opacity(
+                                                opacity: 0.8,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
-                                                ))
-                                          ],
-                                        ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15,
+                                                      vertical: 10),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Text('Price',
+                                                          style: GoogleFonts.quicksand(
+                                                              textStyle: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text('${map["price"]}',
+                                                          style: GoogleFonts.quicksand(
+                                                              textStyle: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ))
+                                        ],
                                       ),
                                     ))
                                 .toList(),

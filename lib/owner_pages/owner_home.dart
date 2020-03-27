@@ -99,7 +99,9 @@ class _OwnerHomeState extends State<OwnerHome> {
         backgroundColor: Colors.green[900],
         elevation: 0.0,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed('/owner_prof', arguments: data);
+          },
           icon: Icon(
             Icons.person_pin,
             color: Colors.white,
@@ -109,7 +111,7 @@ class _OwnerHomeState extends State<OwnerHome> {
         title: Text(
           'Kejani',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
         ),
         actions: <Widget>[
           IconButton(
@@ -140,20 +142,20 @@ class _OwnerHomeState extends State<OwnerHome> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  // Text(
+                  //   'Summary',
+                  //   style: GoogleFonts.quicksand(
+                  //       textStyle: TextStyle(
+                  //           color: Colors.white,
+                  //           fontSize: 18,
+                  //           fontWeight: FontWeight.bold)),
+                  // ),
+                  // _ownerQuickGlance(),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
                   Text(
-                    'Summary',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  _ownerQuickGlance(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'Breakdown',
+                    'Tenants',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                             color: Colors.white,
