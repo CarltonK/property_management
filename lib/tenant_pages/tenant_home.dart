@@ -495,15 +495,15 @@ class _TenantHomeState extends State<TenantHome> {
                                 DateTime dateDue = user["due"].toDate();
                                 DateTime datePaid = map["date"].toDate();
                                 var difference = dateDue.day - datePaid.day;
-                                print(difference);
+                                //print(difference);
 
                                 dynamic durationTaken = "early";
 
                                 if (difference < 0) {
                                   difference = difference.abs();
-                                  durationTaken = "early";
-                                } else {
                                   durationTaken = "late";
+                                } else {
+                                  durationTaken = "early";
                                 }
 
                                 return Card(

@@ -43,6 +43,7 @@ class _AnnouncementState extends State<Announcement> {
                         .collection("apartments")
                         .document(code.toString())
                         .collection("announcements")
+                        .orderBy("sentDate",descending: true)
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {

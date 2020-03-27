@@ -326,7 +326,7 @@ class _TenantProfileState extends State<TenantProfile> {
             //Temporary changes
             user["phone"] = _phone;
             user["natId"] = _natId;
-            
+
             //Disable the circular progress dialog
             setState(() {
               isLoading = true;
