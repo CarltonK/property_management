@@ -54,7 +54,6 @@ class _RegistrationState extends State<Registration> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -452,6 +451,20 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
+  //Return user data
+  Future navigateUser(String uid) async {
+    //This is the name of the collection we will be reading
+    final String _collection = 'users';
+    //Create a variable to store Firestore instance
+    final Firestore _fireStore = Firestore.instance;
+    var document = _fireStore.collection(_collection).document(uid);
+    var returnDoc = document.get();
+    returnDoc.then((value) {
+      Map<String, dynamic> data = value.data;
+      Navigator.of(context).pushReplacementNamed('/tenant-home',arguments: data);
+    });
+  }
+
   void _registerBtnPressed() {
     if (apartmentName == null) {
       //Show an action sheet with error
@@ -562,9 +575,10 @@ class _RegistrationState extends State<Registration> {
           Timer(Duration(seconds: 2), () {
             Navigator.of(context).pop();
           });
-          Timer(Duration(seconds: 3), () {
-            Navigator.of(context).popAndPushNamed('/login');
-          });
+
+          //Retreieve user details and push to home page
+          navigateUser(result.uid);
+
         } else {
           print('Failed response: $result');
           //Disable the circular progress dialog
