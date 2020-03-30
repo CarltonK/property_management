@@ -461,7 +461,8 @@ class _RegistrationState extends State<Registration> {
     var returnDoc = document.get();
     returnDoc.then((value) {
       Map<String, dynamic> data = value.data;
-      Navigator.of(context).pushReplacementNamed('/tenant-home',arguments: data);
+      Navigator.of(context)
+          .pushReplacementNamed('/tenant-home', arguments: data);
     });
   }
 
@@ -575,9 +576,10 @@ class _RegistrationState extends State<Registration> {
           Timer(Duration(seconds: 2), () {
             Navigator.of(context).pop();
           });
-
+          Timer(Duration(seconds: 3), () {
+            navigateUser(result.uid);
+          });
           //Retreieve user details and push to home page
-          navigateUser(result.uid);
 
         } else {
           print('Failed response: $result');
