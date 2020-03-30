@@ -11,6 +11,7 @@ import 'package:property_management/manager_pages/manager.dart';
 import 'package:property_management/manager_pages/manager_prof.dart';
 import 'package:property_management/manager_pages/record_cash.dart';
 import 'package:property_management/newbie_pages/newbie.dart';
+import 'package:property_management/owner_pages/add_apartment.dart';
 import 'package:property_management/owner_pages/add_listing.dart';
 import 'package:property_management/owner_pages/add_manager.dart';
 import 'package:property_management/owner_pages/owner.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
         '/view-listings': (context) => ViewListings(),
         '/tenant-verify': (context) => TenantVerify(),
         '/owner_prof': (context) => OwnerProf(),
+        '/add-apartment': (context) => AddApartment(),
         //Manager
         '/manager': (context) => Manager(),
         '/manager-prof': (context) => ManagerProf(),

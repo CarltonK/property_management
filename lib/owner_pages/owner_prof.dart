@@ -63,137 +63,153 @@ class _OwnerProfState extends State<OwnerProf> {
                   SizedBox(
                     height: 10,
                   ),
-                  StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('apartments')
-                          .where('owner', isEqualTo: data['firstName'])
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          return Row(
-                            children: snapshot.data.documents
-                                .map((map) => Container(
-                                      decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.white)),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.8,
-                                      child: ListTile(
-                                        isThreeLine: true,
-                                        title: Text(
-                                          '${map['apartment_name']}',
-                                          style: GoogleFonts.quicksand(
-                                              textStyle: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white)),
-                                        ),
-                                        trailing: GestureDetector(
-                                          onTap: () {
-                                            showCupertinoModalPopup(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CupertinoAlertDialog(
-                                                    title: Text(
-                                                      'Are you sure ?',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: GoogleFonts.quicksand(
-                                                          textStyle: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                    ),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                          onPressed: () =>
+                  Expanded(
+                    child: StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('apartments')
+                            .where('owner', isEqualTo: data['firstName'])
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView(
+                              children: snapshot.data.documents
+                                  .map((map) => Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 5),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.white)),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListTile(
+                                          isThreeLine: true,
+                                          title: Text(
+                                            '${map['apartment_name']}',
+                                            style: GoogleFonts.quicksand(
+                                                textStyle: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white)),
+                                          ),
+                                          trailing: GestureDetector(
+                                            onTap: () {
+                                              showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return CupertinoAlertDialog(
+                                                      title: Text(
+                                                        'Are you sure ?',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: GoogleFonts.quicksand(
+                                                            textStyle: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        FlatButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
+                                                            child: Text(
+                                                              'NO',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: GoogleFonts.quicksand(
+                                                                  textStyle: TextStyle(
+                                                                      color: Colors
+                                                                          .red,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                            )),
+                                                        FlatButton(
+                                                            onPressed:
+                                                                () async {
+                                                              //Delete an apartment
+                                                              await Firestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'apartments')
+                                                                  .document(map
+                                                                      .documentID)
+                                                                  .delete();
+
                                                               Navigator.of(
                                                                       context)
-                                                                  .pop(),
-                                                          child: Text(
-                                                            'NO',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: GoogleFonts.quicksand(
-                                                                textStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .red,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
-                                                          )),
-                                                      FlatButton(
-                                                          onPressed: () async {
-                                                            //Delete an apartment
-                                                            await Firestore
-                                                                .instance
-                                                                .collection(
-                                                                    'apartments')
-                                                                .document(map
-                                                                    .documentID)
-                                                                .delete();
-                                                          },
-                                                          child: Text(
-                                                            'YES',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: GoogleFonts.quicksand(
-                                                                textStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
-                                                          ))
-                                                    ],
-                                                  );
-                                                });
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                                  .pop();
+                                                            },
+                                                            child: Text(
+                                                              'YES',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: GoogleFonts.quicksand(
+                                                                  textStyle: TextStyle(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                            ))
+                                                      ],
+                                                    );
+                                                  });
+                                            },
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  'Delete',
+                                                  style: GoogleFonts.quicksand(
+                                                      textStyle: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600)),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Icon(Icons.delete,
+                                                    color: Colors.red)
+                                              ],
+                                            ),
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Text(
-                                                'Delete',
+                                                '${map['location']}',
                                                 style: GoogleFonts.quicksand(
                                                     textStyle: TextStyle(
                                                         color: Colors.white)),
                                               ),
-                                              Icon(Icons.delete,
-                                                  color: Colors.red)
+                                              Text(
+                                                'Paybill: ${map['paybill']}',
+                                                style: GoogleFonts.quicksand(
+                                                    textStyle: TextStyle(
+                                                        color: Colors.white)),
+                                              )
                                             ],
                                           ),
                                         ),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              '${map['location']}',
-                                              style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                            Text(
-                                              'Paybill: ${map['paybill']}',
-                                              style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                      color: Colors.white)),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
+                                      ))
+                                  .toList(),
+                            );
+                          }
+                          return SpinKitDoubleBounce(
+                            color: Colors.white,
                           );
-                        }
-                        return SpinKitDoubleBounce(
-                          color: Colors.white,
-                        );
-                      }),
+                        }),
+                  ),
                 ],
               ),
             ),
@@ -203,7 +219,8 @@ class _OwnerProfState extends State<OwnerProf> {
       floatingActionButton: MaterialButton(
         splashColor: Colors.greenAccent[700],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        onPressed: () {},
+        onPressed: () =>
+            Navigator.of(context).pushNamed('/add-apartment', arguments: data),
         color: Colors.white,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -215,7 +232,8 @@ class _OwnerProfState extends State<OwnerProf> {
             Text(
               'Apartment',
               style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(fontWeight: FontWeight.w600)),
+                  textStyle:
+                      TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
             )
           ],
         ),
