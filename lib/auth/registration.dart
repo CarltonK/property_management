@@ -154,12 +154,17 @@ class _RegistrationState extends State<Registration> {
                   items: snapshot.data.documents.map((map) {
                     return DropdownMenuItem<String>(
                         value: map["apartment_name"],
-                        child: Text(map["apartment_name"],
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold))));
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(8),
+                          color: Colors.green[900],
+                          child: Text(map["apartment_name"],
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold))),
+                        ));
                   }).toList(),
                   onChanged: (value) {
                     setState(() {

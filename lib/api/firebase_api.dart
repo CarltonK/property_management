@@ -277,6 +277,7 @@ class API with ChangeNotifier {
         "paybill": paybill,
         "location": location,
         "county": county,
+        "selected": true
       });
       return currentUser;
     } catch (e) {

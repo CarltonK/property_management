@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +23,14 @@ class _AddApartmentState extends State<AddApartment> {
   final _formKey = GlobalKey<FormState>();
 
   final _focuspaybill = FocusNode();
-  final _focusapartment = FocusNode();
   final _focusLocation = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focuspaybill.dispose();
+    _focusLocation.dispose();
+  }
 
   void _locationHandler(String value) {
     _location = value.trim();
@@ -189,7 +194,7 @@ class _AddApartmentState extends State<AddApartment> {
                   borderSide: BorderSide(color: Colors.red)),
               labelText: 'Name of the building',
               labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+                  textStyle: TextStyle(color: Colors.white, fontSize: 13)),
               icon: Icon(
                 Icons.business,
                 color: Colors.white,
@@ -244,7 +249,7 @@ class _AddApartmentState extends State<AddApartment> {
                   borderSide: BorderSide(color: Colors.red)),
               labelText: 'E.g: Langata, Nairobi',
               labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+                  textStyle: TextStyle(color: Colors.white, fontSize: 13)),
               icon: Icon(
                 Icons.location_on,
                 color: Colors.white,
@@ -299,7 +304,7 @@ class _AddApartmentState extends State<AddApartment> {
                   borderSide: BorderSide(color: Colors.red)),
               labelText: 'Safaricom paybill',
               labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
+                  textStyle: TextStyle(color: Colors.white, fontSize: 13)),
               icon: Icon(
                 Icons.confirmation_number,
                 color: Colors.white,
@@ -372,7 +377,8 @@ class _AddApartmentState extends State<AddApartment> {
           "location": _location,
           "paybill": _paybill,
           "apartment_name": _apartmentName,
-          "apartment_code": _lordCode
+          "apartment_code": _lordCode,
+          "selected": false
         });
 
         FocusScope.of(context).unfocus();
@@ -394,18 +400,14 @@ class _AddApartmentState extends State<AddApartment> {
                     color: Colors.black,
                   )),
                 ),
-                message: SpinKitCircle(
-                  color: Colors.red,
-                  size: 50,
-                ),
               );
             });
 
-        Timer(Duration(seconds: 1), () {
+        Timer(Duration(seconds: 2), () {
           Navigator.of(context).pop();
         });
 
-        Timer(Duration(seconds: 2), () {
+        Timer(Duration(seconds: 3), () {
           Navigator.of(context).pop();
         });
       }
@@ -458,46 +460,49 @@ class _AddApartmentState extends State<AddApartment> {
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: Colors.green[900],
-            ),
-            Container(
-              height: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _dropDownCounties(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _registerApartment(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _registerApartmentLocation(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _registerPaybill(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _registerBtn()
-                    ],
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: Colors.green[900],
+              ),
+              Container(
+                height: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        _dropDownCounties(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _registerApartment(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _registerApartmentLocation(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _registerPaybill(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _registerBtn()
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
