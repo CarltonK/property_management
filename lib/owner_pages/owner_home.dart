@@ -15,6 +15,10 @@ class OwnerHome extends StatefulWidget {
 class _OwnerHomeState extends State<OwnerHome> {
   static Map<String, dynamic> data;
   int code;
+  String phone;
+  String name;
+  String uid;
+  String apartmentName;
 
   Widget _ownerQuickGlance() {
     return Card(
@@ -87,12 +91,26 @@ class _OwnerHomeState extends State<OwnerHome> {
     return query.documents;
   }
 
+  Future payAdmin(String phoneNumber, String userid) async {
+  await Firestore.instance
+    .collection("payments")
+    .document('Admin')
+    .collection('remittances')
+    .document()
+    .setData({
+    "phone": phoneNumber,
+    "date": DateTime.now(),
+    "uid": userid
+  });
+}
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    //print('Owner data: $data');
+    print('Owner data: $data');
     code = data["landlord_code"];
-    //apartmentName = data["apartment"];
+    phone = data["phone"];
+    uid = data['uid'];
 
     return Scaffold(
       appBar: AppBar(
@@ -248,6 +266,54 @@ class _OwnerHomeState extends State<OwnerHome> {
             TenantPopup(
               apartment_name: data["apartment_name"],
               code: data["landlord_code"],
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: MaterialButton(
+        splashColor: Colors.greenAccent[700],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+        onPressed: () {
+          payAdmin(phone, uid).whenComplete(() {
+            showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoActionSheet(
+                            title: Text(
+                              'Your booking request is being processed',
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.black,
+                              )),
+                            ),
+                            message: Text(
+                              'Please enter your M-PESA pin in the popup',
+                              style: GoogleFonts.quicksand(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.black,
+                              )),
+                            ),
+                          );
+                        });
+          });
+        },
+        color: Colors.white,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.monetization_on),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              'Pay',
+              style: GoogleFonts.quicksand(
+                  textStyle:
+                      TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
             )
           ],
         ),

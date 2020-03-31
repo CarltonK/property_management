@@ -21,8 +21,7 @@ class _OwnerProfState extends State<OwnerProf> {
     //Retrieve data
     data = ModalRoute.of(context).settings.arguments;
     uid = data['uid'];
-
-    print('Retrieved data: $data');
+    //print('Retrieved data: $data');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],
@@ -54,7 +53,7 @@ class _OwnerProfState extends State<OwnerProf> {
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                            fontSize: 22,
                             color: Colors.white)),
                   ),
                   SizedBox(
@@ -62,6 +61,15 @@ class _OwnerProfState extends State<OwnerProf> {
                   ),
                   Text(
                     'Here is a list of apartments you own',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                            fontWeight: FontWeight.w600, color: Colors.white)),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    'Select one to activate it',
                     style: GoogleFonts.quicksand(
                         textStyle: TextStyle(
                             fontWeight: FontWeight.w600, color: Colors.white)),
