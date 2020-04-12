@@ -36,7 +36,6 @@ class _TenantPopupState extends State<TenantPopup> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -73,6 +72,7 @@ class _TenantPopupState extends State<TenantPopup> {
                               padd = MediaQuery.of(context).size.height * 0.5;
                             });
                           });
+
                           return Center(
                             child: Text(
                               'You have no tenant approval requests',
@@ -87,11 +87,15 @@ class _TenantPopupState extends State<TenantPopup> {
                         switch (snapshot.connectionState) {
                           case ConnectionState.done:
                             if (snapshot.data.length == 0) {
-                              setState(() {
-                                opacity = 0;
-                                hasDataQuery = false;
-                                padd = MediaQuery.of(context).size.height * 0.5;
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                setState(() {
+                                  opacity = 0;
+                                  hasDataQuery = false;
+                                  padd =
+                                      MediaQuery.of(context).size.height * 0.5;
+                                });
                               });
+
                               return Center(
                                 child: Text(
                                   'You have no tenant approval requests',

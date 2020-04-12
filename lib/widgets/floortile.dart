@@ -59,6 +59,7 @@ class _FloorTileState extends State<FloorTile> {
                       children: snapshot.data.map((map) {
                         //Date Parsing and Formatting
                         var dateRetrieved = map["due"];
+                        var paidStatus = map['paid'];
                         var formatter = new DateFormat('d');
                         String date = formatter.format(dateRetrieved.toDate());
 
@@ -95,18 +96,18 @@ class _FloorTileState extends State<FloorTile> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    'Amount',
+                                    paidStatus ? 'Paid' : 'Unpaid',
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.quicksand(
-                                        textStyle:
-                                            TextStyle(color: Colors.white)),
+                                        textStyle: TextStyle(
+                                            color: Colors.white, fontSize: 12)),
                                   ),
                                   Text(
                                     '${map["rent"]}',
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.quicksand(
-                                        textStyle:
-                                            TextStyle(color: Colors.white)),
+                                        textStyle: TextStyle(
+                                            color: Colors.white, fontSize: 12)),
                                   ),
                                 ],
                               ),

@@ -133,7 +133,8 @@ class _TenantVerifyState extends State<TenantVerify> {
       "uid": docId,
       "hseNumber": hseNumber,
       "rent": amt,
-      "due": due
+      "due": due,
+      "paid": false
     });
 
     await _fcm.subscribeToTopic(code.toString());

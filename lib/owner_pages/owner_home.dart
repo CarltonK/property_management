@@ -92,17 +92,13 @@ class _OwnerHomeState extends State<OwnerHome> {
   }
 
   Future payAdmin(String phoneNumber, String userid) async {
-  await Firestore.instance
-    .collection("payments")
-    .document('Admin')
-    .collection('remittances')
-    .document()
-    .setData({
-    "phone": phoneNumber,
-    "date": DateTime.now(),
-    "uid": userid
-  });
-}
+    await Firestore.instance
+        .collection("payments")
+        .document('Admin')
+        .collection('remittances')
+        .document()
+        .setData({"phone": phoneNumber, "date": DateTime.now(), "uid": userid});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +114,8 @@ class _OwnerHomeState extends State<OwnerHome> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushNamed('/owner_prof', arguments: data);
+            Navigator.of(context)
+                .pushReplacementNamed('/owner_prof', arguments: data);
           },
           icon: Icon(
             Icons.person_pin,
@@ -276,29 +273,29 @@ class _OwnerHomeState extends State<OwnerHome> {
         onPressed: () {
           payAdmin(phone, uid).whenComplete(() {
             showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoActionSheet(
-                            title: Text(
-                              'Your booking request is being processed',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                                color: Colors.black,
-                              )),
-                            ),
-                            message: Text(
-                              'Please enter your M-PESA pin in the popup',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                                color: Colors.black,
-                              )),
-                            ),
-                          );
-                        });
+                context: context,
+                builder: (BuildContext context) {
+                  return CupertinoActionSheet(
+                    title: Text(
+                      'Your booking request is being processed',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                    ),
+                    message: Text(
+                      'Please enter your M-PESA pin in the popup',
+                      style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      )),
+                    ),
+                  );
+                });
           });
         },
         color: Colors.white,

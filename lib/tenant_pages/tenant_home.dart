@@ -23,6 +23,7 @@ class _TenantHomeState extends State<TenantHome> {
   Map<String, dynamic> user;
   int _code;
   String uid, file_path, url_result;
+  int _floor;
   String phone, natId, rent;
 
   //int notificationCount = 0;
@@ -107,6 +108,18 @@ class _TenantHomeState extends State<TenantHome> {
         "uid": uid,
         "date": date,
       });
+
+      final String _collectionUpper = "apartments";
+      final String _collectionMiddle = "floors";
+      final String _collectionLower = "tenants";
+      await Firestore.instance
+          .collection(_collectionUpper)
+          .document(_code.toString())
+          .collection(_collectionMiddle)
+          .document(_floor.toString())
+          .collection(_collectionLower)
+          .document(uid)
+          .updateData({"paid": true});
     }).whenComplete(() {
       Navigator.of(context).pop();
       //Show a success message
@@ -220,7 +233,7 @@ class _TenantHomeState extends State<TenantHome> {
     }
   }
 
-  Future _lipaNaMpesa(String phone, String ID, int rent) async {
+  Future _lipaNaMpesa(String phone, String id, int rent) async {
     await Firestore.instance
         .collection("payments")
         .document(_code.toString())
@@ -237,6 +250,19 @@ class _TenantHomeState extends State<TenantHome> {
       "uid": uid,
       "date": date,
     });
+
+    //Update Floor Tile(Owner Home)
+    final String _collectionUpper = "apartments";
+    final String _collectionMiddle = "floors";
+    final String _collectionLower = "tenants";
+    await Firestore.instance
+        .collection(_collectionUpper)
+        .document(_code.toString())
+        .collection(_collectionMiddle)
+        .document(_floor.toString())
+        .collection(_collectionLower)
+        .document(uid)
+        .updateData({"paid": true});
   }
 
   void _bankPay() {
@@ -360,6 +386,7 @@ class _TenantHomeState extends State<TenantHome> {
   @override
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
+    _floor = user['floorNumber'];
     _code = user["landlord_code"];
     phone = user["phone"];
     natId = user["natId"];
