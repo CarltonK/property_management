@@ -29,8 +29,8 @@ class _TenantPopupState extends State<TenantPopup> {
         .where("apartment_name", isEqualTo: apartment)
         .where("landlord_code", isEqualTo: 0)
         .getDocuments();
-    print('How many: ${query.documents.length}');
-    print('Docs: ${query.documents[0].data}');
+    //print('How many: ${query.documents.length}');
+    //print('Docs: ${query.documents[0].data}');
     return query.documents;
   }
 

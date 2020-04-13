@@ -1,4 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
@@ -25,17 +27,126 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   double _scale;
   AnimationController _controller;
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
-  String _userId;
 
   Future checkFirstSeen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _seen = (prefs.getBool('seen') ?? false);
 
     if (_seen) {
-      Navigator.of(context).pushReplacementNamed('/login');
-    } else {
+      checkLoginStatus().then((value) {
+        if (value == null) {
+          Navigator.of(context).pushNamed('/login');
+        }
+        else {
+          getUserBase(value);
+        }
+      });
+    } 
+    else {
       await prefs.setBool('seen', true);
     }
+  }
+
+  Future checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String uid = prefs.getString('uid');
+    return uid;
+  }
+
+   Future getUserBase(String uid) async {
+
+       //This is the name of the collection we will be reading
+    final String _collection = 'users';
+    //Create a variable to store Firestore instance
+    final Firestore _fireStore = Firestore.instance;
+    var document =  _fireStore.collection(_collection).document(uid);
+    var returnDoc = document.get();
+    //Show the return value - A DocumentSnapshot;
+    //print('This is the return ${returnDoc}');
+    returnDoc.then((value) async{
+      //Extract values
+      String userdesignation = value.data["designation"];
+      //Return the data for user
+      Map<String, dynamic> userData = value.data;
+      //Add the uid to the Map
+      userData["uid"] = uid;
+
+      // //Try save credentials using shared preferences
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString('uid', uid);
+
+
+      //Show different home pages based on designation
+      //Tenant Page
+      if (userdesignation == "Tenant") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context)
+              .popAndPushNamed('/tenant-home', arguments: userData);
+        });
+      }
+      //Admin Page
+      else if (userdesignation == "Admin") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context).popAndPushNamed('/admin', arguments: userData);
+        });
+      }
+      //Manager page
+      else if (userdesignation == "Manager") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context)
+              .popAndPushNamed('/manager', arguments: userData);
+        });
+      }
+      //Landlord Page
+      else if (userdesignation == "Landlord") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context)
+              .popAndPushNamed('/owner_home', arguments: userData);
+        });
+      } else {
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              message: Text(
+                'This account is not registered',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
+              ),
+            );
+          },
+        );
+      }
+    }).catchError((error) {
+      //Pop welcome dialog
+      //Navigator.of(context).pop();
+
+      Navigator.of(context).pushNamed('/login');
+       showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              message: Text(
+                'You have been gone for too long. Please login again',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
+              ),
+            );
+          },
+        );
+    });
   }
 
   @override

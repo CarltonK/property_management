@@ -8,6 +8,7 @@ import 'package:property_management/tenant_pages/ten_search.dart';
 import 'package:property_management/tenant_pages/ten_vacate.dart';
 import 'package:property_management/tenant_pages/tenant_home.dart';
 import 'package:property_management/tenant_pages/tenant_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TenantBase extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class TenantBase extends StatefulWidget {
 }
 
 class _TenantBaseState extends State<TenantBase> {
+  
   int _selectedIndex = 0;
 
   PageController _pageController;

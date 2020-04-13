@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:property_management/models/usermodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //Use ChangeNotifier to allow widgets using this service to be updated
 class API with ChangeNotifier {
@@ -41,7 +42,11 @@ class API with ChangeNotifier {
   }
 
   //User Logout
-  Future logout() {
+  Future logout() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('uid');
+
+    
     this.currentUser = null;
     _auth.signOut();
     notifyListeners();

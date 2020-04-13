@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connection_status_bar/connection_status_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/usermodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -210,17 +210,24 @@ class _LoginState extends State<Login> {
     final String _collection = 'users';
     //Create a variable to store Firestore instance
     final Firestore _fireStore = Firestore.instance;
-    var document = await _fireStore.collection(_collection).document(uid);
+    var document = _fireStore.collection(_collection).document(uid);
     var returnDoc = document.get();
     //Show the return value - A DocumentSnapshot;
     //print('This is the return ${returnDoc}');
-    returnDoc.then((DocumentSnapshot) {
+    returnDoc.then((value) async{
       //Extract values
-      String userdesignation = DocumentSnapshot.data["designation"];
+      String userdesignation = value.data["designation"];
       //Return the data for user
-      Map<String, dynamic> userData = DocumentSnapshot.data;
+      Map<String, dynamic> userData = value.data;
+      
       //Add the uid to the Map
       userData["uid"] = uid;
+
+      //Try save credentials using shared preferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('uid', uid);
+
+
       //Show different home pages based on designation
       //Tenant Page
       if (userdesignation == "Tenant") {
