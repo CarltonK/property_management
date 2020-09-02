@@ -16,7 +16,6 @@ class TenantBase extends StatefulWidget {
 }
 
 class _TenantBaseState extends State<TenantBase> {
-  
   int _selectedIndex = 0;
 
   PageController _pageController;

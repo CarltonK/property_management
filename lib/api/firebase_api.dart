@@ -42,11 +42,10 @@ class API with ChangeNotifier {
   }
 
   //User Logout
-  Future logout() async{
+  Future logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('uid');
 
-    
     this.currentUser = null;
     _auth.signOut();
     notifyListeners();

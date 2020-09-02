@@ -36,13 +36,11 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       checkLoginStatus().then((value) {
         if (value == null) {
           Navigator.of(context).pushNamed('/login');
-        }
-        else {
+        } else {
           getUserBase(value);
         }
       });
-    } 
-    else {
+    } else {
       await prefs.setBool('seen', true);
     }
   }
@@ -53,17 +51,16 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
     return uid;
   }
 
-   Future getUserBase(String uid) async {
-
-       //This is the name of the collection we will be reading
+  Future getUserBase(String uid) async {
+    //This is the name of the collection we will be reading
     final String _collection = 'users';
     //Create a variable to store Firestore instance
     final Firestore _fireStore = Firestore.instance;
-    var document =  _fireStore.collection(_collection).document(uid);
+    var document = _fireStore.collection(_collection).document(uid);
     var returnDoc = document.get();
     //Show the return value - A DocumentSnapshot;
     //print('This is the return ${returnDoc}');
-    returnDoc.then((value) async{
+    returnDoc.then((value) async {
       //Extract values
       String userdesignation = value.data["designation"];
       //Return the data for user
@@ -75,12 +72,11 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // prefs.setString('uid', uid);
 
-
       //Show different home pages based on designation
       //Tenant Page
       if (userdesignation == "Tenant") {
         //Timed Function
-        Timer(Duration(milliseconds: 100), () {
+        Timer(Duration(milliseconds: 50), () {
           Navigator.of(context)
               .popAndPushNamed('/tenant-home', arguments: userData);
         });
@@ -88,14 +84,14 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       //Admin Page
       else if (userdesignation == "Admin") {
         //Timed Function
-        Timer(Duration(milliseconds: 100), () {
+        Timer(Duration(milliseconds: 50), () {
           Navigator.of(context).popAndPushNamed('/admin', arguments: userData);
         });
       }
       //Manager page
       else if (userdesignation == "Manager") {
         //Timed Function
-        Timer(Duration(milliseconds: 100), () {
+        Timer(Duration(milliseconds: 50), () {
           Navigator.of(context)
               .popAndPushNamed('/manager', arguments: userData);
         });
@@ -103,7 +99,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       //Landlord Page
       else if (userdesignation == "Landlord") {
         //Timed Function
-        Timer(Duration(milliseconds: 100), () {
+        Timer(Duration(milliseconds: 50), () {
           Navigator.of(context)
               .popAndPushNamed('/owner_home', arguments: userData);
         });
@@ -130,22 +126,22 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       //Navigator.of(context).pop();
 
       Navigator.of(context).pushNamed('/login');
-       showCupertinoModalPopup(
-          context: context,
-          builder: (BuildContext context) {
-            return CupertinoActionSheet(
-              message: Text(
-                'You have been gone for too long. Please login again',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.black,
-                )),
-              ),
-            );
-          },
-        );
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoActionSheet(
+            message: Text(
+              'You have been gone for too long. Please login again',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
+            ),
+          );
+        },
+      );
     });
   }
 
@@ -311,23 +307,23 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   }
 
   Widget get _animatedButtonUI => Container(
-        height: 60,
-        width: 270,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100.0),
-          color: Colors.white,
+    height: 60,
+    width: 270,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(100.0),
+      color: Colors.white,
+    ),
+    child: Center(
+      child: Text(
+        'LET\'S GET STARTED',
+        style: TextStyle(
+          fontSize: 22.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.green[900],
         ),
-        child: Center(
-          child: Text(
-            'LET\'S GET STARTED',
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.green[900],
-            ),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 
   void _onTapDown(TapDownDetails details) {
     _controller.forward();

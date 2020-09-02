@@ -46,19 +46,42 @@ export const sendPaymentNotice = functions.firestore
         })
     })
 
-// export const delete3dayOldComplaint = functions.firestore
-//     .document('complaints/{complaint}')
-//     .onUpdate(async snapshot => {
-//         //Check if issue has been fixed
-//         if (snapshot.after.get('fixed') == true) {
-//             //Get the time now
-//             const now = Date.now();
-//             const fixedDate = snapshot.after.get('fixedDate');
-//             const difference = now - fixedDate;
-//             //Delete the doc if the days are greater than 3
-//             if (difference > 3) {
-//                 const docId = snapshot.after.id;
-//                 db.collection('complaints').doc(docId).delete;
-//             }
-//         }
+// export const changePaymentStatus = functions.firestore
+//     .document('apartments/{code}/floors/{floor}/tenants/{tenant}')
+//     .onWrite(async snapshot => {
+//         //Get the current system date
+//         const now: Date = new Date()
+//         console.log(`System Date ${now}`)
+//         if (now.getDate() > 24 && now.getDate() <= 31) {
+//             //Get document ID
+//             const docId = snapshot.before.id
+//             console.log(`Document ID ${docId}`)
+//             await db.doc(`apartments/{code}/floors/{floor}/tenants/${docId}`).update({"paid":false})
+//         } 
 //     })
+
+export const delete3dayOldComplaint = functions.firestore
+    .document('complaints/{complaint}')
+    .onUpdate(async snapshot => {
+        //Check if issue has been fixed
+        if (snapshot.after.get('fixed') == true) {
+            //Get the date now
+            const now: Date = new Date()
+            //Get the date in the document
+            const fixedDate = snapshot.after.get('fixedDate');
+            // console.log(`System Date ${now}`)
+            // console.log(`Document Date ${fixedDate.toDate()}`)
+            //Convert firebase timestamp to Date object
+            const timeStampAsDate = fixedDate.toDate()
+            //Get the difference between the two dates
+            const diff = Number(now) - Number(timeStampAsDate);
+            // console.log(`Difference Date ${diff}`)
+            const threeDaysInNumber: number = 259200
+            if (diff > threeDaysInNumber) {
+                //Get document ID
+                const docId = snapshot.before.id
+                console.log(`Document ID ${docId}`)
+                await db.collection('complaints').doc(docId).delete()
+            }
+        }
+    })

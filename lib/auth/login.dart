@@ -214,19 +214,18 @@ class _LoginState extends State<Login> {
     var returnDoc = document.get();
     //Show the return value - A DocumentSnapshot;
     //print('This is the return ${returnDoc}');
-    returnDoc.then((value) async{
+    returnDoc.then((value) async {
       //Extract values
       String userdesignation = value.data["designation"];
       //Return the data for user
       Map<String, dynamic> userData = value.data;
-      
+
       //Add the uid to the Map
       userData["uid"] = uid;
 
       //Try save credentials using shared preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('uid', uid);
-
 
       //Show different home pages based on designation
       //Tenant Page

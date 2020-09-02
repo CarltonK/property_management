@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,34 +107,34 @@ class _TenVacateState extends State<TenVacate> {
                                       letterSpacing: 0.5)),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: DatePickerTimeline(
-                              DateTime.now().add(Duration(days: 30)),
-                              height: 100,
-                              selectionColor: Colors.greenAccent[700],
-                              onDateChange: (date) {
-                                _vacateDate = date;
-                                print('$_vacateDate');
-                              },
-                              daysCount: 90,
-                              dateTextStyle: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                              monthTextStyle: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500)),
-                              dayTextStyle: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500)),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 30),
+                          //   child: DatePickerTimeline(
+                          //     DateTime.now().add(Duration(days: 30)),
+                          //     height: 100,
+                          //     selectionColor: Colors.greenAccent[700],
+                          //     onDateChange: (date) {
+                          //       _vacateDate = date;
+                          //       print('$_vacateDate');
+                          //     },
+                          //     daysCount: 90,
+                          //     dateTextStyle: GoogleFonts.quicksand(
+                          //         textStyle: TextStyle(
+                          //             color: Colors.white,
+                          //             fontSize: 24,
+                          //             fontWeight: FontWeight.bold)),
+                          //     monthTextStyle: GoogleFonts.quicksand(
+                          //         textStyle: TextStyle(
+                          //             color: Colors.white,
+                          //             fontSize: 12,
+                          //             fontWeight: FontWeight.w500)),
+                          //     dayTextStyle: GoogleFonts.quicksand(
+                          //         textStyle: TextStyle(
+                          //             color: Colors.white,
+                          //             fontSize: 12,
+                          //             fontWeight: FontWeight.w500)),
+                          //   ),
+                          // ),
                           SizedBox(
                             height: 10,
                           ),
