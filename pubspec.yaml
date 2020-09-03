@@ -1,6 +1,6 @@
 name: property_management
-description: A new Flutter project.
-version: 1.0.23+1
+description: Kejani
+version: 1.0.24+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
