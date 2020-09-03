@@ -444,7 +444,7 @@ class _TenantSettingsState extends State<TenantSettings> {
                   // _linkToLandlord(),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
