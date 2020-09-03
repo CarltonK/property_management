@@ -18,7 +18,7 @@ class ManagerHome extends StatefulWidget {
 class _ManagerHomeState extends State<ManagerHome> {
   static Map<String, dynamic> data;
   int code;
-  String apartment_name;
+  String apartmentName;
 
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
@@ -360,7 +360,7 @@ class _ManagerHomeState extends State<ManagerHome> {
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
     code = data["landlord_code"];
-    apartment_name = data["apartment_name"];
+    apartmentName = data["apartment_name"];
 
     return Scaffold(
       appBar: AppBar(
