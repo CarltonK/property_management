@@ -8,7 +8,6 @@ import 'package:property_management/tenant_pages/ten_search.dart';
 import 'package:property_management/tenant_pages/ten_vacate.dart';
 import 'package:property_management/tenant_pages/tenant_home.dart';
 import 'package:property_management/tenant_pages/tenant_settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TenantBase extends StatefulWidget {
   @override
@@ -43,7 +42,7 @@ class _TenantBaseState extends State<TenantBase> {
     TenSearch(),
     TenVacate(),
     TenantComplain(),
-    //TenantSettings()
+    TenantSettings()
   ];
 
   Future _buildLogOutSheet(BuildContext context) {
@@ -53,44 +52,50 @@ class _TenantBaseState extends State<TenantBase> {
           title: Text(
             'EXIT',
             style: GoogleFonts.muli(
-                textStyle: TextStyle(
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 18,
-            )),
+              textStyle: TextStyle(
+                letterSpacing: 1.5,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
           ),
           content: Text(
             'Are you sure ? ',
             style: GoogleFonts.muli(
-                textStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            )),
+              textStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
           ),
           actions: <Widget>[
             FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'NO',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'NO',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                  )),
-                )),
+                  ),
+                ),
+              ),
+            ),
             FlatButton(
-                onPressed: _logOutUser,
-                child: Text(
-                  'YES',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
+              onPressed: _logOutUser,
+              child: Text(
+                'YES',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
                     color: Colors.green,
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                  )),
-                ))
+                  ),
+                ),
+              ),
+            )
           ],
         );
       },
@@ -112,6 +117,21 @@ class _TenantBaseState extends State<TenantBase> {
     return _buildLogOutSheet(context) ?? false;
   }
 
+  bottomBarItem(IconData icon, String title) {
+    return BottomNavigationBarItem(
+      icon: Icon(
+        icon,
+        color: Colors.green[900],
+        size: 30,
+      ),
+      title: Text(
+        title,
+        style: GoogleFonts.quicksand(
+            textStyle: TextStyle(fontWeight: FontWeight.w500)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
@@ -122,20 +142,11 @@ class _TenantBaseState extends State<TenantBase> {
       child: Scaffold(
           body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: BoxDecoration(color: Colors.green[900]),
-                ),
-                Container(
-                  height: double.infinity,
-                  padding: EdgeInsets.symmetric(),
-                  width: MediaQuery.of(context).size.width,
-                  child: _widgetTenants[_selectedIndex],
-                )
-              ],
+            child: Container(
+              height: double.infinity,
+              padding: EdgeInsets.symmetric(),
+              width: MediaQuery.of(context).size.width,
+              child: _widgetTenants[_selectedIndex],
             ),
           ),
           bottomNavigationBar: Container(
@@ -144,58 +155,11 @@ class _TenantBaseState extends State<TenantBase> {
               backgroundColor: Colors.white,
               selectedItemColor: Colors.green[900],
               items: [
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.home,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text(
-                      'Home',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(fontWeight: FontWeight.w500)),
-                    )),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.search,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text('Search',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                                TextStyle(fontWeight: FontWeight.w500)))),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.exit_to_app,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text('Vacate',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                                TextStyle(fontWeight: FontWeight.w500)))),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.comment,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text('Complaints',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                                TextStyle(fontWeight: FontWeight.w500)))),
-                // BottomNavigationBarItem(
-                //     icon: Icon(
-                //       Icons.settings,
-                //       color: Colors.green[900],
-                //       size: 30,
-                //     ),
-                //     title: Text('Settings',style: GoogleFonts.quicksand(
-                //         textStyle: TextStyle(
-                //             fontWeight: FontWeight.w500
-                //         )
-                //     )))
+                bottomBarItem(Icons.home, 'Home'),
+                bottomBarItem(Icons.search, 'Search'),
+                bottomBarItem(Icons.exit_to_app, 'Vacate'),
+                bottomBarItem(Icons.comment, 'Complaints'),
+                bottomBarItem(Icons.accessibility, 'Services')
               ],
               currentIndex: _selectedIndex,
               onTap: _onIndexChanged,

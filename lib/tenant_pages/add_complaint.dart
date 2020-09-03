@@ -41,23 +41,31 @@ class _AddComplaintState extends State<AddComplaint> {
         TextFormField(
           autofocus: false,
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
           decoration: InputDecoration(
             errorStyle: GoogleFonts.quicksand(
               textStyle: TextStyle(color: Colors.white),
             ),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(10)),
+              borderSide: BorderSide(color: Colors.white),
+              borderRadius: BorderRadius.circular(10),
+            ),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 1.5),
-                borderRadius: BorderRadius.circular(10)),
+              borderSide: BorderSide(color: Colors.white, width: 1.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
             errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.circular(10)),
+              borderSide: BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(10),
+            ),
             labelText: 'What is the issue you are facing?',
             labelStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white)),
+              textStyle: TextStyle(color: Colors.white),
+            ),
           ),
           keyboardType: TextInputType.text,
           focusNode: _focusmessage,
@@ -120,36 +128,42 @@ class _AddComplaintState extends State<AddComplaint> {
           context: context,
           builder: (BuildContext context) {
             return CupertinoActionSheet(
-                title: Text(
-                  'Your complaint could not be posted',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
+              title: Text(
+                'Your complaint could not be posted',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
                     color: Colors.black,
-                  )),
+                  ),
                 ),
-                message: Text(
-                  'Please wait for the landlord to approve you',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
+              ),
+              message: Text(
+                'Please wait for the landlord to approve you',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 18,
                     color: Colors.black,
-                  )),
+                  ),
                 ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
+              ),
+              cancelButton: CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'CANCEL',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
         );
       } else {
@@ -160,34 +174,39 @@ class _AddComplaintState extends State<AddComplaint> {
           "title": _message,
           "landlord_code": data["landlord_code"],
           "tenant": "${data["fullName"]}",
-          "date": DateTime.now().toLocal().toIso8601String(),
+          "date": Timestamp.now(),
         };
         _postComplaint(newData).catchError((error) {
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
-                  title: Text(
-                    '$error',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
+                title: Text(
+                  '$error',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
                       color: Colors.black,
-                    )),
+                    ),
                   ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'CANCEL',
+                    style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              );
             },
           );
         }).whenComplete(() {
@@ -200,27 +219,32 @@ class _AddComplaintState extends State<AddComplaint> {
               context: context,
               builder: (BuildContext context) {
                 return CupertinoActionSheet(
-                    title: Text(
-                      'Your complaint has been posted',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
+                  title: Text(
+                    'Your complaint has been posted',
+                    style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
                         color: Colors.black,
-                      )),
+                      ),
                     ),
-                    cancelButton: CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          'CANCEL',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold)),
-                        )));
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
             );
             //Timed Function
@@ -246,15 +270,18 @@ class _AddComplaintState extends State<AddComplaint> {
               onPressed: _submitPressed,
               padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: Text(
                 'SUBMIT',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.green[900],
-                        fontSize: 18,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                    color: Colors.green[900],
+                    fontSize: 18,
+                    letterSpacing: 0.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             )
           : Center(
@@ -274,16 +301,30 @@ class _AddComplaintState extends State<AddComplaint> {
     _focusmessage.dispose();
   }
 
+  Widget appBar() {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      title: Text(
+        'Complaint',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    print('Add Complaint Page Data: $data');
+    // print('Add Complaint Page Data: $data');
     code = data["landlord_code"];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[900],
-      ),
+      appBar: appBar(),
       backgroundColor: Colors.green[900],
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -300,7 +341,7 @@ class _AddComplaintState extends State<AddComplaint> {
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -308,25 +349,15 @@ class _AddComplaintState extends State<AddComplaint> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Hello',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  letterSpacing: 0.5)),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
                           'Please fill in the form below to submit a complaint',
                           style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 20,
-                                  letterSpacing: 0.5)),
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 20,

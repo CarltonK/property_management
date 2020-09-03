@@ -14,29 +14,24 @@ class _TenantSettingsState extends State<TenantSettings> {
   final _formKey = GlobalKey<FormState>();
   String uid;
   int codeData;
-
-  Widget _appBarLayout() {
-    return Text(
-      'Settings',
-      style: GoogleFonts.quicksand(
-          textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1)),
-    );
-  }
+  Future<int> future;
 
   Widget _ownerCode() {
     return Card(
       elevation: 10,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.white54, width: 1.2)),
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Colors.white54,
+          width: 1.2,
+        ),
+      ),
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-            color: Colors.green[800], borderRadius: BorderRadius.circular(12)),
+          color: Colors.green[800],
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -44,11 +39,12 @@ class _TenantSettingsState extends State<TenantSettings> {
               'This is your landlord code',
               textAlign: TextAlign.center,
               style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 24,
-              )),
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
@@ -59,19 +55,22 @@ class _TenantSettingsState extends State<TenantSettings> {
                 Text(
                   'Code: ',
                   style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  )),
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
                 Text(
                   '${data["landlord_code"]}',
                   style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          letterSpacing: .5,
-                          fontWeight: FontWeight.bold)),
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      letterSpacing: .5,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -309,29 +308,31 @@ class _TenantSettingsState extends State<TenantSettings> {
     //If the code is 0, prompt the user to enter the landlord code
     //Else the user can see the landlord code
     return FutureBuilder(
-      future: _getCode(),
+      future: future,
       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
         if (snapshot.hasError) {
           print('Snapshot Error: ${snapshot.error.toString()}');
           return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 50,
-              ),
-              Text(
-                'Ooops! ${snapshot.error.toString()}',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.quicksand(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 50,
+                ),
+                Text(
+                  'Ooops! ${snapshot.error.toString()}',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.greenAccent[700],
-                  fontSize: 20,
-                )),
-              )
-            ],
-          ));
+                      fontWeight: FontWeight.bold,
+                      color: Colors.greenAccent[700],
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
         }
         switch (snapshot.connectionState) {
           case ConnectionState.active:
@@ -351,11 +352,12 @@ class _TenantSettingsState extends State<TenantSettings> {
                         'Please request a code from your landlord',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 24,
-                        )),
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 24,
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 20,
@@ -390,14 +392,37 @@ class _TenantSettingsState extends State<TenantSettings> {
     );
   }
 
+  Widget appBar() {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    future = _getCode();
+  }
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    print('Settings Page Data: $data');
+    // print('Settings Page Data: $data');
     codeData = data["landlord_code"];
     uid = data["uid"];
 
     return Scaffold(
+      appBar: appBar(),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
@@ -405,24 +430,19 @@ class _TenantSettingsState extends State<TenantSettings> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(color: Colors.green[900]),
+              decoration: BoxDecoration(
+                color: Colors.green[900],
+              ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               height: double.infinity,
               width: MediaQuery.of(context).size.width,
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _appBarLayout(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _linkToLandlord()
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // _linkToLandlord(),
+                ],
               ),
             )
           ],

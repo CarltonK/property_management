@@ -19,14 +19,11 @@ class TenantHome extends StatefulWidget {
 }
 
 class _TenantHomeState extends State<TenantHome> {
-  //final GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
   Map<String, dynamic> user;
   int _code;
   String uid, file_path, url_result;
   int _floor;
   String phone, natId, rent;
-
-  //int notificationCount = 0;
 
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
@@ -72,24 +69,25 @@ class _TenantHomeState extends State<TenantHome> {
   Future _addBankPayment() async {
     //Action sheet to show upload status
     showCupertinoModalPopup(
-        context: context,
-        builder: (BuildContext context) {
-          return CupertinoActionSheet(
-            title: Text(
-              'Uploading',
-              style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                color: Colors.black,
-              )),
-            ),
-            message: SpinKitDualRing(
-              color: Colors.red,
-              size: 50,
-            ),
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          title: Text(
+            'Uploading',
+            style: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+              color: Colors.black,
+            )),
+          ),
+          message: SpinKitDualRing(
+            color: Colors.red,
+            size: 50,
+          ),
+        );
+      },
+    );
 
     _startUpload(_imageFile).then((value) async {
       //Change value in firebase users collection
@@ -120,10 +118,11 @@ class _TenantHomeState extends State<TenantHome> {
           .collection(_collectionLower)
           .document(uid)
           .updateData({"paid": true});
-    }).whenComplete(() {
-      Navigator.of(context).pop();
-      //Show a success message
-      showCupertinoModalPopup(
+    }).whenComplete(
+      () {
+        Navigator.of(context).pop();
+        //Show a success message
+        showCupertinoModalPopup(
           context: context,
           builder: (BuildContext context) {
             return CupertinoActionSheet(
@@ -137,8 +136,29 @@ class _TenantHomeState extends State<TenantHome> {
                 )),
               ),
             );
-          });
-    });
+          },
+        );
+      },
+    ).catchError(
+      (error) {
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: Text(
+                error.toString(),
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void _mpesaPay() {
@@ -147,28 +167,32 @@ class _TenantHomeState extends State<TenantHome> {
         context: context,
         builder: (BuildContext context) {
           return CupertinoActionSheet(
-              title: Text(
-                'Please wait for the landlord to approve your application',
+            title: Text(
+              'Please wait for the landlord to approve your application',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
+            ),
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                FocusScope.of(context).unfocus();
+              },
+              child: Text(
+                'CANCEL',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.black,
-                )),
+                  textStyle: TextStyle(
+                    color: Colors.red,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              cancelButton: CupertinoActionSheetAction(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: Text(
-                    'CANCEL',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.red,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold)),
-                  )));
+            ),
+          );
         },
       );
     } else {
@@ -178,44 +202,48 @@ class _TenantHomeState extends State<TenantHome> {
           context: context,
           builder: (BuildContext context) {
             return CupertinoActionSheet(
-                title: Text(
-                  'Please complete your profile',
+              title: Text(
+                'Please complete your profile',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
+              ),
+              cancelButton: CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'CANCEL',
                   style: GoogleFonts.quicksand(
                       textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
+                          color: Colors.red,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold)),
                 ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
+              ),
+            );
           },
         );
       } else {
-        _lipaNaMpesa(phone, natId, int.parse(rent)).whenComplete(() {
-          //Show a success message
-          showCupertinoModalPopup(
+        _lipaNaMpesa(phone, natId, int.parse(rent)).whenComplete(
+          () {
+            //Show a success message
+            showCupertinoModalPopup(
               context: context,
               builder: (BuildContext context) {
                 return CupertinoActionSheet(
                   title: Text(
                     'Your M-PESA payment is being processed',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   message: Text(
                     'Please enter your M-PESA pin in the popup',
@@ -227,8 +255,29 @@ class _TenantHomeState extends State<TenantHome> {
                     )),
                   ),
                 );
-              });
-        });
+              },
+            );
+          },
+        ).catchError(
+          (error) {
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return CupertinoActionSheet(
+                  title: Text(
+                    error.toString(),
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
+                );
+              },
+            );
+          },
+        );
       }
     }
   }
@@ -271,28 +320,30 @@ class _TenantHomeState extends State<TenantHome> {
         context: context,
         builder: (BuildContext context) {
           return CupertinoActionSheet(
-              title: Text(
-                'Please wait for the landlord to approve your application',
+            title: Text(
+              'Please wait for the landlord to approve your application',
+              style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              )),
+            ),
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                FocusScope.of(context).unfocus();
+              },
+              child: Text(
+                'CANCEL',
                 style: GoogleFonts.quicksand(
                     textStyle: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.black,
-                )),
+                        color: Colors.red,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold)),
               ),
-              cancelButton: CupertinoActionSheetAction(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: Text(
-                    'CANCEL',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.red,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold)),
-                  )));
+            ),
+          );
         },
       );
     } else {
@@ -310,6 +361,49 @@ class _TenantHomeState extends State<TenantHome> {
 //    return query.documents.length;
 //  }
 
+  Future showMessagePopup(Map<String, dynamic> message) {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            '${message["notification"]["title"]}',
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          content: Text(
+            '${message["notification"]["body"]}',
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'CANCEL',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -319,46 +413,10 @@ class _TenantHomeState extends State<TenantHome> {
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print('onMessage: $message');
-
-        showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoAlertDialog(
-                title: Text(
-                  '${message["notification"]["title"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                  )),
-                ),
-                content: Text(
-                  '${message["notification"]["body"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  )),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        )),
-                      ))
-                ],
-              );
-            });
+        showMessagePopup(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-
         Navigator.of(context).pushNamed('/announcement', arguments: _code);
       },
       onResume: (Map<String, dynamic> message) async {
@@ -383,6 +441,193 @@ class _TenantHomeState extends State<TenantHome> {
 //    return query.documents;
 //  }
 
+  Widget appBar() {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/tenant-profile', arguments: user);
+        },
+        icon: Icon(
+          Icons.person_pin,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+        ),
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.mail,
+            size: 30,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushNamed('/announcement', arguments: _code);
+          },
+        )
+      ],
+    );
+  }
+
+  Widget showError(String message) {
+    return Center(
+      child: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: 20,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget paymentCard(DocumentSnapshot map, String dateFormatted,
+      String durationTaken, var difference) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      color: Colors.green[900],
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.white, width: 1.5),
+          borderRadius: BorderRadius.circular(8)),
+      child: map["mode"] != "bank"
+          ? ListTile(
+              isThreeLine: true,
+              title: Text(
+                '$dateFormatted',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                )),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Paid via: ${map["mode"]}',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    )),
+                  ),
+                  Text(
+                    '$difference days $durationTaken',
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    )),
+                  )
+                ],
+              ),
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Status',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    )),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Icon(
+                    map["approved"] ? Icons.done_outline : Icons.cancel,
+                    color: map["approved"] ? Colors.white : Colors.red,
+                  )
+                ],
+              ),
+            )
+          : ExpansionTile(
+              title: Text(
+                '$dateFormatted',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                )),
+              ),
+              subtitle: Text(
+                'Paid via: ${map["mode"]}',
+                style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                )),
+              ),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$difference days $durationTaken',
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Image.network(
+                        map["url"],
+                        fit: BoxFit.fitWidth,
+                        height: 200,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Status',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    )),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Icon(
+                    map["approved"] ? Icons.done_outline : Icons.cancel,
+                    color: map["approved"] ? Colors.white : Colors.red,
+                  )
+                ],
+              ),
+            ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
@@ -394,36 +639,7 @@ class _TenantHomeState extends State<TenantHome> {
     uid = user["uid"];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/tenant-profile', arguments: user);
-          },
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-        title: Text(
-          'Kejani',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
-        ),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.mail,
-                size: 30,
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed('/announcement', arguments: _code);
-              })
-        ],
-      ),
+      appBar: appBar(),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
@@ -434,16 +650,12 @@ class _TenantHomeState extends State<TenantHome> {
               decoration: BoxDecoration(color: Colors.green[900]),
             ),
             Container(
-              //This Container lays out the UI
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
                   Text(
                     'Payments',
                     style: GoogleFonts.quicksand(
@@ -456,228 +668,62 @@ class _TenantHomeState extends State<TenantHome> {
                     height: 10,
                   ),
                   Expanded(
-                    child: Container(
-                      child: StreamBuilder(
-                        stream: Firestore.instance
-                            .collection("payments")
-                            .document(_code.toString())
-                            .collection("received")
-                            .where("uid", isEqualTo: uid)
-                            .orderBy("date", descending: true)
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            print(
-                                'Snapshot Error: ${snapshot.error.toString()}');
-                            return Center(
-                                child: Text(
-                              'Ooops! You need a code from your landlord to view your previous payments',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 20,
-                              )),
-                            ));
-                          }
-                          if (snapshot.data == null) {
-                            return Center(
-                              child: Text(
-                                'You have no previous payments',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.quicksand(
-                                    textStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                )),
-                              ),
-                            );
-                          }
-                          if (snapshot.data.documents.length == 0) {
-                            return Center(
-                              child: Text(
-                                'You have no previous payments',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.quicksand(
-                                    textStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                )),
-                              ),
-                            );
-                          }
-                          if (snapshot.hasData) {
-                            return ListView(
-                              children: snapshot.data.documents.map((map) {
-                                var date = map["date"];
-                                var formatter = new DateFormat('yMMMd');
-                                String dateFormatted =
-                                    formatter.format(date.toDate());
+                    child: StreamBuilder(
+                      stream: Firestore.instance
+                          .collection("payments")
+                          .document(_code.toString())
+                          .collection("received")
+                          .where("uid", isEqualTo: uid)
+                          .orderBy("date", descending: true)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          print('Snapshot Error: ${snapshot.error.toString()}');
+                          return showError(
+                              'Ooops! You need a code from your landlord to view your previous payments');
+                        }
+                        if (snapshot.data == null) {
+                          return showError('You have no previous payments');
+                        }
+                        if (snapshot.data.documents.length == 0) {
+                          return showError('You have no previous payments');
+                        }
+                        if (snapshot.hasData) {
+                          return ListView(
+                            children: snapshot.data.documents.map((map) {
+                              var date = map["date"];
+                              var formatter = new DateFormat('yMMMd');
+                              String dateFormatted =
+                                  formatter.format(date.toDate());
 
-                                //Difference in days
-                                DateTime dateDue = user["due"].toDate();
-                                DateTime datePaid = map["date"].toDate();
-                                var difference = dateDue.day - datePaid.day;
-                                //print(difference);
+                              //Difference in days
+                              DateTime dateDue = user["due"].toDate();
+                              DateTime datePaid = map["date"].toDate();
+                              var difference = dateDue.day - datePaid.day;
+                              //print(difference);
 
-                                dynamic durationTaken = "early";
+                              dynamic durationTaken = "early";
 
-                                if (difference < 0) {
-                                  difference = difference.abs();
-                                  durationTaken = "late";
-                                } else {
-                                  durationTaken = "early";
-                                }
+                              if (difference < 0) {
+                                difference = difference.abs();
+                                durationTaken = "late";
+                              } else {
+                                durationTaken = "early";
+                              }
 
-                                return Card(
-                                  margin: EdgeInsets.symmetric(vertical: 5),
-                                  color: Colors.green[900],
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: Colors.white, width: 1.5),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: map["mode"] != "bank"
-                                      ? ListTile(
-                                          isThreeLine: true,
-                                          title: Text(
-                                            '$dateFormatted',
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            )),
-                                          ),
-                                          subtitle: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                'Paid via: ${map["mode"]}',
-                                                style: GoogleFonts.quicksand(
-                                                    textStyle: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                )),
-                                              ),
-                                              Text(
-                                                '$difference days $durationTaken',
-                                                style: GoogleFonts.quicksand(
-                                                    textStyle: TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                )),
-                                              )
-                                            ],
-                                          ),
-                                          leading: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Text(
-                                                'Status',
-                                                textAlign: TextAlign.center,
-                                                style: GoogleFonts.quicksand(
-                                                    textStyle: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                )),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Icon(
-                                                map["approved"]
-                                                    ? Icons.done_outline
-                                                    : Icons.cancel,
-                                                color: map["approved"]
-                                                    ? Colors.white
-                                                    : Colors.red,
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      : ExpansionTile(
-                                          title: Text(
-                                            '$dateFormatted',
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            )),
-                                          ),
-                                          subtitle: Text(
-                                            'Paid via: ${map["mode"]}',
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            )),
-                                          ),
-                                          children: <Widget>[
-                                            Text(
-                                              '$difference days $durationTaken',
-                                              style: GoogleFonts.quicksand(
-                                                  textStyle: TextStyle(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              )),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Image.network(
-                                              map["url"],
-                                              fit: BoxFit.fitWidth,
-                                              height: 200,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                            )
-                                          ],
-                                          leading: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Text(
-                                                'Approved',
-                                                textAlign: TextAlign.center,
-                                                style: GoogleFonts.quicksand(
-                                                    textStyle: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                )),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Icon(
-                                                map["approved"]
-                                                    ? Icons.done_outline
-                                                    : Icons.cancel,
-                                                color: map["approved"]
-                                                    ? Colors.white
-                                                    : Colors.red,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                );
-                              }).toList(),
-                            );
-                          }
-                          return Center(
-                              child: SpinKitFadingCircle(
+                              return paymentCard(map, dateFormatted,
+                                  durationTaken, difference);
+                            }).toList(),
+                          );
+                        }
+                        return Center(
+                          child: SpinKitFadingCircle(
                             color: Colors.white,
                             size: 150.0,
-                          ));
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   )
                 ],
@@ -710,42 +756,43 @@ class _TenantHomeState extends State<TenantHome> {
                       Text(
                         'Upload bank slip',
                         style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        )),
-                      )
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                MaterialButton(
-                  padding: EdgeInsets.all(6),
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  splashColor: Colors.greenAccent[700],
-                  onPressed: _mpesaPay,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.send,
-                        size: 20,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'Lipa na M-PESA',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        )),
-                      )
-                    ],
-                  ),
-                )
+                // MaterialButton(
+                //   padding: EdgeInsets.all(6),
+                //   color: Colors.white,
+                //   shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(8)),
+                //   splashColor: Colors.greenAccent[700],
+                //   onPressed: _mpesaPay,
+                //   child: Row(
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: <Widget>[
+                //       Icon(
+                //         Icons.send,
+                //         size: 20,
+                //       ),
+                //       SizedBox(
+                //         width: 5,
+                //       ),
+                //       Text(
+                //         'Lipa na M-PESA',
+                //         style: GoogleFonts.quicksand(
+                //             textStyle: TextStyle(
+                //           color: Colors.black,
+                //           fontWeight: FontWeight.bold,
+                //         )),
+                //       )
+                //     ],
+                //   ),
+                // )
               ],
             )
           : Text(''),

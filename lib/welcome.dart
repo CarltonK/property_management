@@ -153,7 +153,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    new Timer(new Duration(milliseconds: 1), () {
+    new Timer(new Duration(milliseconds: 5000), () {
       checkFirstSeen();
     });
     _controller = AnimationController(
@@ -226,7 +226,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   ),
                 ),
               ),
-              delay: delayedAmount + 1000,
+              delay: delayedAmount + 500,
             ),
             DelayedAnimation(
               child: Text(
@@ -238,7 +238,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         letterSpacing: 1,
                         fontWeight: FontWeight.bold)),
               ),
-              delay: delayedAmount + 2000,
+              delay: delayedAmount + 1500,
             ),
             DelayedAnimation(
               child: Text(
@@ -250,7 +250,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         letterSpacing: 1,
                         fontWeight: FontWeight.bold)),
               ),
-              delay: delayedAmount + 3000,
+              delay: delayedAmount + 2000,
             ),
             SizedBox(
               height: 30.0,
@@ -264,7 +264,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         fontSize: 25,
                         fontWeight: FontWeight.bold)),
               ),
-              delay: delayedAmount + 4000,
+              delay: delayedAmount + 2500,
             ),
             SizedBox(
               height: 30.0,
@@ -279,7 +279,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   child: _animatedButtonUI,
                 ),
               ),
-              delay: delayedAmount + 5000,
+              delay: delayedAmount + 3000,
             ),
             SizedBox(
               height: 10.0,
@@ -298,7 +298,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                       color: Colors.white),
                 ),
               ),
-              delay: delayedAmount + 6000,
+              delay: delayedAmount + 4000,
             ),
           ],
         ),
@@ -307,23 +307,23 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   }
 
   Widget get _animatedButtonUI => Container(
-    height: 60,
-    width: 270,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(100.0),
-      color: Colors.white,
-    ),
-    child: Center(
-      child: Text(
-        'LET\'S GET STARTED',
-        style: TextStyle(
-          fontSize: 22.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.green[900],
+        height: 60,
+        width: 270,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100.0),
+          color: Colors.white,
         ),
-      ),
-    ),
-  );
+        child: Center(
+          child: Text(
+            'LET\'S GET STARTED',
+            style: TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.green[900],
+            ),
+          ),
+        ),
+      );
 
   void _onTapDown(TapDownDetails details) {
     _controller.forward();

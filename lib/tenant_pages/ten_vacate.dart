@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 
 class TenVacate extends StatefulWidget {
   @override
@@ -23,6 +24,22 @@ class _TenVacateState extends State<TenVacate> {
     print('Reason: $_reason');
   }
 
+  Widget appBar() {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
@@ -30,23 +47,7 @@ class _TenVacateState extends State<TenVacate> {
     _name = data["fullName"];
     _hse = data["hseNumber"];
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-        title: Text(
-          'Kejani',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
-        ),
-      ),
+      appBar: appBar(),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -56,10 +57,12 @@ class _TenVacateState extends State<TenVacate> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(color: Colors.green[900]),
+                decoration: BoxDecoration(
+                  color: Colors.green[900],
+                ),
               ),
               Container(
-                  padding: EdgeInsets.only(top: 30),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   height: double.infinity,
                   width: MediaQuery.of(context).size.width,
                   child: SingleChildScrollView(
@@ -69,72 +72,75 @@ class _TenVacateState extends State<TenVacate> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Text(
-                              'Please fill in the form below to vacate the premises',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 20,
-                                      letterSpacing: 0.5)),
+                          Text(
+                            'Please fill in the form below to vacate the premises',
+                            style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                                letterSpacing: 0.5,
+                              ),
                             ),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: 20,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Text(
-                              'Please set your exit date',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17,
-                                      letterSpacing: 0.5)),
+                          Text(
+                            'Please set your exit date',
+                            style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                letterSpacing: 0.5,
+                              ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Text(
-                              'You are required to give 30 days notice',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400,
-                                      letterSpacing: 0.5)),
+                          Text(
+                            'You are required to give 30 days notice',
+                            style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.5,
+                              ),
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(horizontal: 30),
-                          //   child: DatePickerTimeline(
-                          //     DateTime.now().add(Duration(days: 30)),
-                          //     height: 100,
-                          //     selectionColor: Colors.greenAccent[700],
-                          //     onDateChange: (date) {
-                          //       _vacateDate = date;
-                          //       print('$_vacateDate');
-                          //     },
-                          //     daysCount: 90,
-                          //     dateTextStyle: GoogleFonts.quicksand(
-                          //         textStyle: TextStyle(
-                          //             color: Colors.white,
-                          //             fontSize: 24,
-                          //             fontWeight: FontWeight.bold)),
-                          //     monthTextStyle: GoogleFonts.quicksand(
-                          //         textStyle: TextStyle(
-                          //             color: Colors.white,
-                          //             fontSize: 12,
-                          //             fontWeight: FontWeight.w500)),
-                          //     dayTextStyle: GoogleFonts.quicksand(
-                          //         textStyle: TextStyle(
-                          //             color: Colors.white,
-                          //             fontSize: 12,
-                          //             fontWeight: FontWeight.w500)),
-                          //   ),
-                          // ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          DatePicker(
+                            DateTime.now().add(Duration(days: 30)),
+                            height: 100,
+                            selectionColor: Colors.greenAccent[700],
+                            onDateChange: (date) {
+                              _vacateDate = date;
+                              print('$_vacateDate');
+                            },
+                            daysCount: 90,
+                            dateTextStyle: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            monthTextStyle: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            dayTextStyle: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -161,15 +167,18 @@ class _TenVacateState extends State<TenVacate> {
               onPressed: _submitBtnPressed,
               padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: Text(
                 'SUBMIT',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.green[900],
-                        fontSize: 18,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                    color: Colors.green[900],
+                    fontSize: 18,
+                    letterSpacing: 0.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             )
           : Center(
@@ -182,43 +191,40 @@ class _TenVacateState extends State<TenVacate> {
   }
 
   Widget _reasonTextField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: TextFormField(
-        style: GoogleFonts.quicksand(
-            textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-        decoration: InputDecoration(
-          errorStyle: GoogleFonts.quicksand(
-            textStyle: TextStyle(color: Colors.white),
-          ),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.white)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.white, width: 1.5)),
-          errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.red)),
-          labelText: 'What is the reason behind your exit?',
-          labelStyle:
-              GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.white)),
+    return TextFormField(
+      style: GoogleFonts.quicksand(
+          textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+      decoration: InputDecoration(
+        errorStyle: GoogleFonts.quicksand(
+          textStyle: TextStyle(color: Colors.white),
         ),
-        keyboardType: TextInputType.text,
-        textAlign: TextAlign.start,
-        maxLines: 3,
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'This field cannot be empty';
-          }
-          return null;
-        },
-        onFieldSubmitted: (value) {
-          FocusScope.of(context).unfocus();
-        },
-        textInputAction: TextInputAction.done,
-        onSaved: _confirmReasonHandler,
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.white)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.white, width: 1.5)),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.red)),
+        labelText: 'What is the reason behind your exit?',
+        labelStyle:
+            GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.white)),
       ),
+      keyboardType: TextInputType.text,
+      textAlign: TextAlign.start,
+      maxLines: 3,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'This field cannot be empty';
+        }
+        return null;
+      },
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).unfocus();
+      },
+      textInputAction: TextInputAction.done,
+      onSaved: _confirmReasonHandler,
     );
   }
 
@@ -262,28 +268,33 @@ class _TenVacateState extends State<TenVacate> {
           context: context,
           builder: (BuildContext context) {
             return CupertinoActionSheet(
-                title: Text(
-                  'Please select a date to vacate',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
+              title: Text(
+                'Please select a date to vacate',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
                     color: Colors.black,
-                  )),
+                  ),
                 ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
+              ),
+              cancelButton: CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  FocusScope.of(context).unfocus();
+                },
+                child: Text(
+                  'CANCEL',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
         );
       } else if (_code == 0) {
@@ -296,28 +307,33 @@ class _TenVacateState extends State<TenVacate> {
           context: context,
           builder: (BuildContext context) {
             return CupertinoActionSheet(
-                title: Text(
-                  'Please wait for the landlord to approve your application before submitting a request to vacate',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
+              title: Text(
+                'Please wait for the landlord to approve your application before submitting a request to vacate',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
                     color: Colors.black,
-                  )),
+                  ),
                 ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
+              ),
+              cancelButton: CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  FocusScope.of(context).unfocus();
+                },
+                child: Text(
+                  'CANCEL',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      color: Colors.red,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
         );
       } else {
@@ -341,16 +357,54 @@ class _TenVacateState extends State<TenVacate> {
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
-                  title: Text(
-                    '$error',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
+                title: Text(
+                  '$error',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
                       color: Colors.black,
-                    )),
+                    ),
                   ),
-                  cancelButton: CupertinoActionSheetAction(
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: Text(
+                    'CANCEL',
+                    style: GoogleFonts.muli(
+                      textStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }).whenComplete(
+          () {
+            if (callResponse) {
+              print('Successful response $result');
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) {
+                  return CupertinoActionSheet(
+                    title: Text(
+                      'You request has been received',
+                      style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    cancelButton: CupertinoActionSheetAction(
                       onPressed: () {
                         Navigator.of(context).pop();
                         FocusScope.of(context).unfocus();
@@ -358,84 +412,64 @@ class _TenVacateState extends State<TenVacate> {
                       child: Text(
                         'CANCEL',
                         style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
-            },
-          );
-        }).whenComplete(() {
-          if (callResponse) {
-            print('Successful response $result');
-            showCupertinoModalPopup(
-              context: context,
-              builder: (BuildContext context) {
-                return CupertinoActionSheet(
-                    title: Text(
-                      'You request has been received',
-                      style: GoogleFonts.quicksand(
                           textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                            color: Colors.red,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                    cancelButton: CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: Text(
-                          'CANCEL',
-                          style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold)),
-                        )));
-              },
-            );
-            //Disable the circular progress dialog
-            setState(() {
-              isLoading = true;
-            });
-          } else {
-            print('Failed response: $result');
-            //Disable the circular progress dialog
-            setState(() {
-              isLoading = true;
-            });
-            //Show an action sheet with result
-            showCupertinoModalPopup(
-              context: context,
-              builder: (BuildContext context) {
-                return CupertinoActionSheet(
+                  );
+                },
+              );
+              //Disable the circular progress dialog
+              setState(() {
+                isLoading = true;
+              });
+            } else {
+              print('Failed response: $result');
+              //Disable the circular progress dialog
+              setState(() {
+                isLoading = true;
+              });
+              //Show an action sheet with result
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) {
+                  return CupertinoActionSheet(
                     title: Text(
                       '$result',
                       style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                     cancelButton: CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: Text('CANCEL',
-                            style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold),
-                            ))));
-              },
-            );
-          }
-        });
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                          textStyle: TextStyle(
+                            color: Colors.red,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        );
       }
     }
   }

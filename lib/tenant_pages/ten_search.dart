@@ -45,10 +45,12 @@ class _TenSearchState extends State<TenSearch> {
 
   Widget _dropDownRanges() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: Colors.green[900], borderRadius: BorderRadius.circular(12)),
+        color: Colors.green[900],
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -56,50 +58,59 @@ class _TenSearchState extends State<TenSearch> {
             child: Text(
               'Price',
               style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.w500)),
+                textStyle: TextStyle(
+                  fontSize: 22,
+                  color: Colors.white,
+                  letterSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ),
           SizedBox(
             height: 20,
           ),
           DropdownButton<RangeValues>(
-              underline: Divider(
-                color: Colors.white,
-                height: 2,
-                thickness: 1.5,
-              ),
-              icon: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-                size: 30,
-              ),
-              items: ranges.map((map) {
+            underline: Divider(
+              color: Colors.white,
+              height: 2,
+              thickness: 1.5,
+            ),
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: Colors.white,
+              size: 30,
+            ),
+            items: ranges.map(
+              (map) {
                 return DropdownMenuItem<RangeValues>(
-                    value: map,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(8),
-                      color: Colors.green[900],
-                      child: Text('${map.start} - ${map.end}',
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold))),
-                    ));
-              }).toList(),
-              isExpanded: true,
-              value: range,
-              onChanged: (value) {
-                setState(() {
-                  range = value;
-                });
-//
-              }),
+                  value: map,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(8),
+                    color: Colors.green[900],
+                    child: Text(
+                      '${map.start} - ${map.end}',
+                      style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ).toList(),
+            isExpanded: true,
+            value: range,
+            onChanged: (value) {
+              setState(() {
+                range = value;
+              });
+            },
+          ),
         ],
       ),
     );
@@ -108,35 +119,46 @@ class _TenSearchState extends State<TenSearch> {
   Widget _bedroomSelector() {
     return Card(
       elevation: 20,
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Container(
         padding: EdgeInsets.all(8),
         height: MediaQuery.of(context).size.height * 0.25,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-            color: Colors.green[700], borderRadius: BorderRadius.circular(12)),
+          color: Colors.green[700],
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text(
               'Bedrooms',
               style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.w500)),
+                textStyle: TextStyle(
+                  fontSize: 22,
+                  color: Colors.white,
+                  letterSpacing: 1,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
             ),
             Text(
               _bedroomCount.toInt() == 0
-                  ? 'Bedsitter'
+                  ? '(0) Bedsitter'
                   : '${_bedroomCount.toInt()}',
               style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      fontSize: _bedroomCount.toInt() == 0 ? 30 : 35,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
+                textStyle: TextStyle(
+                  fontSize: _bedroomCount.toInt() == 0 ? 30 : 35,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -144,37 +166,54 @@ class _TenSearchState extends State<TenSearch> {
                 Text(
                   '0',
                   style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.w500)),
+                    textStyle: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
                 Slider.adaptive(
-                    min: 0,
-                    max: 5,
-                    divisions: 5,
-                    value: _bedroomCount,
-                    activeColor: Colors.white,
-                    inactiveColor: Colors.white,
-                    onChanged: (value) {
-                      setState(() {
-                        _bedroomCount = value;
-                      });
-                    }),
+                  min: 0,
+                  max: 5,
+                  divisions: 5,
+                  value: _bedroomCount,
+                  activeColor: Colors.white,
+                  inactiveColor: Colors.green[900],
+                  onChanged: (value) {
+                    setState(() {
+                      _bedroomCount = value;
+                    });
+                  },
+                ),
                 Text(
                   '5',
                   style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.w500)),
+                    textStyle: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 )
               ],
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget appBar() {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+            textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
       ),
     );
   }
@@ -186,23 +225,7 @@ class _TenSearchState extends State<TenSearch> {
     apartment_name = data['apartment_name'];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-        title: Text(
-          'Kejani',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
-        ),
-      ),
+      appBar: appBar(),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -215,49 +238,49 @@ class _TenSearchState extends State<TenSearch> {
                 decoration: BoxDecoration(color: Colors.green[900]),
               ),
               Container(
-                padding: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _bedroomSelector(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _dropDownRanges(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        color: Colors.green[900],
-                        margin: EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Text(
-                              'Search Results: ',
-                              style: GoogleFonts.muli(
-                                  textStyle: TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _bedroomSelector(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _dropDownRanges(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      color: Colors.green[900],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                            'Search Results: ',
+                            style: GoogleFonts.muli(
+                              textStyle: TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                            Text(
-                              '$resultsFound',
-                              style: GoogleFonts.muli(
-                                  textStyle: TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                          ),
+                          Text(
+                            '$resultsFound',
+                            style: GoogleFonts.muli(
+                              textStyle: TextStyle(
+                                fontSize: 30,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               )
             ],
@@ -276,27 +299,32 @@ class _TenSearchState extends State<TenSearch> {
                 context: context,
                 builder: (BuildContext context) {
                   return CupertinoActionSheet(
-                      title: Text(
-                        'Please select a price range',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
+                    title: Text(
+                      'Please select a price range',
+                      style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
                           color: Colors.black,
-                        )),
+                        ),
                       ),
-                      cancelButton: CupertinoActionSheetAction(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            'CANCEL',
-                            style: GoogleFonts.muli(
-                                textStyle: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold)),
-                          )));
+                    ),
+                    cancelButton: CupertinoActionSheetAction(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'CANCEL',
+                        style: GoogleFonts.muli(
+                          textStyle: TextStyle(
+                            color: Colors.red,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
                 },
               );
             } else {
@@ -325,42 +353,46 @@ class _TenSearchState extends State<TenSearch> {
                     title: Text(
                       'Please complete your profile to continue',
                       style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      )),
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                     actions: <Widget>[
                       FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-
-                            Navigator.of(context)
-                                .pushNamed('/tenant-profile', arguments: data);
-                          },
-                          child: Text(
-                            'OK',
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context)
+                              .pushNamed('/tenant-profile', arguments: data);
+                        },
+                        child: Text(
+                          'OK',
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,
                               color: Colors.black,
-                            )),
-                          )),
+                            ),
+                          ),
+                        ),
+                      ),
                       FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            'CANCEL',
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'CANCEL',
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,
                               color: Colors.red,
-                            )),
-                          ))
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   );
                 },
@@ -384,10 +416,12 @@ class _TenSearchState extends State<TenSearch> {
             Text(
               resultsFound == 0 ? 'Search' : 'Unlock results',
               style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14)),
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
             )
           ],
         ),
@@ -404,77 +438,90 @@ void _viewResults(BuildContext context, int results, String phone, int beds,
     context: context,
     builder: (BuildContext context) {
       return CupertinoActionSheet(
-          title: Text(
-            'We found $results listings',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
+        title: Text(
+          'We found $results listings',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.quicksand(
+            textStyle: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
               color: Colors.black,
-            )),
+            ),
           ),
-          message: Text(
-            'To view results you will be required to pay a small fee of KES 50',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
+        ),
+        message: Text(
+          'To view results you will be required to pay a small fee of KES 50',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.quicksand(
+            textStyle: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 20,
               color: Colors.black,
-            )),
+            ),
           ),
-          actions: <Widget>[
-            CupertinoActionSheetAction(
-                onPressed: () {
-                  payToView(phone, beds, min, max).whenComplete(() {
-                    showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoActionSheet(
-                            title: Text(
-                              'Your booking request is being processed',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                                color: Colors.black,
-                              )),
+        ),
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            onPressed: () {
+              payToView(phone, beds, min, max).whenComplete(
+                () {
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CupertinoActionSheet(
+                        title: Text(
+                          'Your booking request is being processed',
+                          style: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: Colors.black,
+                          )),
+                        ),
+                        message: Text(
+                          'Please enter your M-PESA pin in the popup',
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Colors.black,
                             ),
-                            message: Text(
-                              'Please enter your M-PESA pin in the popup',
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                                color: Colors.black,
-                              )),
-                            ),
-                          );
-                        });
-                  });
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 },
-                child: Text(
-                  'OK I UNDERSTAND',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                ))
-          ],
-          cancelButton: CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'CANCEL',
-                style: GoogleFonts.muli(
-                    textStyle: TextStyle(
-                        color: Colors.red,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-              )));
+              );
+            },
+            child: Text(
+              'OK I UNDERSTAND',
+              style: GoogleFonts.muli(
+                textStyle: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            'CANCEL',
+            style: GoogleFonts.muli(
+              textStyle: TextStyle(
+                color: Colors.red,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      );
     },
   );
 }
