@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 class TenantComplain extends StatelessWidget {
   static Map<String, dynamic> tenantdata;
+  static Map<String, dynamic> user;
 
   Future _getComplaints() async {
     //This is the name of the collection containing complaints
@@ -27,6 +28,16 @@ class TenantComplain extends StatelessWidget {
     return AppBar(
       backgroundColor: Colors.green[900],
       elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/tenant-profile', arguments: user);
+        },
+        icon: Icon(
+          Icons.person_pin,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
       title: Text(
         'Kejani',
         style: GoogleFonts.quicksand(
@@ -57,6 +68,7 @@ class TenantComplain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    user = ModalRoute.of(context).settings.arguments;
     tenantdata = ModalRoute.of(context).settings.arguments;
     //print('Complaints Page Data: $tenantdata');
     return Scaffold(

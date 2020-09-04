@@ -18,6 +18,7 @@ class _TenVacateState extends State<TenVacate> {
 
   Map<String, dynamic> data;
   String _reason;
+  Map<String, dynamic> user;
 
   void _confirmReasonHandler(String value) {
     _reason = value.trim();
@@ -28,6 +29,16 @@ class _TenVacateState extends State<TenVacate> {
     return AppBar(
       backgroundColor: Colors.green[900],
       elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/tenant-profile', arguments: user);
+        },
+        icon: Icon(
+          Icons.person_pin,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
       title: Text(
         'Kejani',
         style: GoogleFonts.quicksand(
@@ -42,6 +53,7 @@ class _TenVacateState extends State<TenVacate> {
 
   @override
   Widget build(BuildContext context) {
+    user = ModalRoute.of(context).settings.arguments;
     data = ModalRoute.of(context).settings.arguments;
     _code = data["landlord_code"];
     _name = data["fullName"];

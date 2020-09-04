@@ -220,6 +220,104 @@ class _TenantProfileState extends State<TenantProfile> {
     });
   }
 
+  Future pictureSelection() {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          title: Text(
+            'Select a source',
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.camera);
+              },
+              child: Text(
+                'CAMERA',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.gallery);
+              },
+              child: Text(
+                'GALLERY',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(context).pop();
+              FocusScope.of(context).unfocus();
+            },
+            child: Text(
+              'CANCEL',
+              style: GoogleFonts.muli(
+                textStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget changePic() {
+    return MaterialButton(
+      padding: EdgeInsets.all(10),
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      splashColor: Colors.greenAccent[700],
+      onPressed: () => pictureSelection(),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            Icons.add_a_photo,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            'Change picture',
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
@@ -280,28 +378,33 @@ class _TenantProfileState extends State<TenantProfile> {
             context: context,
             builder: (BuildContext context) {
               return CupertinoActionSheet(
-                  title: Text(
-                    '$error',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
+                title: Text(
+                  '$error',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
                       color: Colors.black,
-                    )),
+                    ),
                   ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
+                ),
+                cancelButton: CupertinoActionSheetAction(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: Text(
+                    'CANCEL',
+                    style: GoogleFonts.muli(
+                      textStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              );
             },
           );
         }).whenComplete(() {
@@ -314,11 +417,12 @@ class _TenantProfileState extends State<TenantProfile> {
                   title: Text(
                     'Your profile has been updated',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 );
               },
@@ -344,28 +448,33 @@ class _TenantProfileState extends State<TenantProfile> {
               context: context,
               builder: (BuildContext context) {
                 return CupertinoActionSheet(
-                    title: Text(
-                      'We have updated your profile',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
+                  title: Text(
+                    'We have updated your profile',
+                    style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
                         color: Colors.black,
-                      )),
+                      ),
                     ),
-                    cancelButton: CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: Text(
-                          'CANCEL',
-                          style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold)),
-                        )));
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                        textStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
             );
           }
@@ -378,23 +487,25 @@ class _TenantProfileState extends State<TenantProfile> {
         backgroundColor: Colors.green[900],
         elevation: 0.0,
         leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
-        centerTitle: true,
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 30,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: Text(
-          'PROFILE',
+          'Profile',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 1,
-                  fontSize: 24)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1,
+              fontSize: 30,
+            ),
+          ),
         ),
       ),
       backgroundColor: Colors.white,
@@ -404,7 +515,9 @@ class _TenantProfileState extends State<TenantProfile> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(color: Colors.green[900]),
+              decoration: BoxDecoration(
+                color: Colors.green[900],
+              ),
             ),
             Container(
               height: MediaQuery.of(context).size.height,
@@ -434,18 +547,22 @@ class _TenantProfileState extends State<TenantProfile> {
                   Text(
                     '${user["fullName"]}',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 25)),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 25,
+                      ),
+                    ),
                   ),
                   Text(
                     'Tenant since $dateFormatted',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
-                            fontSize: 18)),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 10,
@@ -460,16 +577,19 @@ class _TenantProfileState extends State<TenantProfile> {
                                     title: Text(
                                       'Complete your profile',
                                       style: GoogleFonts.quicksand(
-                                          textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                              fontSize: 18)),
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                        ),
+                                      ),
                                     ),
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        side: BorderSide(
-                                            color: Colors.greenAccent[700],
-                                            width: 1.5)),
+                                      borderRadius: BorderRadius.circular(16),
+                                      side: BorderSide(
+                                          color: Colors.greenAccent[700],
+                                          width: 1.5),
+                                    ),
                                     content: Container(
                                       width: MediaQuery.of(context).size.width,
                                       child: Form(
@@ -495,10 +615,12 @@ class _TenantProfileState extends State<TenantProfile> {
                                         child: Text(
                                           'SKIP',
                                           style: GoogleFonts.quicksand(
-                                              textStyle: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  fontSize: 18)),
+                                            textStyle: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                            ),
+                                          ),
                                         ),
                                         color: Colors.red,
                                       ),
@@ -508,11 +630,12 @@ class _TenantProfileState extends State<TenantProfile> {
                                               child: Text(
                                                 'COMPLETE',
                                                 style: GoogleFonts.quicksand(
-                                                    textStyle: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white,
-                                                        fontSize: 18)),
+                                                  textStyle: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
                                               ),
                                               color: Colors.green,
                                             )
@@ -529,10 +652,12 @@ class _TenantProfileState extends State<TenantProfile> {
                           child: Text(
                             'Complete your profile',
                             style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 18)),
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
                           ),
                           color: Colors.white,
                         )
@@ -541,83 +666,7 @@ class _TenantProfileState extends State<TenantProfile> {
               ),
             ),
           ])),
-      floatingActionButton: MaterialButton(
-        padding: EdgeInsets.all(10),
-        color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        splashColor: Colors.greenAccent[700],
-        onPressed: () {
-          showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    'Select a source',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
-                  ),
-                  actions: <Widget>[
-                    CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _pickImage(ImageSource.camera);
-                        },
-                        child: Text(
-                          'CAMERA',
-                          style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold)),
-                        )),
-                    CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _pickImage(ImageSource.gallery);
-                        },
-                        child: Text(
-                          'GALLERY',
-                          style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold)),
-                        ))
-                  ],
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
-            },
-          );
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(Icons.add_a_photo),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              'Change picture',
-              style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              )),
-            )
-          ],
-        ),
-      ),
+      floatingActionButton: changePic(),
     );
   }
 }

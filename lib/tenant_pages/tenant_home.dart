@@ -458,7 +458,7 @@ class _TenantHomeState extends State<TenantHome> {
       title: Text(
         'Kejani',
         style: GoogleFonts.quicksand(
-          textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+          textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
         ),
       ),
       actions: <Widget>[
