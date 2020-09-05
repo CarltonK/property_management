@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connection_status_bar/connection_status_bar.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/usermodel.dart';
+import 'package:property_management/widgets/dialogs/error_dialog.dart';
+import 'package:property_management/widgets/dialogs/info_dialog.dart';
+import 'package:property_management/widgets/utilities/backgroundColor.dart';
+import 'package:property_management/widgets/utilities/sectionHeader.dart';
 
 class Registration extends StatefulWidget {
   @override
@@ -90,8 +93,11 @@ class _RegistrationState extends State<Registration> {
   Widget _signInWidget() {
     return InkWell(
       customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          bottomLeft: Radius.circular(25),
+        ),
+      ),
       onTap: () {
         print('I want to sign in');
         Navigator.of(context).pushNamed('/login');
@@ -101,17 +107,22 @@ class _RegistrationState extends State<Registration> {
         width: MediaQuery.of(context).size.width * 0.3,
         margin: EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), bottomLeft: Radius.circular(30))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            bottomLeft: Radius.circular(30),
+          ),
+        ),
         child: Center(
           child: Text(
             'SIGN IN',
             style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.green[900],
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold)),
+              textStyle: TextStyle(
+                color: Colors.green[900],
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),
@@ -122,15 +133,7 @@ class _RegistrationState extends State<Registration> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Apartment',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
+        SectionHeader(title: 'Apartment'),
         StreamBuilder<QuerySnapshot>(
           stream: Firestore.instance.collection("apartments").snapshots(),
           builder:
@@ -139,39 +142,45 @@ class _RegistrationState extends State<Registration> {
               return LinearProgressIndicator();
             } else {
               return DropdownButton<String>(
-                  underline: Divider(
-                    color: Colors.white,
-                    height: 3,
-                    thickness: 1.5,
-                  ),
-                  icon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                  isExpanded: true,
-                  value: apartmentName,
-                  items: snapshot.data.documents.map((map) {
-                    return DropdownMenuItem<String>(
-                        value: map["apartment_name"],
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(8),
-                          color: Colors.green[900],
-                          child: Text(map["apartment_name"],
-                              style: GoogleFonts.quicksand(
-                                  textStyle: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold))),
-                        ));
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      apartmentName = value;
-                    });
-                    print(apartmentName);
+                underline: Divider(
+                  color: Colors.white,
+                  height: 3,
+                  thickness: 1.5,
+                ),
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                isExpanded: true,
+                value: apartmentName,
+                items: snapshot.data.documents.map((map) {
+                  return DropdownMenuItem<String>(
+                    value: map["apartment_name"],
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(8),
+                      color: Colors.green[900],
+                      child: Text(
+                        map["apartment_name"],
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    apartmentName = value;
                   });
+                  print(apartmentName);
+                },
+              );
             }
           },
         ),
@@ -183,43 +192,49 @@ class _RegistrationState extends State<Registration> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Name',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
+        SectionHeader(title: 'Name'),
         SizedBox(
           height: 5,
         ),
         TextFormField(
           autofocus: false,
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
           decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              helperText: 'Be sure to use a space',
-              helperStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-//              labelText: 'Please enter your full name',
-//              labelStyle: GoogleFonts.quicksand(
-//                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.person,
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(color: Colors.white),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
                 color: Colors.white,
-              )),
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            helperText: 'Be sure to use a space',
+            helperStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            icon: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+          ),
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
@@ -244,40 +259,46 @@ class _RegistrationState extends State<Registration> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Email',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
+        SectionHeader(title: 'Email'),
         SizedBox(
           height: 5,
         ),
         TextFormField(
           autofocus: false,
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
           focusNode: _focusemail,
           decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-//              labelText: 'Please enter your email',
-//              labelStyle: GoogleFonts.quicksand(
-//                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.email,
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
                 color: Colors.white,
-              )),
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            icon: Icon(
+              Icons.email,
+              color: Colors.white,
+            ),
+          ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value.isEmpty) {
@@ -302,41 +323,47 @@ class _RegistrationState extends State<Registration> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Password',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
+        SectionHeader(title: 'Password'),
         SizedBox(
           height: 5,
         ),
         TextFormField(
           autofocus: false,
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
           controller: _passwording,
           focusNode: _focuspass,
           decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-//              labelText: 'Create a secure password',
-//              labelStyle: GoogleFonts.quicksand(
-//                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.vpn_key,
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
                 color: Colors.white,
-              )),
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            icon: Icon(
+              Icons.vpn_key,
+              color: Colors.white,
+            ),
+          ),
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -362,41 +389,47 @@ class _RegistrationState extends State<Registration> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Password confirmation',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
+        SectionHeader(title: 'Password Confirmation'),
         SizedBox(
           height: 5,
         ),
         TextFormField(
           autofocus: false,
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
           controller: _confirmPass,
           focusNode: _focuscpass,
           decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-//              labelText: 'Confirm your password',
-//              labelStyle: GoogleFonts.quicksand(
-//                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.vpn_key,
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
                 color: Colors.white,
-              )),
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            icon: Icon(
+              Icons.vpn_key,
+              color: Colors.white,
+            ),
+          ),
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -466,8 +499,10 @@ class _RegistrationState extends State<Registration> {
     var returnDoc = document.get();
     returnDoc.then((value) {
       Map<String, dynamic> data = value.data;
-      Navigator.of(context)
-          .pushReplacementNamed('/tenant-home', arguments: data);
+      Navigator.of(context).pushReplacementNamed(
+        '/tenant-home',
+        arguments: data,
+      );
     });
   }
 
@@ -477,29 +512,7 @@ class _RegistrationState extends State<Registration> {
       showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
-          return CupertinoActionSheet(
-              title: Text(
-                'Please select an apartment',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.black,
-                )),
-              ),
-              cancelButton: CupertinoActionSheetAction(
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'CANCEL',
-                    style: GoogleFonts.muli(
-                        textStyle: TextStyle(
-                            color: Colors.red,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold)),
-                  )));
+          return ErrorDialog(message: 'Please select an apartment');
         },
       );
     } else if (_formKey.currentState.validate()) {
@@ -507,13 +520,14 @@ class _RegistrationState extends State<Registration> {
 
       //Populate the user fields based on designation
       _user = User(
-          fullName: _fullName,
-          email: _email,
-          registerDate: now,
-          designation: "Tenant",
-          apartmentName: apartmentName,
-          password: _pass,
-          lordCode: 0);
+        fullName: _fullName,
+        email: _email,
+        registerDate: now,
+        designation: "Tenant",
+        apartmentName: apartmentName,
+        password: _pass,
+        lordCode: 0,
+      );
 
       setState(() {
         isLoading = false;
@@ -530,28 +544,7 @@ class _RegistrationState extends State<Registration> {
         showCupertinoModalPopup(
           context: context,
           builder: (BuildContext context) {
-            return CupertinoActionSheet(
-                title: Text(
-                  '$error',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
-                ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.muli(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
+            return ErrorDialog(message: error.toString());
           },
         );
       }).whenComplete(() {
@@ -560,16 +553,9 @@ class _RegistrationState extends State<Registration> {
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                title: Text(
-                  'Thank you for joining us ${_user.fullName.split(' ')[0]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
-                ),
+              return InfoDialog(
+                message:
+                    'Thank you for joining us ${_user.fullName.split(' ')[0]}',
               );
             },
           );
@@ -596,28 +582,7 @@ class _RegistrationState extends State<Registration> {
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    '$result',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
-                  ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
+              return ErrorDialog(message: result.toString());
             },
           );
         }
@@ -635,15 +600,18 @@ class _RegistrationState extends State<Registration> {
               onPressed: _registerBtnPressed,
               padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: Text(
                 'REGISTER',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.green[900],
-                        fontSize: 18,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                    color: Colors.green[900],
+                    fontSize: 18,
+                    letterSpacing: 0.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             )
           : Center(
@@ -670,10 +638,12 @@ class _RegistrationState extends State<Registration> {
           child: Text(
             'looking for a house',
             style: GoogleFonts.muli(
-                textStyle: TextStyle(
-                    color: Colors.black,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold)),
+              textStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ],
@@ -686,12 +656,15 @@ class _RegistrationState extends State<Registration> {
       appBar: AppBar(
         backgroundColor: Colors.green[900],
         leading: IconButton(
-            icon: Icon(
-              CupertinoIcons.back,
-              color: Colors.white,
-            ),
-            onPressed: () => Navigator.pop(context)),
-        actions: <Widget>[_signInWidget()],
+          icon: Icon(
+            CupertinoIcons.back,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: <Widget>[
+          _signInWidget(),
+        ],
         elevation: 0.0,
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -700,11 +673,7 @@ class _RegistrationState extends State<Registration> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(color: Colors.green[900]),
-              ),
+              BackgroundColor(),
               Container(
                 height: double.infinity,
                 child: SingleChildScrollView(
@@ -723,10 +692,11 @@ class _RegistrationState extends State<Registration> {
                           title: Text(
                             'Please check your internet connection',
                             style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            )),
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                         _browseWidget(),
@@ -736,11 +706,13 @@ class _RegistrationState extends State<Registration> {
                         Text(
                           'Hello',
                           style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 22,
-                                  letterSpacing: 0.5)),
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 5,
@@ -748,11 +720,13 @@ class _RegistrationState extends State<Registration> {
                         Text(
                           'Please fill in the form below to open a new tenant account',
                           style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18,
-                                  letterSpacing: 0.5)),
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                         SizedBox(height: 30),
                         _dropDownApartments(),

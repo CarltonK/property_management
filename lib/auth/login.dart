@@ -7,8 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/usermodel.dart';
-import 'package:property_management/widgets/backgroundColor.dart';
+import 'package:property_management/widgets/utilities/backgroundColor.dart';
+import 'package:property_management/widgets/dialogs/error_dialog.dart';
 import 'package:property_management/widgets/dialogs/info_dialog.dart';
+import 'package:property_management/widgets/utilities/sectionHeader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -43,25 +45,12 @@ class _LoginState extends State<Login> {
     print('Password: $_password');
   }
 
-  Widget sectionHeader(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.quicksand(
-        textStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          letterSpacing: .2,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
 
   Widget _loginEmail() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        sectionHeader('Email'),
+        SectionHeader(title: 'Email'),
         SizedBox(
           height: 10,
         ),
@@ -122,7 +111,7 @@ class _LoginState extends State<Login> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        sectionHeader('Password'),
+        SectionHeader(title: 'Password'),
         SizedBox(
           height: 10,
         ),
@@ -265,10 +254,9 @@ class _LoginState extends State<Login> {
       //Check if the user does not have a token
       if (value.data['token'] == null) {
         String token = await _messaging.getToken();
-        await _fireStore
-            .collection(_collection)
-            .document(uid)
-            .updateData({'token': token});
+        await _fireStore.collection(_collection).document(uid).updateData(
+          {'token': token},
+        );
       }
 
       //Show different home pages based on designation
@@ -343,6 +331,7 @@ class _LoginState extends State<Login> {
       setState(() {
         isLoading = false;
       });
+
       //Display appropriate response according to results of above feature
       serverCall().catchError((error) {
         print('This is the error $error');
@@ -354,29 +343,7 @@ class _LoginState extends State<Login> {
         showCupertinoModalPopup(
           context: context,
           builder: (BuildContext context) {
-            return CupertinoActionSheet(
-                title: Text(
-                  '$error',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
-                ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.muli(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
+            return ErrorDialog(message: error.toString());
           },
         );
       }).whenComplete(() {
@@ -423,29 +390,7 @@ class _LoginState extends State<Login> {
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    '$result',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
-                  ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                                color: Colors.red,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)),
-                      )));
+              return ErrorDialog(message: result.toString());
             },
           );
         }
