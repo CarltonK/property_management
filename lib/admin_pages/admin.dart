@@ -34,44 +34,50 @@ class _AdminState extends State<Admin> {
           title: Text(
             'EXIT',
             style: GoogleFonts.muli(
-                textStyle: TextStyle(
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 18,
-            )),
+              textStyle: TextStyle(
+                letterSpacing: 1.5,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
           ),
           content: Text(
             'Are you sure ? ',
             style: GoogleFonts.muli(
-                textStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            )),
+              textStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
           ),
           actions: <Widget>[
             FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'NO',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'NO',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                  )),
-                )),
+                  ),
+                ),
+              ),
+            ),
             FlatButton(
-                onPressed: _logOutUser,
-                child: Text(
-                  'YES',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
+              onPressed: _logOutUser,
+              child: Text(
+                'YES',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
                     color: Colors.green,
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                  )),
-                ))
+                  ),
+                ),
+              ),
+            )
           ],
         );
       },
@@ -96,24 +102,6 @@ class _AdminState extends State<Admin> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green[900],
-          elevation: 0.0,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.person_pin,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-          title: Text(
-            'Kejani',
-            style: GoogleFonts.quicksand(
-                textStyle:
-                    TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
-          ),
-        ),
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: Stack(
@@ -140,25 +128,35 @@ class _AdminState extends State<Admin> {
             selectedFontSize: 16,
             items: [
               BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.green[900],
-                    size: 30,
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.green[900],
+                  size: 30,
+                ),
+                title: Text(
+                  'Home',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  title: Text(
-                    'Home',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(fontWeight: FontWeight.w500)),
-                  )),
+                ),
+              ),
               BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.subject,
-                    color: Colors.green[900],
-                    size: 30,
+                icon: Icon(
+                  Icons.subject,
+                  color: Colors.green[900],
+                  size: 30,
+                ),
+                title: Text(
+                  'Stats',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  title: Text('Stats',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(fontWeight: FontWeight.w500))))
+                ),
+              ),
             ],
             currentIndex: _selectedIndex,
             onTap: _onIndexChanged,

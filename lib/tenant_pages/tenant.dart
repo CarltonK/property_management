@@ -7,7 +7,7 @@ import 'package:property_management/tenant_pages/ten_complaint.dart';
 import 'package:property_management/tenant_pages/ten_search.dart';
 import 'package:property_management/tenant_pages/ten_vacate.dart';
 import 'package:property_management/tenant_pages/tenant_home.dart';
-import 'package:property_management/tenant_pages/tenant_settings.dart';
+import 'package:property_management/tenant_pages/tenant_services.dart';
 
 class TenantBase extends StatefulWidget {
   @override

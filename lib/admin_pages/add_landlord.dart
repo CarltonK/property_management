@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/countymodel.dart';
 import 'package:property_management/models/usermodel.dart';
+import 'package:property_management/widgets/dialogs/info_dialog.dart';
 
 class AddLandlord extends StatefulWidget {
   @override
@@ -550,15 +551,17 @@ class _AddLandlordState extends State<AddLandlord> {
               onPressed: _submitBtnPressed,
               padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: Text(
                 'SUBMIT',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.green[900],
-                        fontSize: 20,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                      color: Colors.green[900],
+                      fontSize: 20,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             )
           : Center(
@@ -596,31 +599,11 @@ class _AddLandlordState extends State<AddLandlord> {
     if (countyName == null) {
       //Show an action sheet with error
       showCupertinoModalPopup(
-          context: context,
-          builder: (BuildContext context) {
-            return CupertinoActionSheet(
-                title: Text(
-                  'You have not selected a county',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
-                ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.muli(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
-          });
+        context: context,
+        builder: (BuildContext context) {
+          return InfoDialog(message: 'You have not selected a county');
+        },
+      );
     } else {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
@@ -631,17 +614,18 @@ class _AddLandlordState extends State<AddLandlord> {
         });
 
         _user = User(
-            fullName: _fullName,
-            email: _email,
-            natId: _natId,
-            phone: _phone,
-            apartmentName: _apartmentName,
-            location: _location,
-            paybill: _paybill,
-            designation: "Landlord",
-            county: countyName,
-            registerDate: DateTime.now().toLocal(),
-            lordCode: lordCodeGenerator());
+          fullName: _fullName,
+          email: _email,
+          natId: _natId,
+          phone: _phone,
+          apartmentName: _apartmentName,
+          location: _location,
+          paybill: _paybill,
+          designation: "Landlord",
+          county: countyName,
+          registerDate: DateTime.now().toLocal(),
+          lordCode: lordCodeGenerator(),
+        );
 
         serverCall().catchError((error) {
           print('This is the error $error');
@@ -848,21 +832,46 @@ class _AddLandlordState extends State<AddLandlord> {
     );
   }
 
+  Widget appBar() {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      title: Text(
+        'Create Landlord',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 30,
+          ),
+        ),
+      ),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget subheader(String text) {
+    return Center(
+      child: Text(
+        text,
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.green[900],
-          elevation: 0.0,
-          title: Text(
-            'Create Landlord',
-            style: GoogleFonts.quicksand(
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-          ),
-          leading: IconButton(
-              icon: Icon(CupertinoIcons.back),
-              onPressed: () => Navigator.of(context).pop())),
+      appBar: appBar(),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -875,27 +884,16 @@ class _AddLandlordState extends State<AddLandlord> {
                 color: Colors.green[900],
               ),
               Container(
-                height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Center(
-                          child: Text(
-                            'Personal Details',
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    letterSpacing: 0.5)),
-                          ),
-                        ),
+                        subheader('Personal Details'),
                         SizedBox(
                           height: 30,
                         ),
@@ -915,17 +913,7 @@ class _AddLandlordState extends State<AddLandlord> {
                         SizedBox(
                           height: 40,
                         ),
-                        Center(
-                          child: Text(
-                            'Apartment Details',
-                            style: GoogleFonts.quicksand(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    letterSpacing: 0.5)),
-                          ),
-                        ),
+                        subheader('Apartment Details'),
                         SizedBox(
                           height: 40,
                         ),

@@ -49,6 +49,7 @@ class API with ChangeNotifier {
     this.currentUser = null;
     _auth.signOut();
     notifyListeners();
+
     return Future.value(currentUser);
   }
 
@@ -195,7 +196,6 @@ class API with ChangeNotifier {
 
       if (designation == "Tenant") {
         //Subscribe the tenant to the topic of the apartment
-
         await Firestore.instance.collection("tenants").document(uid).setData({
           "email": email,
           "fullName": fullName,
@@ -220,7 +220,9 @@ class API with ChangeNotifier {
     //First create a user
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: user.email, password: "p@ssw.rd");
+        email: user.email,
+        password: "p@ssw.rd",
+      );
       currentUser = result.user;
       //The User has registered successfully
       //Retrieve data from User object
@@ -236,9 +238,6 @@ class API with ChangeNotifier {
       int landlordCode = user.lordCode;
       String apartment = user.apartmentName;
 
-      //Retrieve Device Token
-      String fcmToken = await _fcm.getToken();
-
       //Add data to firebase collection "users"
       await Firestore.instance
           .collection("users")
@@ -252,7 +251,6 @@ class API with ChangeNotifier {
         "registerDate": registerDate,
         "landlord_code": landlordCode,
         "apartment_name": apartment,
-        "token": fcmToken,
       });
       //Add data to Firestore collection "landlords"
       await Firestore.instance
@@ -267,7 +265,6 @@ class API with ChangeNotifier {
         "registerDate": registerDate,
         "landlord_code": landlordCode,
         "apartment_name": apartment,
-        "token": fcmToken,
       });
       //Add data to Firestore collection "apartments"
       await Firestore.instance

@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/models/usermodel.dart';
+import 'package:property_management/widgets/backgroundColor.dart';
+import 'package:property_management/widgets/dialogs/info_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -16,6 +19,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final _focusPass = FocusNode();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passController = TextEditingController();
 
   String _email, _password;
   User _user;
@@ -28,8 +33,9 @@ class _LoginState extends State<Login> {
   @override
   void dispose() {
     super.dispose();
-    //Dispose of the FocusNode
     _focusPass.dispose();
+    _emailController.clear();
+    _passController.clear();
   }
 
   void _passwordHandler(String pass) {
@@ -37,43 +43,64 @@ class _LoginState extends State<Login> {
     print('Password: $_password');
   }
 
+  Widget sectionHeader(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.quicksand(
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          letterSpacing: .2,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
   Widget _loginEmail() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Email',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
+        sectionHeader('Email'),
         SizedBox(
           height: 10,
         ),
         TextFormField(
           autofocus: false,
+          controller: _emailController,
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
           decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-//              labelText: 'Please enter your email',
-//              labelStyle: GoogleFonts.quicksand(
-//                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.email,
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
                 color: Colors.white,
-              )),
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            icon: Icon(
+              Icons.email,
+              color: Colors.white,
+            ),
+          ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value.isEmpty) {
@@ -95,41 +122,48 @@ class _LoginState extends State<Login> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Password',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
+        sectionHeader('Password'),
         SizedBox(
           height: 10,
         ),
         TextFormField(
           autofocus: false,
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
           obscureText: true,
           focusNode: _focusPass,
+          controller: _passController,
           decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-//              labelText: 'Please enter your password',
-//              labelStyle: GoogleFonts.quicksand(
-//                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.vpn_key,
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
                 color: Colors.white,
-              )),
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            icon: Icon(
+              Icons.vpn_key,
+              color: Colors.white,
+            ),
+          ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
             if (value.isEmpty) {
@@ -151,7 +185,7 @@ class _LoginState extends State<Login> {
   }
 
   void _forgotPasswordBtn() {
-    print('I want to reset my password');
+    // print('I want to reset my password');
     Navigator.of(context).pushNamed('/reset');
   }
 
@@ -164,10 +198,11 @@ class _LoginState extends State<Login> {
         child: Text(
           'Forgot Password?',
           style: GoogleFonts.muli(
-              textStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          )),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
         ),
       ),
     );
@@ -211,6 +246,7 @@ class _LoginState extends State<Login> {
     final Firestore _fireStore = Firestore.instance;
     var document = _fireStore.collection(_collection).document(uid);
     var returnDoc = document.get();
+    FirebaseMessaging _messaging = FirebaseMessaging();
     //Show the return value - A DocumentSnapshot;
     //print('This is the return ${returnDoc}');
     returnDoc.then((value) async {
@@ -226,52 +262,60 @@ class _LoginState extends State<Login> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('uid', uid);
 
+      //Check if the user does not have a token
+      if (value.data['token'] == null) {
+        String token = await _messaging.getToken();
+        await _fireStore
+            .collection(_collection)
+            .document(uid)
+            .updateData({'token': token});
+      }
+
       //Show different home pages based on designation
       //Tenant Page
       if (userdesignation == "Tenant") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
-          Navigator.of(context)
-              .popAndPushNamed('/tenant-home', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/tenant-home',
+            arguments: userData,
+          );
         });
       }
       //Admin Page
       else if (userdesignation == "Admin") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
-          Navigator.of(context).popAndPushNamed('/admin', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/admin',
+            arguments: userData,
+          );
         });
       }
       //Manager page
       else if (userdesignation == "Manager") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
-          Navigator.of(context)
-              .popAndPushNamed('/manager', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/manager',
+            arguments: userData,
+          );
         });
       }
       //Landlord Page
       else if (userdesignation == "Landlord") {
         //Timed Function
         Timer(Duration(milliseconds: 100), () {
-          Navigator.of(context)
-              .popAndPushNamed('/owner_home', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/owner_home',
+            arguments: userData,
+          );
         });
       } else {
         showCupertinoModalPopup(
           context: context,
           builder: (BuildContext context) {
-            return CupertinoActionSheet(
-              message: Text(
-                'This account is not registered',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.black,
-                )),
-              ),
-            );
+            return InfoDialog(message: 'This account is not registered');
           },
         );
       }
@@ -282,17 +326,7 @@ class _LoginState extends State<Login> {
       showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
-          return CupertinoAlertDialog(
-            title: Text(
-              'This account is not available',
-              style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                color: Colors.black,
-              )),
-            ),
-          );
+          return InfoDialog(message: 'This account is not available');
         },
       );
     });
@@ -429,15 +463,18 @@ class _LoginState extends State<Login> {
               onPressed: _loginBtnPressed,
               padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: Text(
                 'LOGIN',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.green[900],
-                        fontSize: 20,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                    color: Colors.green[900],
+                    fontSize: 20,
+                    letterSpacing: 0.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             )
           : Center(
@@ -452,8 +489,11 @@ class _LoginState extends State<Login> {
   Widget _signUpWidget() {
     return InkWell(
       customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          bottomLeft: Radius.circular(25),
+        ),
+      ),
       onTap: () {
         print('I want to create an account');
         Navigator.of(context).pushNamed('/register');
@@ -463,17 +503,22 @@ class _LoginState extends State<Login> {
         width: MediaQuery.of(context).size.width * 0.3,
         margin: EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), bottomLeft: Radius.circular(30))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            bottomLeft: Radius.circular(30),
+          ),
+        ),
         child: Center(
           child: Text(
             'SIGN UP',
             style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.green[900],
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold)),
+              textStyle: TextStyle(
+                color: Colors.green[900],
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),
@@ -500,11 +545,7 @@ class _LoginState extends State<Login> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(color: Colors.green[900]),
-              ),
+              BackgroundColor(),
               Container(
                 height: double.infinity,
                 child: SingleChildScrollView(
@@ -519,11 +560,13 @@ class _LoginState extends State<Login> {
                         Text(
                           'Welcome',
                           style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                  letterSpacing: 0.5)),
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 5,
@@ -531,11 +574,13 @@ class _LoginState extends State<Login> {
                         Text(
                           'Login to your account now',
                           style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 20,
-                                  letterSpacing: 0.5)),
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 50,

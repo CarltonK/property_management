@@ -1,10 +1,25 @@
-import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
+
 //Initialize the firebase app
 admin.initializeApp()
+import * as functions from 'firebase-functions'
+
+import * as analytics from './analytics_channel'
+
 //Define messaging
 const fcm = admin.messaging()
 const db = admin.firestore()
+
+//Custom Analytics
+/*
+COMMENT IF PRICE IS TOO HIGH
+*/
+export const adminpaymentTracker = analytics.paymentTracker
+export const admincomplaintTracker = analytics.complaintTracker
+export const adminlandlordTracker = analytics.landlordTracker
+export const admintenantTracker = analytics.tenantTracker
+export const adminlistingTracker = analytics.listingTracker
+export const adminvacationTracker = analytics.vacationTracker
 
 export const sendAnnouncement = functions.firestore
     .document('apartments/{code}/announcements/{doc}')
@@ -64,7 +79,7 @@ export const delete3dayOldComplaint = functions.firestore
     .document('complaints/{complaint}')
     .onUpdate(async snapshot => {
         //Check if issue has been fixed
-        if (snapshot.after.get('fixed') == true) {
+        if (snapshot.after.get('fixed') === true) {
             //Get the date now
             const now: Date = new Date()
             //Get the date in the document

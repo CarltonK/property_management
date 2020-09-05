@@ -110,10 +110,23 @@ class _AdminHomeState extends State<AdminHome> {
     return Scaffold(
       backgroundColor: Colors.green[900],
       body: StreamBuilder<QuerySnapshot>(
-        initialData: null,
         stream: Firestore.instance.collection("landlords").snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
+            if (snapshot.data.documents.length == 0) {
+              return Center(
+                child: Text(
+                  'There are no landlords',
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              );
+            }
             return ListView(
               padding: const EdgeInsets.only(top: 20.0),
               children: snapshot.data.documents
