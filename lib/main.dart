@@ -26,11 +26,9 @@ import 'package:property_management/widgets/view_listingsWidget.dart';
 import 'package:property_management/widgets/view_tenantsWidgets.dart';
 
 void main() {
-  Crashlytics.instance.enableInDevMode = true;
+  Crashlytics.instance.enableInDevMode = false;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  runZoned<Future<void>>(() async {
-    runApp(MyApp());
-  }, onError: Crashlytics.instance.recordError);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
