@@ -36,46 +36,11 @@ class _OwnerBaseState extends State<OwnerBase> {
     });
   }
 
-  static Widget globalOwnerBar() {
-    return AppBar(
-      backgroundColor: Colors.green[900],
-      elevation: 0.0,
-      leading: IconButton(
-        onPressed: () {
-          Navigator.of(context).pushReplacementNamed(
-            '/owner_prof',
-            arguments: data,
-          );
-        },
-        icon: Icon(
-          Icons.person_pin,
-          color: Colors.white,
-          size: 30,
-        ),
-      ),
-      title: Text(
-        'Kejani',
-        style: GoogleFonts.quicksand(
-          textStyle: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
   List<Widget> _ownerTenants = [
     OwnerHome(),
-    OwnerComplaint(
-      appBar: globalOwnerBar(),
-    ),
-    OwnerVacations(
-      appBar: globalOwnerBar(),
-    ),
-    OwnerSettings(
-      appBar: globalOwnerBar(),
-    )
+    OwnerComplaint(),
+    OwnerVacations(),
+    OwnerSettings()
   ];
 
   Future _buildLogOutSheet(BuildContext context) {

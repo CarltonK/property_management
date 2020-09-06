@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/widgets/breakdown_widget.dart';
+import 'package:property_management/widgets/dialogs/error_dialog.dart';
 import 'package:property_management/widgets/tenant_popup.dart';
+import 'package:property_management/widgets/utilities/backgroundColor.dart';
 
 class ManagerHome extends StatefulWidget {
   @override
@@ -35,135 +36,96 @@ class _ManagerHomeState extends State<ManagerHome> {
     return query.documents;
   }
 
+  Future notificationPopup(var message) {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            '${message["notification"]["title"]}',
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          content: Text(
+            '${message["notification"]["body"]}',
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'CANCEL',
+                style: GoogleFonts.muli(
+                  textStyle: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
 
+    Future.delayed(Duration(seconds: 1), () {
+      _getTenants(apartmentName).then((value) {
+        if (value.length > 0) {
+          promptPopup();
+        }
+      });
+    });
+
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print('onMessage: $message');
-
-        showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoAlertDialog(
-                title: Text(
-                  '${message["notification"]["title"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                  )),
-                ),
-                content: Text(
-                  '${message["notification"]["body"]}',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  )),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.muli(
-                            textStyle: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        )),
-                      ))
-                ],
-              );
-            });
+        notificationPopup(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-
-        Navigator.of(context).pushNamed('/manager-prof', arguments: data);
-
-//        showCupertinoModalPopup(
-//            context: context,
-//            builder: (BuildContext context) {
-//              return CupertinoAlertDialog(
-//                title: Text(
-//                  '${message["notification"]["title"]}',
-//                  style: GoogleFonts.quicksand(
-//                      textStyle: TextStyle(
-//                        fontWeight: FontWeight.w600,
-//                        fontSize: 20,
-//                      )),
-//                ),
-//                content: Text(
-//                  '${message["notification"]["body"]}',
-//                  style: GoogleFonts.quicksand(
-//                      textStyle: TextStyle(
-//                        fontWeight: FontWeight.w600,
-//                        fontSize: 16,
-//                      )),
-//                ),
-//                actions: <Widget>[
-//                  FlatButton(
-//                      onPressed: () => Navigator.of(context).pop(),
-//                      child: Text(
-//                        'CANCEL',
-//                        style: GoogleFonts.muli(
-//                            textStyle: TextStyle(
-//                              color: Colors.red,
-//                              fontWeight: FontWeight.bold,
-//                              fontSize: 20,
-//                            )),
-//                      ))
-//                ],
-//              );
-//            }
-//        );
+        Navigator.of(context).pushNamed(
+          '/manager-prof',
+          arguments: data,
+        );
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-
-        Navigator.of(context).pushNamed('/manager-prof', arguments: data);
-
-//        showCupertinoModalPopup(
-//            context: context,
-//            builder: (BuildContext context) {
-//              return CupertinoAlertDialog(
-//                title: Text(
-//                  '${message["notification"]["title"]}',
-//                  style: GoogleFonts.quicksand(
-//                      textStyle: TextStyle(
-//                        fontWeight: FontWeight.w600,
-//                        fontSize: 20,
-//                      )),
-//                ),
-//                content: Text(
-//                  '${message["notification"]["body"]}',
-//                  style: GoogleFonts.quicksand(
-//                      textStyle: TextStyle(
-//                        fontWeight: FontWeight.w600,
-//                        fontSize: 16,
-//                      )),
-//                ),
-//                actions: <Widget>[
-//                  FlatButton(
-//                      onPressed: () => Navigator.of(context).pop(),
-//                      child: Text(
-//                        'CANCEL',
-//                        style: GoogleFonts.muli(
-//                            textStyle: TextStyle(
-//                              color: Colors.red,
-//                              fontWeight: FontWeight.bold,
-//                              fontSize: 20,
-//                            )),
-//                      ))
-//                ],
-//              );
-//            }
-//        );
+        Navigator.of(context).pushNamed(
+          '/manager-prof',
+          arguments: data,
+        );
       },
     );
+  }
+
+  Future<List<DocumentSnapshot>> _getTenants(String apartment) async {
+    //This is the name of the collection containing tenants
+    final String _collection = 'tenants';
+    //Create a variable to store Firestore instance
+    final Firestore _fireStore = Firestore.instance;
+    QuerySnapshot query = await _fireStore
+        .collection(_collection)
+        .where("apartment_name", isEqualTo: apartment)
+        .where("landlord_code", isEqualTo: 0)
+        .getDocuments();
+    //print('How many: ${query.documents.length}');
+    //print('Docs: ${query.documents[0].data}');
+    return query.documents;
   }
 
   bool isLoading = true;
@@ -180,17 +142,33 @@ class _ManagerHomeState extends State<ManagerHome> {
     return TextFormField(
       autofocus: false,
       style: GoogleFonts.quicksand(
-          textStyle: TextStyle(color: Colors.black, fontSize: 18)),
+        textStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+        ),
+      ),
       decoration: InputDecoration(
         errorStyle: GoogleFonts.quicksand(
-          textStyle: TextStyle(color: Colors.black),
+          textStyle: TextStyle(
+            color: Colors.black,
+          ),
         ),
-        enabledBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black, width: 1.5)),
-        errorBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+          borderSide: BorderSide(
+            color: Colors.black,
+            width: 1.5,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.red,
+          ),
+        ),
       ),
       keyboardType: TextInputType.text,
       validator: (value) {
@@ -235,34 +213,7 @@ class _ManagerHomeState extends State<ManagerHome> {
           isLoading = true;
         });
         //Show an action sheet with error
-        showCupertinoModalPopup(
-          context: context,
-          builder: (BuildContext context) {
-            return CupertinoActionSheet(
-                title: Text(
-                  '$error',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black,
-                  )),
-                ),
-                cancelButton: CupertinoActionSheetAction(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Text(
-                      'CANCEL',
-                      style: GoogleFonts.muli(
-                          textStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold)),
-                    )));
-          },
-        );
+        ErrorDialog(message: '$error');
       }).whenComplete(() {
         showCupertinoModalPopup(
           context: context,
@@ -271,11 +222,12 @@ class _ManagerHomeState extends State<ManagerHome> {
               title: Text(
                 'Your message has been sent',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.black,
-                )),
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
               ),
             );
           },
@@ -292,68 +244,90 @@ class _ManagerHomeState extends State<ManagerHome> {
 
   void _announceBtnPressed() {
     showCupertinoModalPopup(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Send a message to all tenants',
-              style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Send a message to all tenants',
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
-              )),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color: Colors.greenAccent[700], width: 1.5)),
-            content: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _addMessage(context),
-                  ],
-                ),
               ),
             ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'CANCEL',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(
+              color: Colors.greenAccent[700],
+              width: 1.5,
+            ),
+          ),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _addMessage(context),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'CANCEL',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              color: Colors.red,
+            ),
+            isLoading
+                ? FlatButton(
+                    onPressed: _completeBtnPressed,
+                    child: Text(
+                      'SEND',
+                      style: GoogleFonts.quicksand(
+                        textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: 18)),
-                ),
-                color: Colors.red,
-              ),
-              isLoading
-                  ? FlatButton(
-                      onPressed: _completeBtnPressed,
-                      child: Text(
-                        'SEND',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 18)),
+                          fontSize: 18,
+                        ),
                       ),
-                      color: Colors.green,
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                        strokeWidth: 3,
-                      ),
-                    )
-            ],
-          );
-        });
+                    ),
+                    color: Colors.green,
+                  )
+                : Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  )
+          ],
+        );
+      },
+    );
+  }
+
+  Future promptPopup() {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return TenantPopup(
+          apartmentName: apartmentName,
+          code: code,
+        );
+      },
+    );
   }
 
   @override
@@ -368,7 +342,10 @@ class _ManagerHomeState extends State<ManagerHome> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushNamed('/manager-prof', arguments: data);
+            Navigator.of(context).pushNamed(
+              '/manager-prof',
+              arguments: data,
+            );
           },
           icon: Icon(
             Icons.person_pin,
@@ -379,18 +356,18 @@ class _ManagerHomeState extends State<ManagerHome> {
         title: Text(
           'Kejani',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+            textStyle: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
           children: <Widget>[
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: Colors.green[900],
-            ),
+            BackgroundColor(),
             Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
@@ -401,10 +378,12 @@ class _ManagerHomeState extends State<ManagerHome> {
                   Text(
                     'Tenants',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold)),
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -489,10 +468,6 @@ class _ManagerHomeState extends State<ManagerHome> {
                 ],
               ),
             ),
-            TenantPopup(
-              apartment_name: data["apartment_name"],
-              code: data["landlord_code"],
-            )
           ],
         ),
       ),

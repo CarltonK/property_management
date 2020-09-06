@@ -30,7 +30,7 @@ class _OwnerProfState extends State<OwnerProf> {
     //Retrieve data
     data = ModalRoute.of(context).settings.arguments;
     uid = data['uid'];
-    //print('Retrieved data: $data');
+    print('Retrieved data: $data');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

@@ -482,31 +482,31 @@ class _TenantVerifyState extends State<TenantVerify> {
                                   letterSpacing: .2,
                                   fontWeight: FontWeight.bold)),
                         ),
-                        // DatePickerTimeline(
-                        //   DateTime.now(),
-                        //   height: 100,
-                        //   selectionColor: Colors.greenAccent[700],
-                        //   onDateChange: (date) {
-                        //     _vacateDate = date;
-                        //     print('$_vacateDate');
-                        //   },
-                        //   daysCount: 90,
-                        //   dateTextStyle: GoogleFonts.quicksand(
-                        //       textStyle: TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 24,
-                        //           fontWeight: FontWeight.bold)),
-                        //   monthTextStyle: GoogleFonts.quicksand(
-                        //       textStyle: TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 12,
-                        //           fontWeight: FontWeight.w500)),
-                        //   dayTextStyle: GoogleFonts.quicksand(
-                        //       textStyle: TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 12,
-                        //           fontWeight: FontWeight.w500)),
-                        // ),
+                        DatePicker(
+                          DateTime.now(),
+                          height: 100,
+                          selectionColor: Colors.greenAccent[700],
+                          onDateChange: (date) {
+                            _vacateDate = date;
+                            print('$_vacateDate');
+                          },
+                          daysCount: 90,
+                          dateTextStyle: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold)),
+                          monthTextStyle: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500)),
+                          dayTextStyle: GoogleFonts.quicksand(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500)),
+                        ),
                         SizedBox(
                           height: 20,
                         ),

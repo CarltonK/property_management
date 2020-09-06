@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:property_management/api/firebase_api.dart';
 import 'package:property_management/widgets/utilities/backgroundColor.dart';
 
 class OwnerSettings extends StatefulWidget {
-  final Widget appBar;
-  OwnerSettings({@required this.appBar});
   @override
   _OwnerSettingsState createState() => _OwnerSettingsState();
 }
@@ -285,6 +281,35 @@ class _OwnerSettingsState extends State<OwnerSettings> {
     );
   }
 
+  Widget globalOwnerBar(var data) {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacementNamed(
+            '/owner_prof',
+            arguments: data,
+          );
+        },
+        icon: Icon(
+          Icons.person_pin,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
@@ -293,7 +318,7 @@ class _OwnerSettingsState extends State<OwnerSettings> {
     apartmentName = data["apartment_name"];
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: globalOwnerBar(data),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(

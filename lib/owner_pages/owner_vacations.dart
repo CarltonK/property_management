@@ -7,9 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:property_management/widgets/utilities/backgroundColor.dart';
 
 class OwnerVacations extends StatefulWidget {
-  final Widget appBar;
-  OwnerVacations({@required this.appBar});
-
   @override
   _OwnerVacationsState createState() => _OwnerVacationsState();
 }
@@ -147,13 +144,42 @@ class _OwnerVacationsState extends State<OwnerVacations> {
     );
   }
 
+  Widget globalOwnerBar(var data) {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacementNamed(
+            '/owner_prof',
+            arguments: data,
+          );
+        },
+        icon: Icon(
+          Icons.person_pin,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
     _code = data["landlord_code"];
     //print('Vacations Page Data: $data');
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: globalOwnerBar(data),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(

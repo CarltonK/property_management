@@ -5,19 +5,46 @@ import 'package:property_management/widgets/utilities/backgroundColor.dart';
 import 'package:property_management/widgets/view_complaintsWidget.dart';
 
 class OwnerComplaint extends StatefulWidget {
-  final Widget appBar;
-  OwnerComplaint({@required this.appBar});
   @override
   _OwnerComplaintState createState() => _OwnerComplaintState();
 }
 
 class _OwnerComplaintState extends State<OwnerComplaint> {
+  Widget globalOwnerBar(var data) {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacementNamed(
+            '/owner_prof',
+            arguments: data,
+          );
+        },
+        icon: Icon(
+          Icons.person_pin,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
     //print('Complaints Page Data: $data');
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: globalOwnerBar(data),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
