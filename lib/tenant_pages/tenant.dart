@@ -8,6 +8,7 @@ import 'package:property_management/tenant_pages/ten_search.dart';
 import 'package:property_management/tenant_pages/ten_vacate.dart';
 import 'package:property_management/tenant_pages/tenant_home.dart';
 import 'package:property_management/tenant_pages/tenant_services.dart';
+import 'package:property_management/widgets/dialogs/logout_dialog.dart';
 
 class TenantBase extends StatefulWidget {
   @override
@@ -48,56 +49,7 @@ class _TenantBaseState extends State<TenantBase> {
   Future _buildLogOutSheet(BuildContext context) {
     return showCupertinoModalPopup(
       builder: (context) {
-        return CupertinoAlertDialog(
-          title: Text(
-            'EXIT',
-            style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                letterSpacing: 1.5,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
-          ),
-          content: Text(
-            'Are you sure ? ',
-            style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'NO',
-                style: GoogleFonts.muli(
-                  textStyle: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
-            FlatButton(
-              onPressed: _logOutUser,
-              child: Text(
-                'YES',
-                style: GoogleFonts.muli(
-                  textStyle: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            )
-          ],
-        );
+        return LogOutDialog(yesClick: _logOutUser);
       },
       context: context,
     );
@@ -127,7 +79,10 @@ class _TenantBaseState extends State<TenantBase> {
       title: Text(
         title,
         style: GoogleFonts.quicksand(
-            textStyle: TextStyle(fontWeight: FontWeight.w500)),
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

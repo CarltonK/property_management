@@ -32,17 +32,18 @@ class InfoDialog extends StatelessWidget {
       ),
       actions: [
         FlatButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              'CANCEL',
-              style: GoogleFonts.muli(
-                textStyle: TextStyle(
-                  color: Colors.red,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(
+            'CANCEL',
+            style: GoogleFonts.muli(
+              textStyle: TextStyle(
+                color: Colors.red,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
               ),
-            ))
+            ),
+          ),
+        )
       ],
     );
   }

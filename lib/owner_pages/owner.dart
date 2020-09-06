@@ -7,6 +7,8 @@ import 'package:property_management/owner_pages/owner_complaint.dart';
 import 'package:property_management/owner_pages/owner_home.dart';
 import 'package:property_management/owner_pages/owner_settings.dart';
 import 'package:property_management/owner_pages/owner_vacations.dart';
+import 'package:property_management/widgets/dialogs/logout_dialog.dart';
+import 'package:property_management/widgets/utilities/backgroundColor.dart';
 
 class OwnerBase extends StatefulWidget {
   @override
@@ -34,60 +36,52 @@ class _OwnerBaseState extends State<OwnerBase> {
     });
   }
 
+  static Widget globalOwnerBar() {
+    return AppBar(
+      backgroundColor: Colors.green[900],
+      elevation: 0.0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacementNamed(
+            '/owner_prof',
+            arguments: data,
+          );
+        },
+        icon: Icon(
+          Icons.person_pin,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+      title: Text(
+        'Kejani',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   List<Widget> _ownerTenants = [
     OwnerHome(),
-    OwnerComplaint(),
-    OwnerVacations(),
-    OwnerSettings()
+    OwnerComplaint(
+      appBar: globalOwnerBar(),
+    ),
+    OwnerVacations(
+      appBar: globalOwnerBar(),
+    ),
+    OwnerSettings(
+      appBar: globalOwnerBar(),
+    )
   ];
 
   Future _buildLogOutSheet(BuildContext context) {
     return showCupertinoModalPopup(
       builder: (context) {
-        return CupertinoAlertDialog(
-          title: Text(
-            'EXIT',
-            style: GoogleFonts.muli(
-                textStyle: TextStyle(
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 18,
-            )),
-          ),
-          content: Text(
-            'Are you sure ? ',
-            style: GoogleFonts.muli(
-                textStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            )),
-          ),
-          actions: <Widget>[
-            FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'NO',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  )),
-                )),
-            FlatButton(
-                onPressed: _logOutUser,
-                child: Text(
-                  'YES',
-                  style: GoogleFonts.muli(
-                      textStyle: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  )),
-                ))
-          ],
-        );
+        return LogOutDialog(yesClick: _logOutUser);
       },
       context: context,
     );
@@ -107,6 +101,24 @@ class _OwnerBaseState extends State<OwnerBase> {
     return _buildLogOutSheet(context) ?? false;
   }
 
+  bottomBarItem(IconData icon, String title) {
+    return BottomNavigationBarItem(
+      icon: Icon(
+        icon,
+        color: Colors.green[900],
+        size: 30,
+      ),
+      title: Text(
+        title,
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
@@ -114,76 +126,37 @@ class _OwnerBaseState extends State<OwnerBase> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-          body: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle.light,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: BoxDecoration(color: Colors.green[900]),
-                ),
-                Container(
-                  height: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: MediaQuery.of(context).size.width,
-                  child: _ownerTenants[_selectedIndex],
-                ),
-              ],
-            ),
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: Stack(
+            children: <Widget>[
+              BackgroundColor(),
+              Container(
+                height: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10),
+                width: MediaQuery.of(context).size.width,
+                child: _ownerTenants[_selectedIndex],
+              ),
+            ],
           ),
-          bottomNavigationBar: Container(
-            height: 70,
-            child: BottomNavigationBar(
-              backgroundColor: Colors.white,
-              selectedItemColor: Colors.green[900],
-              selectedFontSize: 16,
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.home,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text(
-                      'Home',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(fontWeight: FontWeight.w500)),
-                    )),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.comment,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text('Complaints',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                                TextStyle(fontWeight: FontWeight.w500)))),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.exit_to_app,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text('Vacate',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                                TextStyle(fontWeight: FontWeight.w500)))),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.settings,
-                      color: Colors.green[900],
-                      size: 30,
-                    ),
-                    title: Text('Settings',
-                        style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(fontWeight: FontWeight.w500))))
-              ],
-              currentIndex: _selectedIndex,
-              onTap: _onIndexChanged,
-            ),
-          )),
+        ),
+        bottomNavigationBar: Container(
+          height: 70,
+          child: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.green[900],
+            selectedFontSize: 16,
+            items: [
+              bottomBarItem(Icons.home, 'Home'),
+              bottomBarItem(Icons.comment, 'Complaints'),
+              bottomBarItem(Icons.exit_to_app, 'Vacate'),
+              bottomBarItem(Icons.settings, 'Settings'),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onIndexChanged,
+          ),
+        ),
+      ),
     );
   }
 }

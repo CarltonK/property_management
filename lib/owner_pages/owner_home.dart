@@ -20,63 +20,63 @@ class _OwnerHomeState extends State<OwnerHome> {
   String uid;
   String apartmentName;
 
-  Widget _ownerQuickGlance() {
-    return Card(
-      elevation: 10,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.white54, width: 1.2)),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Colors.green[800], borderRadius: BorderRadius.circular(12)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Amount Due: ',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(color: Colors.white, fontSize: 16)),
-                ),
-                Text(
-                  'KES 400,000',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Amount Received: ',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(color: Colors.white, fontSize: 16)),
-                ),
-                Text(
-                  'KES 320,000',
-                  style: GoogleFonts.quicksand(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _ownerQuickGlance() {
+  //   return Card(
+  //     elevation: 10,
+  //     shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(12),
+  //         side: BorderSide(color: Colors.white54, width: 1.2)),
+  //     child: Container(
+  //       padding: EdgeInsets.all(10),
+  //       decoration: BoxDecoration(
+  //           color: Colors.green[800], borderRadius: BorderRadius.circular(12)),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: <Widget>[
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: <Widget>[
+  //               Text(
+  //                 'Amount Due: ',
+  //                 style: GoogleFonts.quicksand(
+  //                     textStyle: TextStyle(color: Colors.white, fontSize: 16)),
+  //               ),
+  //               Text(
+  //                 'KES 400,000',
+  //                 style: GoogleFonts.quicksand(
+  //                     textStyle: TextStyle(
+  //                         color: Colors.white,
+  //                         fontSize: 20,
+  //                         fontWeight: FontWeight.bold)),
+  //               )
+  //             ],
+  //           ),
+  //           SizedBox(
+  //             height: 10,
+  //           ),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: <Widget>[
+  //               Text(
+  //                 'Amount Received: ',
+  //                 style: GoogleFonts.quicksand(
+  //                     textStyle: TextStyle(color: Colors.white, fontSize: 16)),
+  //               ),
+  //               Text(
+  //                 'KES 320,000',
+  //                 style: GoogleFonts.quicksand(
+  //                     textStyle: TextStyle(
+  //                         color: Colors.white,
+  //                         fontSize: 20,
+  //                         fontWeight: FontWeight.bold)),
+  //               )
+  //             ],
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Future<List<DocumentSnapshot>> _getFloors(int code) async {
     final String _collectionUpper = "apartments";
@@ -114,8 +114,10 @@ class _OwnerHomeState extends State<OwnerHome> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context)
-                .pushReplacementNamed('/owner_prof', arguments: data);
+            Navigator.of(context).pushReplacementNamed(
+              '/owner_prof',
+              arguments: data,
+            );
           },
           icon: Icon(
             Icons.person_pin,
@@ -126,19 +128,26 @@ class _OwnerHomeState extends State<OwnerHome> {
         title: Text(
           'Kejani',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
+            textStyle: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         actions: <Widget>[
           IconButton(
-              icon: Icon(
-                Icons.message,
-                size: 30,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed('/announcement', arguments: code);
-              })
+            icon: Icon(
+              Icons.message,
+              size: 30,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                '/announcement',
+                arguments: code,
+              );
+            },
+          )
         ],
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(

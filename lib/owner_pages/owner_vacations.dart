@@ -4,8 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:property_management/widgets/utilities/backgroundColor.dart';
 
 class OwnerVacations extends StatefulWidget {
+  final Widget appBar;
+  OwnerVacations({@required this.appBar});
+
   @override
   _OwnerVacationsState createState() => _OwnerVacationsState();
 }
@@ -21,7 +25,9 @@ class _OwnerVacationsState extends State<OwnerVacations> {
     String dateFormatted = formatter.format(_date.toDate());
 
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       color: Colors.grey[100],
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Container(
@@ -44,16 +50,22 @@ class _OwnerVacationsState extends State<OwnerVacations> {
               Text(
                 '${data["hse"]}',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
           title: Text(
             '${data["name"]}',
             style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold)),
+              textStyle: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,17 +73,77 @@ class _OwnerVacationsState extends State<OwnerVacations> {
               Text(
                 'Exit date - $dateFormatted',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: Colors.black)),
+                  textStyle: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
               ),
               Text(
                 '${data["reason"]}',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: Colors.black)),
+                  textStyle: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget errorMessage(String message) {
+    return Center(
+      child: Text(
+        message ?? '',
+        textAlign: TextAlign.center,
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            fontSize: 25,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget body() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection("vacations")
+          .where('landlord_code', isEqualTo: _code)
+          .orderBy("date", descending: false)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.data == null) {
+          return errorMessage(
+            'You have not received any vacation requests',
+          );
+        }
+        if (snapshot.data.documents.length == 0) {
+          return errorMessage(
+            'You have not received any vacation requests',
+          );
+        }
+        if (snapshot.hasData) {
+          return ListView(
+            padding: const EdgeInsets.only(top: 10.0),
+            children: snapshot.data.documents
+                .map(
+                  (data) => _buildListItem(context, data),
+                )
+                .toList(),
+          );
+        }
+        return Center(
+          child: SpinKitFadingCircle(
+            size: 150,
+            color: Colors.white,
+          ),
+        );
+      },
     );
   }
 
@@ -81,84 +153,14 @@ class _OwnerVacationsState extends State<OwnerVacations> {
     _code = data["landlord_code"];
     //print('Vacations Page Data: $data');
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-        title: Text(
-          'Kejani',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
-        ),
-      ),
+      appBar: widget.appBar,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
           children: <Widget>[
+            BackgroundColor(),
             Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(color: Colors.green[900]),
-            ),
-            Container(
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance
-                      .collection("vacations")
-                      .where('landlord_code', isEqualTo: _code)
-                      .orderBy("date", descending: false)
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.data == null) {
-                      return Center(
-                        child: Text(
-                          'You have not received any vacation requests',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                            fontSize: 25,
-                          )),
-                        ),
-                      );
-                    }
-                    if (snapshot.data.documents.length == 0) {
-                      return Center(
-                        child: Text(
-                          'You have not received any vacation requests',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                            fontSize: 25,
-                          )),
-                        ),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      return ListView(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        children: snapshot.data.documents
-                            .map((data) => _buildListItem(context, data))
-                            .toList(),
-                      );
-                    }
-                    return Center(
-                      child: SpinKitFadingCircle(
-                        size: 150,
-                        color: Colors.white,
-                      ),
-                    );
-                  }),
+              child: body(),
             )
           ],
         ),
