@@ -2,9 +2,10 @@ import * as admin from 'firebase-admin'
 
 //Initialize the firebase app
 admin.initializeApp()
-import * as functions from 'firebase-functions'
 
+import * as functions from 'firebase-functions'
 import * as analytics from './analytics_channel'
+import * as reports from './reports'
 
 //Define messaging
 const fcm = admin.messaging()
@@ -20,6 +21,10 @@ export const adminlandlordTracker = analytics.landlordTracker
 export const admintenantTracker = analytics.tenantTracker
 export const adminlistingTracker = analytics.listingTracker
 export const adminvacationTracker = analytics.vacationTracker
+
+//Payment Reports
+export const paymentReportGenerator = reports.paymentReportGenerator
+export const reportAccesser  = reports.reportAccesser
 
 export const sendAnnouncement = functions.firestore
     .document('apartments/{code}/announcements/{doc}')

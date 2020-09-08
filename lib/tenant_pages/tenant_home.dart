@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -101,6 +100,7 @@ class _TenantHomeState extends State<TenantHome> {
         "url": value,
         "fullName": user["fullName"],
         "mode": "bank",
+        "amount": int.parse(rent),
         "code": _code.toString(),
         "approved": false,
         "uid": uid,
@@ -337,10 +337,12 @@ class _TenantHomeState extends State<TenantHome> {
               child: Text(
                 'CANCEL',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.red,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                    color: Colors.red,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           );

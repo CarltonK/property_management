@@ -44,6 +44,9 @@ service cloud.firestore {
     	allow write: if isSignedInUser();
       match /floors/{floor} {
     	  allow read, write: if isSignedInUser();
+        match /tenants/{tenant} {
+          allow read, write: if isSignedInUser();
+        }
       }
     }
 

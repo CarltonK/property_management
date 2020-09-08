@@ -34,7 +34,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.carlton.tenantlandlord.property_management"
         minSdkVersion 16
         targetSdkVersion 28
@@ -52,7 +51,6 @@ android {
     }
 
     dependencies {
-        // add the Firebase SDK for Google Analytics
         implementation 'com.google.firebase:firebase-analytics:17.2.3'
         implementation 'com.google.firebase:firebase-messaging:20.1.2'
         // add SDKs for any other desired Firebase products
@@ -63,5 +61,3 @@ android {
 flutter {
     source '../..'
 }
-
-apply plugin: 'io.fabric'

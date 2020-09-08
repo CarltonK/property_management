@@ -10,6 +10,9 @@ export const paymentTracker = functions.firestore
     .onCreate(async snapshot => {
         try {
             const amount: number = snapshot.get('amount')
+            if (amount === null || typeof(amount) === "string") {
+                console.error()
+            }
             await doc.update({
                 amount: admin.firestore.FieldValue.increment(amount),
                 payments: admin.firestore.FieldValue.increment(1)

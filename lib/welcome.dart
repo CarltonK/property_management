@@ -214,16 +214,8 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 repeat: true,
                 repeatPauseDuration: Duration(seconds: 2),
                 startDelay: Duration(seconds: 1),
-                child: Material(
-                  elevation: 10,
-                  shape: CircleBorder(),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey[100],
-                    child: FlutterLogo(
-                      size: 50,
-                    ),
-                    radius: 50,
-                  ),
+                child: Image.asset(
+                  'assets/launcher/logo.png',
                 ),
               ),
               delay: delayedAmount + 500,
@@ -232,11 +224,13 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
               child: Text(
                 'Hi There',
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 35,
-                        letterSpacing: 1,
-                        fontWeight: FontWeight.bold)),
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 35,
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               delay: delayedAmount + 1500,
             ),
