@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/widgets/breakdown_widget.dart';
+import 'package:property_management/widgets/dialogs/error_dialog.dart';
 import 'package:property_management/widgets/tenant_popup.dart';
 import 'package:property_management/widgets/utilities/backgroundColor.dart';
 
@@ -108,6 +109,15 @@ class _OwnerHomeState extends State<OwnerHome> {
     );
   }
 
+  Future generateReport(Timestamp start) async {
+    await Firestore.instance.collection('reports').document().setData({
+      'code': code,
+      'start': start,
+      'uid': uid,
+      'end': Timestamp.now(),
+    });
+  }
+
   Widget errorMessage(String message) {
     return Center(
       child: Text(
@@ -193,6 +203,108 @@ class _OwnerHomeState extends State<OwnerHome> {
     //print('How many: ${query.documents.length}');
     //print('Docs: ${query.documents[0].data}');
     return query.documents;
+  }
+
+  payAdminFunction() {
+    return payAdmin(phone, uid).whenComplete(
+      () {
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: Text(
+                'Your booking request is being processed',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              message: Text(
+                'Please enter your M-PESA pin in the popup',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  generateReportFunction() {
+    DateTime oneYearAgo = DateTime.now().subtract(Duration(days: 365));
+    DateTime oneWeekAgo = DateTime.now().subtract(Duration(days: 7));
+    DateTime now = DateTime.now();
+    return showDatePicker(
+      context: context,
+      initialDate: oneWeekAgo,
+      firstDate: oneYearAgo,
+      lastDate: now,
+    ).then((value) {
+      generateReport(Timestamp.fromDate(value)).whenComplete(() {
+        showCupertinoModalPopup(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: Text(
+                'Your request is being processed. You will receive a report on the registered account email',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      });
+    }).catchError((error) => {
+          showCupertinoModalPopup(
+            context: context,
+            builder: (context) => ErrorDialog(
+              message: error.toString(),
+            ),
+          )
+        });
+  }
+
+  Widget fab(Function func, IconData icon, String title) {
+    return MaterialButton(
+      splashColor: Colors.greenAccent[700],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
+      ),
+      onPressed: func,
+      color: Colors.white,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(icon),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            title,
+            style: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -318,63 +430,13 @@ class _OwnerHomeState extends State<OwnerHome> {
           ],
         ),
       ),
-      floatingActionButton: MaterialButton(
-        splashColor: Colors.greenAccent[700],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
-        ),
-        onPressed: () {
-          payAdmin(phone, uid).whenComplete(
-            () {
-              showCupertinoModalPopup(
-                context: context,
-                builder: (BuildContext context) {
-                  return CupertinoActionSheet(
-                    title: Text(
-                      'Your booking request is being processed',
-                      style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    message: Text(
-                      'Please enter your M-PESA pin in the popup',
-                      style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          );
-        },
-        color: Colors.white,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(Icons.monetization_on),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              'Pay',
-              style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                ),
-              ),
-            )
-          ],
-        ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          fab(() => payAdminFunction(), Icons.monetization_on, 'Pay'),
+          fab(() => generateReportFunction(), Icons.sort, 'Report')
+        ],
       ),
     );
   }

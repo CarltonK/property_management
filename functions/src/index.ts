@@ -9,7 +9,7 @@ import * as reports from './reports'
 
 //Define messaging
 const fcm = admin.messaging()
-const db = admin.firestore()
+export const db = admin.firestore()
 
 //Custom Analytics
 /*
@@ -24,7 +24,7 @@ export const adminvacationTracker = analytics.vacationTracker
 
 //Payment Reports
 export const paymentReportGenerator = reports.paymentReportGenerator
-export const reportAccesser  = reports.reportAccesser
+// export const reportAccesser  = reports.reportAccesser
 
 export const sendAnnouncement = functions.firestore
     .document('apartments/{code}/announcements/{doc}')

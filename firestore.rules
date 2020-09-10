@@ -81,5 +81,19 @@ service cloud.firestore {
     match /analytics/{doc} {
       allow read: if isSignedInUser() && isSuperAdmin();
     }
+
+    match /reports/{report} {
+      function isValidReport() {
+        return request.resource.data.start != null
+          && request.resource.data.end != null
+          && request.resource.data.code != null
+          && request.resource.data.uid != null
+          && exists(/databases/$(database)/documents/users/$(request.resource.data.uid))
+          && request.resource.data.size() == 4
+          && request.resource.data.code is number;
+      }
+      allow write: if isSignedInUser() && isValidReport();
+      allow read: if isSignedInUser();
+    }
   }
 }

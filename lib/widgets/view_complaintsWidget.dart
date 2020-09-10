@@ -302,9 +302,9 @@ class _ViewComplaintsWidgetState extends State<ViewComplaintsWidget> {
               return ListView(
                 children: snapshot.data.documents.map((map) {
                   //Date Parsing and Formatting
-                  var parsedDate = DateTime.parse(map['date']);
+                  Timestamp parsedDate = map['date'];
                   var formatter = new DateFormat('yMMMd');
-                  String dateFormatted = formatter.format(parsedDate);
+                  String dateFormatted = formatter.format(parsedDate.toDate());
 
                   return Card(
                     shape: RoundedRectangleBorder(
