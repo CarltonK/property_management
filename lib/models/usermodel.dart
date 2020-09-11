@@ -11,6 +11,7 @@ class User {
   String email;
   String natId;
   String phone;
+  String token;
   String county;
   String location;
   DateTime registerDate;
@@ -30,6 +31,7 @@ class User {
       this.phone,
       this.registerDate,
       this.reminder,
+      this.token,
       this.designation,
       this.paybill,
       this.county,
@@ -44,6 +46,7 @@ class User {
       fullName: json["fullName"],
       email: json["email"],
       natId: json["natId"],
+      token: json['token'],
       phone: json["phone"],
       registerDate: json["registerDate"],
       reminder: json["reminder"],
@@ -61,6 +64,7 @@ class User {
   Map<String, dynamic> toJson() => {
         "fullName": fullName,
         "email": email,
+        "token": token,
         "natId": natId,
         "phone": phone,
         "registerDate": registerDate,

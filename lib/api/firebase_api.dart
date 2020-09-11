@@ -100,6 +100,7 @@ class API with ChangeNotifier {
       await saveUser(user, result.user.uid);
       return currentUser;
     } catch (e) {
+      print(e.toString());
       var response;
       if (e.toString().contains("ERROR_WEAK_PASSWORD")) {
         response = 'Your password is weak. Please choose another';
@@ -161,6 +162,24 @@ class API with ChangeNotifier {
     }
   }
 
+  Future completeProviderProfile(User user, String uid) async {
+    String phone = user.phone;
+    String natId = user.natId;
+
+    try {
+      //Update users collection
+      await Firestore.instance
+          .collection("users")
+          .document(uid)
+          .updateData({"phone": phone, "natId": natId});
+      print('The user was updated successfully');
+      return true;
+    } catch (e) {
+      print('This is the error: $e');
+      return null;
+    }
+  }
+
 //  //Delete a user account from firebase authentication
 //  Future deleteUser() async {
 //    FirebaseUser user = await _auth.currentUser();
@@ -207,6 +226,10 @@ class API with ChangeNotifier {
           "platform": Platform.operatingSystem
         });
         print("The tenant was successfully saved");
+      }
+
+      if (designation == "Provider") {
+        await completeProviderProfile(user, uid);
       }
     } catch (e) {
       print("The user was not successfully saved");

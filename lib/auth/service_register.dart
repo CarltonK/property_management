@@ -247,7 +247,10 @@ class _ServiceRegisterState extends State<ServiceRegister> {
         TextFormField(
           autofocus: false,
           style: GoogleFonts.quicksand(
-            textStyle: TextStyle(color: Colors.black, fontSize: 18),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
           ),
           decoration: InputDecoration(
             errorStyle: GoogleFonts.quicksand(
@@ -309,7 +312,7 @@ class _ServiceRegisterState extends State<ServiceRegister> {
           autofocus: false,
           style: GoogleFonts.quicksand(
             textStyle: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 18,
             ),
           ),
