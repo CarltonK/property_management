@@ -45,7 +45,6 @@ class _LoginState extends State<Login> {
     print('Password: $_password');
   }
 
-
   Widget _loginEmail() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,6 +285,16 @@ class _LoginState extends State<Login> {
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context).popAndPushNamed(
             '/manager',
+            arguments: userData,
+          );
+        });
+      }
+      //Service Provider Page
+      else if (userdesignation == "Provider") {
+        //Timed Function
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context).popAndPushNamed(
+            '/provider-home',
             arguments: userData,
           );
         });

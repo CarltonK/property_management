@@ -38,8 +38,7 @@ class _DelayedAnimationState extends State<DelayedAnimation>
 
     if (widget.delay == null) {
       _controller.forward();
-    } 
-    else {
+    } else {
       Timer(Duration(milliseconds: widget.delay), () {
         _controller.forward();
       });

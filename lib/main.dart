@@ -5,6 +5,7 @@ import 'package:property_management/admin_pages/admin.dart';
 import 'package:property_management/auth/forgot_pass.dart';
 import 'package:property_management/auth/login.dart';
 import 'package:property_management/auth/registration.dart';
+import 'package:property_management/auth/service_register.dart';
 import 'package:property_management/manager_pages/manager.dart';
 import 'package:property_management/manager_pages/manager_prof.dart';
 import 'package:property_management/manager_pages/record_cash.dart';
@@ -15,6 +16,7 @@ import 'package:property_management/owner_pages/add_manager.dart';
 import 'package:property_management/owner_pages/owner.dart';
 import 'package:property_management/owner_pages/owner_prof.dart';
 import 'package:property_management/owner_pages/tenant_verify.dart';
+import 'package:property_management/provider_pages/provider_home.dart';
 import 'package:property_management/tenant_pages/add_complaint.dart';
 import 'package:property_management/tenant_pages/announcement.dart';
 import 'package:property_management/tenant_pages/tenant.dart';
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => Registration(),
         '/reset': (context) => ForgotPassword(),
         '/login': (context) => Login(),
+        '/service-create': (context) => ServiceRegister(),
         //Tenant
         '/tenant-home': (context) => TenantBase(),
         '/tenant-profile': (context) => TenantProfile(),
@@ -65,6 +68,8 @@ class MyApp extends StatelessWidget {
         //Admin
         '/admin': (context) => Admin(),
         '/add': (context) => AddLandlord(),
+        //Service Provider
+        '/provider-home': (context) => ProviderHome(),
       },
       theme: ThemeData(
         appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),

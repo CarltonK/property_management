@@ -15,7 +15,7 @@ class _ManagerSettingsState extends State<ManagerSettings> {
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    print('Settings Page Data: ${data}');
+    print('Settings Page Data: $data');
     code = data["landlord_code"];
     apartmentName = data["apartment_name"];
 

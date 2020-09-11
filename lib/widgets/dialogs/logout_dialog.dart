@@ -7,7 +7,6 @@ class LogOutDialog extends StatelessWidget {
   const LogOutDialog({Key key, @required this.yesClick})
       : assert(yesClick != null);
 
-  
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(

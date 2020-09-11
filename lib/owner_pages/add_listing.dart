@@ -7,9 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:property_management/services/location.dart';
-import 'package:property_management/services/permission_handle.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AddListing extends StatefulWidget {
   @override

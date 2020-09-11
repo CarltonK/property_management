@@ -3,19 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
-import 'package:property_management/tenant_pages/ten_complaint.dart';
-import 'package:property_management/tenant_pages/ten_search.dart';
-import 'package:property_management/tenant_pages/ten_vacate.dart';
-import 'package:property_management/tenant_pages/tenant_home.dart';
-import 'package:property_management/tenant_pages/tenant_services.dart';
 import 'package:property_management/widgets/dialogs/logout_dialog.dart';
 
-class TenantBase extends StatefulWidget {
+class ProviderHome extends StatefulWidget {
   @override
-  _TenantBaseState createState() => _TenantBaseState();
+  _ProviderHomeState createState() => _ProviderHomeState();
 }
 
-class _TenantBaseState extends State<TenantBase> {
+class _ProviderHomeState extends State<ProviderHome> {
+  Map<String, dynamic> user;
+
   int _selectedIndex = 0;
 
   PageController _pageController;
@@ -38,13 +35,9 @@ class _TenantBaseState extends State<TenantBase> {
     });
   }
 
-  List<Widget> _widgetTenants = [
-    TenantHome(),
-    TenSearch(),
-    TenVacate(),
-    TenantComplain(),
-    TenantSettings()
-  ];
+  Future<bool> _onWillPop() {
+    return _buildLogOutSheet(context) ?? false;
+  }
 
   Future _buildLogOutSheet(BuildContext context) {
     return showCupertinoModalPopup(
@@ -65,9 +58,10 @@ class _TenantBaseState extends State<TenantBase> {
     Navigator.of(context).pop();
   }
 
-  Future<bool> _onWillPop() {
-    return _buildLogOutSheet(context) ?? false;
-  }
+  List<Widget> _widgetTenants = [
+    Container(),
+    Container(),
+  ];
 
   bottomBarItem(IconData icon, String title) {
     return BottomNavigationBarItem(
@@ -89,9 +83,8 @@ class _TenantBaseState extends State<TenantBase> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
-    //print('$data');
-
+    user = ModalRoute.of(context).settings.arguments;
+    print('User: $user');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -110,11 +103,8 @@ class _TenantBaseState extends State<TenantBase> {
             backgroundColor: Colors.white,
             selectedItemColor: Colors.green[900],
             items: [
-              bottomBarItem(Icons.home, 'Home'),
-              bottomBarItem(Icons.search, 'Search'),
-              bottomBarItem(Icons.exit_to_app, 'Vacate'),
-              bottomBarItem(Icons.comment, 'Complaints'),
-              bottomBarItem(Icons.accessibility, 'Services')
+              bottomBarItem(Icons.receipt, 'Requests'),
+              bottomBarItem(Icons.history, 'History'),
             ],
             currentIndex: _selectedIndex,
             onTap: _onIndexChanged,

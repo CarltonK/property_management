@@ -65,7 +65,7 @@ class _AnnouncementState extends State<Announcement> {
   @override
   Widget build(BuildContext context) {
     code = ModalRoute.of(context).settings.arguments;
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[900],

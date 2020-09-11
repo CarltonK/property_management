@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connection_status_bar/connection_status_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,27 +13,42 @@ import 'package:property_management/widgets/dialogs/info_dialog.dart';
 import 'package:property_management/widgets/utilities/backgroundColor.dart';
 import 'package:property_management/widgets/utilities/sectionHeader.dart';
 
-class Registration extends StatefulWidget {
+class ServiceRegister extends StatefulWidget {
   @override
-  _RegistrationState createState() => _RegistrationState();
+  _ServiceRegisterState createState() => _ServiceRegisterState();
 }
 
-class _RegistrationState extends State<Registration> {
-  User _user;
+class _ServiceRegisterState extends State<ServiceRegister> {
   final _formKey = GlobalKey<FormState>();
-
   //Save Registration Date
   var now = DateTime.now();
 
-//  final _focuslname = FocusNode();
+  networkState() {
+    return ConnectionStatusBar(
+      height: 30,
+      animationDuration: Duration(milliseconds: 500),
+      color: Colors.black,
+      title: Text(
+        'Please check your internet connection',
+        style: GoogleFonts.quicksand(
+          textStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool isLoading = true;
   final _focusemail = FocusNode();
-//  final _focusphone = FocusNode();
-//  final _focusnatid = FocusNode();
+  final _focusphone = FocusNode();
+  final _focusnatid = FocusNode();
   final _focuspass = FocusNode();
   final _focuscpass = FocusNode();
 
   String _fullName, _email, _pass, _cpass;
-//String _phone, _natId, _lname;
+  String _phone, _natId;
   String apartmentName;
 //Network status
   dynamic isConnected;
@@ -45,10 +61,10 @@ class _RegistrationState extends State<Registration> {
     print('Email: $_email');
   }
 
-//  void _phoneHandler(String phone) {
-//    _phone = phone.trim();
-//    print('Phone: $_phone');
-//  }
+  void _phoneHandler(String phone) {
+    _phone = phone.trim();
+    print('Phone: $_phone');
+  }
 
   void _fullNameHandler(String name) {
     _fullName = name.trim();
@@ -64,10 +80,9 @@ class _RegistrationState extends State<Registration> {
   void dispose() {
     super.dispose();
     //Dispose the FocusNodes
-//    _focuslname.dispose();
     _focusemail.dispose();
-//    _focusphone.dispose();
-//    _focusnatid.dispose();
+    _focusphone.dispose();
+    _focusnatid.dispose();
     _focuspass.dispose();
     _focuscpass.dispose();
     //Dispose the TextEditingControllers
@@ -75,10 +90,10 @@ class _RegistrationState extends State<Registration> {
     _confirmPass.dispose();
   }
 
-//  void _natIdHandler(String id) {
-//    _natId = id.trim();
-//    print('National ID: $_natId');
-//  }
+  void _natIdHandler(String id) {
+    _natId = id.trim();
+    print('National ID: $_natId');
+  }
 
   void _passHandler(String password) {
     _pass = password.trim();
@@ -88,104 +103,6 @@ class _RegistrationState extends State<Registration> {
   void _confirmPassHandler(String confirmation) {
     _cpass = confirmation.trim();
     print('Password(2): $_cpass');
-  }
-
-  Widget _signInWidget() {
-    return InkWell(
-      customBorder: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25),
-          bottomLeft: Radius.circular(25),
-        ),
-      ),
-      onTap: () {
-        print('I want to sign in');
-        Navigator.of(context).pushNamed('/login');
-      },
-      splashColor: Colors.grey,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.3,
-        margin: EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            bottomLeft: Radius.circular(30),
-          ),
-        ),
-        child: Center(
-          child: Text(
-            'SIGN IN',
-            style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                color: Colors.green[900],
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _dropDownApartments() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SectionHeader(title: 'Apartment'),
-        StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection("apartments").snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return LinearProgressIndicator();
-            } else {
-              return DropdownButton<String>(
-                underline: Divider(
-                  color: Colors.white,
-                  height: 3,
-                  thickness: 1.5,
-                ),
-                icon: Icon(
-                  Icons.arrow_drop_down,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                isExpanded: true,
-                value: apartmentName,
-                items: snapshot.data.documents.map((map) {
-                  return DropdownMenuItem<String>(
-                    value: map["apartment_name"],
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(8),
-                      color: Colors.green[900],
-                      child: Text(
-                        map["apartment_name"],
-                        style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    apartmentName = value;
-                  });
-                  print(apartmentName);
-                },
-              );
-            }
-          },
-        ),
-      ],
-    );
   }
 
   Widget _registerFullName() {
@@ -310,11 +227,136 @@ class _RegistrationState extends State<Registration> {
             return null;
           },
           onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_focuspass);
+            FocusScope.of(context).requestFocus(_focusphone);
           },
           textInputAction: TextInputAction.next,
           onSaved: _emailHandler,
         )
+      ],
+    );
+  }
+
+  Widget _registerPhone() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(title: 'Phone'),
+        SizedBox(
+          height: 5,
+        ),
+        TextFormField(
+          autofocus: false,
+          style: GoogleFonts.quicksand(
+            textStyle: TextStyle(color: Colors.black, fontSize: 18),
+          ),
+          decoration: InputDecoration(
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            icon: Icon(
+              Icons.phone,
+              color: Colors.white,
+            ),
+          ),
+          keyboardType: TextInputType.phone,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Phone is required';
+            }
+            if (value.length != 10) {
+              return 'Phone number should be 10 digits';
+            }
+            return null;
+          },
+          focusNode: _focusphone,
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).requestFocus(_focusnatid);
+          },
+          textInputAction: TextInputAction.next,
+          onSaved: _phoneHandler,
+        ),
+      ],
+    );
+  }
+
+  Widget _registerID() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(title: 'National ID'),
+        SizedBox(
+          height: 5,
+        ),
+        TextFormField(
+          autofocus: false,
+          style: GoogleFonts.quicksand(
+            textStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+            ),
+          ),
+          focusNode: _focusnatid,
+          decoration: InputDecoration(
+            errorStyle: GoogleFonts.quicksand(
+              textStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            icon: Icon(
+              Icons.perm_identity,
+              color: Colors.white,
+            ),
+          ),
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'ID number is required';
+            }
+            if (value.length < 7 || value.length > 8) {
+              return 'ID number should be 8 digits';
+            }
+            return null;
+          },
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).requestFocus(_focuspass);
+          },
+          textInputAction: TextInputAction.next,
+          onSaved: _natIdHandler,
+        ),
       ],
     );
   }
@@ -433,12 +475,6 @@ class _RegistrationState extends State<Registration> {
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
-            if (value.isEmpty) {
-              return 'Password is required';
-            }
-            if (value.length < 6) {
-              return 'Password should be 6 or more characters';
-            }
             if (value != _passwording.text) {
               return 'Passwords do not match';
             }
@@ -454,20 +490,13 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  //Generate a timestamp that will be the Landlords unique code
-  int lordCode() {
-    int code = DateTime.now().microsecondsSinceEpoch;
-    return code;
-  }
-
-  bool isLoading = true;
   dynamic result;
   bool callResponse = false;
 
   API _api = API();
 
-  Future<bool> serverCall() async {
-    result = await _api.createUserEmailPass(_user);
+  Future<bool> serverCall(User user) async {
+    result = await _api.createUserEmailPass(user);
     print('This is the result: $result');
 
     if (result == 'Your password is weak. Please choose another') {
@@ -500,41 +529,32 @@ class _RegistrationState extends State<Registration> {
     returnDoc.then((value) {
       Map<String, dynamic> data = value.data;
       Navigator.of(context).pushReplacementNamed(
-        '/tenant-home',
+        '/provider-home',
         arguments: data,
       );
     });
   }
 
   void _registerBtnPressed() {
-    if (apartmentName == null) {
-      //Show an action sheet with error
-      showCupertinoModalPopup(
-        context: context,
-        builder: (BuildContext context) {
-          return ErrorDialog(message: 'Please select an apartment');
-        },
-      );
-    } else if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    FormState form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
 
-      //Populate the user fields based on designation
-      _user = User(
-        fullName: _fullName,
-        email: _email,
-        registerDate: now,
-        designation: "Tenant",
-        apartmentName: apartmentName,
-        password: _pass,
-        lordCode: 0,
-      );
+      User _user = new User(
+          fullName: _fullName,
+          email: _email,
+          registerDate: now,
+          phone: _phone,
+          natId: _natId,
+          designation: "Provider",
+          password: _pass,
+          lordCode: 0);
 
       setState(() {
         isLoading = false;
       });
 
-      //Display appropriate response according to results of above feature
-      serverCall().catchError((error) {
+      serverCall(_user).catchError((error) {
         print('This is the error $error');
         //Disable the circular progress dialog
         setState(() {
@@ -571,7 +591,6 @@ class _RegistrationState extends State<Registration> {
             navigateUser(result.uid);
           });
           //Retreieve user details and push to home page
-
         } else {
           print('Failed response: $result');
           //Disable the circular progress dialog
@@ -623,58 +642,6 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  void _browse() {
-    Navigator.of(context).pushNamed('/newbie');
-  }
-
-  void _service() {
-    Navigator.of(context).pushNamed('/service-create');
-  }
-
-  Widget _browseWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        FlatButton(
-          color: Colors.grey[100],
-          onPressed: _browse,
-          child: Text(
-            'looking for a house',
-            style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _serviceWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        FlatButton(
-          color: Colors.grey[100],
-          onPressed: _service,
-          child: Text(
-            'Provide services',
-            style: GoogleFonts.muli(
-              textStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -687,9 +654,17 @@ class _RegistrationState extends State<Registration> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: <Widget>[
-          _signInWidget(),
-        ],
+        title: Text(
+          'Create an account',
+          style: GoogleFonts.quicksand(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
         elevation: 0.0,
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -697,7 +672,7 @@ class _RegistrationState extends State<Registration> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
-            children: <Widget>[
+            children: [
               BackgroundColor(),
               Container(
                 height: double.infinity,
@@ -709,61 +684,21 @@ class _RegistrationState extends State<Registration> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ConnectionStatusBar(
-                          height: 30,
-                          animationDuration: Duration(milliseconds: 500),
-                          color: Colors.black,
-                          title: Text(
-                            'Please check your internet connection',
-                            style: GoogleFonts.quicksand(
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        _browseWidget(),
-                        _serviceWidget(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Hello',
-                          style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Please fill in the form below to open a new tenant account',
-                          style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        _dropDownApartments(),
-                        SizedBox(
-                          height: 25,
-                        ),
+                      children: [
+                        networkState(),
                         _registerFullName(),
                         SizedBox(
                           height: 25,
                         ),
                         _registerEmail(),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        _registerPhone(),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        _registerID(),
                         SizedBox(
                           height: 25,
                         ),
@@ -780,7 +715,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
