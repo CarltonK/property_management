@@ -53,6 +53,7 @@ export const paymentReportGenerator = functions.firestore
                 })
                 .then(async doc => {
                     const requesterEmail = doc.get('email')
+                    const apartment = doc.get('apartment_name')
                     const credOptions = { 
                         service: 'gmail',
                         auth: {
@@ -65,7 +66,8 @@ export const paymentReportGenerator = functions.firestore
                     const mailOptions = {
                         from: process.env.AUTH_USER,
                         to: requesterEmail,
-                        subject: 'Report',
+                        subject: `${apartment} Payment Report`,
+                        text: `This report was requested by ${requesterEmail}`,
                         attachments: [
                             {
                                 filename: 'report.csv',
