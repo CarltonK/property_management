@@ -110,7 +110,9 @@ class API with ChangeNotifier {
         response = 'The email format entered is invalid';
         //print('Negative Response: $response');
       }
-      if (e.toString().contains("ERROR_EMAIL_ALREADY_IN_USE")) {
+      if (e.toString().contains("ERROR_EMAIL_ALREADY_IN_USE") ||
+          e.toString().contains(
+              'The email address is already in use by another account')) {
         response = 'An account with the same email exists';
         //print('Negative Response: $response');
       }

@@ -608,7 +608,7 @@ class _ServiceRegisterState extends State<ServiceRegister> {
       showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
-          return ErrorDialog(message: 'Please select an service');
+          return ErrorDialog(message: 'Please select a service');
         },
       );
     } else {
