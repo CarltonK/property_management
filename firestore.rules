@@ -75,7 +75,7 @@ service cloud.firestore {
     }
 
     match /services/{serviceDoc} {
-      allow read: if request.auth != null;
+      allow read;
     }
 
     match /analytics/{doc} {

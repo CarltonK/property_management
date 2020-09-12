@@ -11,6 +11,7 @@ class User {
   String email;
   String natId;
   String phone;
+  String service;
   String token;
   String county;
   String location;
@@ -28,6 +29,7 @@ class User {
       {this.fullName,
       this.email,
       this.natId,
+      this.service,
       this.phone,
       this.registerDate,
       this.reminder,
@@ -48,6 +50,7 @@ class User {
       natId: json["natId"],
       token: json['token'],
       phone: json["phone"],
+      service: json["service"],
       registerDate: json["registerDate"],
       reminder: json["reminder"],
       designation: json["designation"],
@@ -67,6 +70,7 @@ class User {
         "token": token,
         "natId": natId,
         "phone": phone,
+        "service": service,
         "registerDate": registerDate,
         "reminder": reminder,
         "designation": designation,

@@ -165,13 +165,14 @@ class API with ChangeNotifier {
   Future completeProviderProfile(User user, String uid) async {
     String phone = user.phone;
     String natId = user.natId;
+    String service = user.service;
 
     try {
       //Update users collection
       await Firestore.instance
           .collection("users")
           .document(uid)
-          .updateData({"phone": phone, "natId": natId});
+          .updateData({"phone": phone, "natId": natId, "service": service});
       print('The user was updated successfully');
       return true;
     } catch (e) {

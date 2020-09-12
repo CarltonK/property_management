@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/firebase_api.dart';
+import 'package:property_management/provider_pages/provider_history.dart';
+import 'package:property_management/provider_pages/provider_requests.dart';
 import 'package:property_management/widgets/dialogs/logout_dialog.dart';
 
 class ProviderHome extends StatefulWidget {
@@ -58,9 +60,9 @@ class _ProviderHomeState extends State<ProviderHome> {
     Navigator.of(context).pop();
   }
 
-  List<Widget> _widgetTenants = [
-    Container(),
-    Container(),
+  List<Widget> _widgetProviders = [
+    ProviderRequest(),
+    ProviderHistory(),
   ];
 
   bottomBarItem(IconData icon, String title) {
@@ -94,7 +96,7 @@ class _ProviderHomeState extends State<ProviderHome> {
             height: double.infinity,
             padding: EdgeInsets.symmetric(),
             width: MediaQuery.of(context).size.width,
-            child: _widgetTenants[_selectedIndex],
+            child: _widgetProviders[_selectedIndex],
           ),
         ),
         bottomNavigationBar: Container(

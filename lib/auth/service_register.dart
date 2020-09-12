@@ -49,7 +49,7 @@ class _ServiceRegisterState extends State<ServiceRegister> {
 
   String _fullName, _email, _pass, _cpass;
   String _phone, _natId;
-  String apartmentName;
+  String serviceName;
 //Network status
   dynamic isConnected;
 
@@ -103,6 +103,65 @@ class _ServiceRegisterState extends State<ServiceRegister> {
   void _confirmPassHandler(String confirmation) {
     _cpass = confirmation.trim();
     print('Password(2): $_cpass');
+  }
+
+  Widget _dropDownServices() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SectionHeader(title: 'Services'),
+        StreamBuilder<QuerySnapshot>(
+          stream: Firestore.instance.collection("services").snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return LinearProgressIndicator();
+            } else {
+              return DropdownButton<String>(
+                underline: Divider(
+                  color: Colors.white,
+                  height: 3,
+                  thickness: 1.5,
+                ),
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                isExpanded: true,
+                value: serviceName,
+                items: snapshot.data.documents.map((map) {
+                  return DropdownMenuItem<String>(
+                    value: map["type"],
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(8),
+                      color: Colors.green[900],
+                      child: Text(
+                        "${map["type"]}",
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    serviceName = value;
+                  });
+                  print(serviceName);
+                },
+              );
+            }
+          },
+        ),
+      ],
+    );
   }
 
   Widget _registerFullName() {
@@ -539,76 +598,88 @@ class _ServiceRegisterState extends State<ServiceRegister> {
   }
 
   void _registerBtnPressed() {
-    FormState form = _formKey.currentState;
-    if (form.validate()) {
-      form.save();
+    if (serviceName == null) {
+      //Show an action sheet with error
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return ErrorDialog(message: 'Please select an service');
+        },
+      );
+    } else {
+      FormState form = _formKey.currentState;
+      if (form.validate()) {
+        form.save();
 
-      User _user = new User(
+        User _user = new User(
           fullName: _fullName,
           email: _email,
           registerDate: now,
+          service: serviceName,
           phone: _phone,
           natId: _natId,
           designation: "Provider",
           password: _pass,
-          lordCode: 0);
-
-      setState(() {
-        isLoading = false;
-      });
-
-      serverCall(_user).catchError((error) {
-        print('This is the error $error');
-        //Disable the circular progress dialog
-        setState(() {
-          isLoading = true;
-        });
-        //Show an action sheet with error
-        showCupertinoModalPopup(
-          context: context,
-          builder: (BuildContext context) {
-            return ErrorDialog(message: error.toString());
-          },
+          lordCode: 0,
         );
-      }).whenComplete(() {
-        if (callResponse) {
-          print('Successful response $result');
-          showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return InfoDialog(
-                message:
-                    'Thank you for joining us ${_user.fullName.split(' ')[0]}',
-              );
-            },
-          );
+
+        setState(() {
+          isLoading = false;
+        });
+
+        serverCall(_user).catchError((error) {
+          print('This is the error $error');
           //Disable the circular progress dialog
           setState(() {
             isLoading = true;
           });
-          //Timed Function
-          Timer(Duration(seconds: 2), () {
-            Navigator.of(context).pop();
-          });
-          Timer(Duration(seconds: 3), () {
-            navigateUser(result.uid);
-          });
-          //Retreieve user details and push to home page
-        } else {
-          print('Failed response: $result');
-          //Disable the circular progress dialog
-          setState(() {
-            isLoading = true;
-          });
-          //Show an action sheet with result
+          //Show an action sheet with error
           showCupertinoModalPopup(
             context: context,
             builder: (BuildContext context) {
-              return ErrorDialog(message: result.toString());
+              return ErrorDialog(message: error.toString());
             },
           );
-        }
-      });
+        }).whenComplete(() {
+          if (callResponse) {
+            print('Successful response $result');
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return InfoDialog(
+                  message:
+                      'Thank you for joining us ${_user.fullName.split(' ')[0]}',
+                );
+              },
+            );
+            //Disable the circular progress dialog
+            setState(() {
+              isLoading = true;
+            });
+            //Timed Function
+            Timer(Duration(seconds: 2), () {
+              Navigator.of(context).pop();
+            });
+            Timer(Duration(seconds: 3), () {
+              navigateUser(result.uid);
+            });
+            //Retreieve user details and push to home page
+          } else {
+            print('Failed response: $result');
+            //Disable the circular progress dialog
+            setState(() {
+              isLoading = true;
+            });
+            //Show an action sheet with result
+            showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) {
+                return ErrorDialog(message: result.toString());
+              },
+            );
+          }
+        });
+      }
     }
   }
 
@@ -689,6 +760,10 @@ class _ServiceRegisterState extends State<ServiceRegister> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         networkState(),
+                        _dropDownServices(),
+                        SizedBox(
+                          height: 25,
+                        ),
                         _registerFullName(),
                         SizedBox(
                           height: 25,
