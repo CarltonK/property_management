@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/api/database_provider.dart';
+import 'package:property_management/widgets/utilities/styles.dart';
 
 class ServicesList extends StatefulWidget {
   final String type;
@@ -10,6 +11,8 @@ class ServicesList extends StatefulWidget {
 }
 
 class _ServicesListState extends State<ServicesList> {
+  Future future;
+  DatabaseProvider _provider = DatabaseProvider();
   Widget appBar() {
     final String type = widget.type.replaceFirst(
       widget.type[0],
@@ -30,14 +33,15 @@ class _ServicesListState extends State<ServicesList> {
       ),
       title: Text(
         type ?? '',
-        style: GoogleFonts.quicksand(
-          textStyle: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        style: titleStyle,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    future = _provider.fetchConcernedServiceProvider(widget.type);
   }
 
   @override

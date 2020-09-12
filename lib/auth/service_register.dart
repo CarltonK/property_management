@@ -131,6 +131,11 @@ class _ServiceRegisterState extends State<ServiceRegister> {
                 isExpanded: true,
                 value: serviceName,
                 items: snapshot.data.documents.map((map) {
+                  String service = map['type'];
+                  final String title = service.replaceFirst(
+                    service[0],
+                    service[0].toUpperCase(),
+                  );
                   return DropdownMenuItem<String>(
                     value: map["type"],
                     child: Container(
@@ -138,7 +143,7 @@ class _ServiceRegisterState extends State<ServiceRegister> {
                       padding: EdgeInsets.all(8),
                       color: Colors.green[900],
                       child: Text(
-                        "${map["type"]}",
+                        title ?? '',
                         style: GoogleFonts.quicksand(
                           textStyle: TextStyle(
                             fontSize: 20,
