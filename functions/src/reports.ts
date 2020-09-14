@@ -21,6 +21,9 @@ export const paymentReportGenerator = functions.firestore
         const tempFilePath = join(tmpdir, fileName) 
         const reportRef = db.collection('reports').doc(reportId)
 
+        //Attachment
+        let attachment: any
+
         try {
             //Query Collection
             return db.collection('payments').doc(codeStr).collection('received')
@@ -46,36 +49,37 @@ export const paymentReportGenerator = functions.firestore
                     //Write the file to cloud function temporary storage
                     return outputFile(tempFilePath, csv)
                 })
-                .then(() => {
+                .then(async () => {
+                    const readSync = (await import('fs')).readFileSync
+                    attachment = readSync(tempFilePath).toString('base64')
                     //Send Email
                     //First Get Email
                     return db.collection('users').doc(uid).get()
                 })
                 .then(async doc => {
-                    const requesterEmail = doc.get('email')
-                    const apartment = doc.get('apartment_name')
-                    const credOptions = { 
-                        service: 'gmail',
-                        auth: {
-                            user: process.env.AUTH_USER,
-                            pass: process.env.AUTH_PASS
-                        }
-                    }
+                    //Define SendGrid
+                    const sgMail = (await import('@sendgrid/mail'))
+                    const sgKey: any = (process.env.SENDGRID_API_KEY)
+                    sgMail.setApiKey(sgKey)
 
-                    const transporter = (await import('nodemailer')).createTransport(credOptions)
-                    const mailOptions = {
-                        from: process.env.AUTH_USER,
-                        to: requesterEmail,
+                    //Message
+                    const requesterEmail: string = doc.get('email')
+                    const apartment = doc.get('apartment_name')
+                    const msg: any = {
+                        to: 'easyshopke@gmail.com',
+                        from: 'mcarlton33@gmail.com',
                         subject: `${apartment} Payment Report`,
                         text: `This report was requested by ${requesterEmail}`,
                         attachments: [
                             {
                                 filename: 'report.csv',
-                                path: tempFilePath
+                                type: "application/csv",
+                                content: attachment,
+                                disposition: "attachment"
                             },
                         ]
                     }
-                    return transporter.sendMail(mailOptions)
+                    return sgMail.send(msg)
                 })
                 .then((value) => {
                     //Update report status
