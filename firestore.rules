@@ -11,7 +11,7 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null;
       allow write: if request.auth != null;
 
       match /users/{userId}/payments_history/{document} {
@@ -94,6 +94,10 @@ service cloud.firestore {
       }
       allow write: if isSignedInUser() && isValidReport();
       allow read: if isSignedInUser();
+    }
+
+    match /service_requests/{request} {
+      allow read, write: if isSignedInUser();
     }
   }
 }

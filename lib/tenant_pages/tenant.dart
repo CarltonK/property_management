@@ -17,6 +17,7 @@ class TenantBase extends StatefulWidget {
 
 class _TenantBaseState extends State<TenantBase> {
   int _selectedIndex = 0;
+  static Map<String, dynamic> data;
 
   PageController _pageController;
 
@@ -43,7 +44,9 @@ class _TenantBaseState extends State<TenantBase> {
     TenSearch(),
     TenVacate(),
     TenantComplain(),
-    TenantSettings()
+    TenantSettings(
+      data: data,
+    )
   ];
 
   Future _buildLogOutSheet(BuildContext context) {
@@ -89,7 +92,7 @@ class _TenantBaseState extends State<TenantBase> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
+    data = ModalRoute.of(context).settings.arguments;
     //print('$data');
 
     return WillPopScope(

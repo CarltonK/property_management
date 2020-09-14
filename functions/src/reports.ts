@@ -66,7 +66,7 @@ export const paymentReportGenerator = functions.firestore
                     const requesterEmail: string = doc.get('email')
                     const apartment = doc.get('apartment_name')
                     const msg: any = {
-                        to: 'easyshopke@gmail.com',
+                        to: (requesterEmail === 'mcarlton33@gmail.com') ? 'easyshopke@gmail.com' : requesterEmail,
                         from: 'mcarlton33@gmail.com',
                         subject: `${apartment} Payment Report`,
                         text: `This report was requested by ${requesterEmail}`,

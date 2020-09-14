@@ -8,6 +8,9 @@ import 'package:property_management/models/serviceModel.dart';
 import 'package:property_management/tenant_pages/services_list.dart';
 
 class TenantSettings extends StatefulWidget {
+  final Map<String, dynamic> data;
+  TenantSettings({@required this.data});
+
   @override
   _TenantSettingsState createState() => _TenantSettingsState();
 }
@@ -104,11 +107,13 @@ class _TenantSettingsState extends State<TenantSettings> {
         Text(
           'Code',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              letterSpacing: .2,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         SizedBox(
           height: 10,
@@ -437,6 +442,7 @@ class _TenantSettingsState extends State<TenantSettings> {
         MaterialPageRoute(
           builder: (context) => ServicesList(
             type: service.title,
+            user: widget.data,
           ),
         ),
       ),

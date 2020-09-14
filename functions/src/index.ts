@@ -6,6 +6,7 @@ admin.initializeApp()
 import * as functions from 'firebase-functions'
 import * as analytics from './analytics_channel'
 import * as reports from './reports'
+import * as service from './service_provision'
 
 //Define messaging
 const fcm = admin.messaging()
@@ -25,6 +26,9 @@ export const adminvacationTracker = analytics.vacationTracker
 //Payment Reports
 export const paymentReportGenerator = reports.paymentReportGenerator
 // export const reportAccesser  = reports.reportAccesser
+
+//Service Provision
+export const serviceRequest = service.serviceRequest
 
 export const sendAnnouncement = functions.firestore
     .document('apartments/{code}/announcements/{doc}')
