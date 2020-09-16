@@ -94,7 +94,6 @@ class _ProviderHomeState extends State<ProviderHome> {
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
     uid = user['uid'];
-    print('User: $user');
     return Provider(
       create: (_) => DatabaseProvider(),
       child: WillPopScope(

@@ -89,8 +89,11 @@ class _ServicesListState extends State<ServicesList> {
   void tileTap(String to, String toToken) async {
     String by = widget.user['uid'];
     String byToken = widget.user['token'];
+    String byName = widget.user['fullName'];
     DatabaseProvider provider = DatabaseProvider();
-    provider.sendServiceRequest(by, byToken, to, toToken).whenComplete(() {
+    provider
+        .sendServiceRequest(by, byToken, to, toToken, byName)
+        .whenComplete(() {
       showCupertinoModalPopup(
         context: context,
         builder: (context) =>

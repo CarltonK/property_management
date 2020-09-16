@@ -26,16 +26,18 @@ class DatabaseProvider {
     }
   }
 
-  Future<void> sendServiceRequest(
-      String by, String byToken, String to, String toToken) async {
+  Future<void> sendServiceRequest(String by, String byToken, String to,
+      String toToken, String byName) async {
     try {
       String collection = 'service_requests';
       await _firestore.collection(collection).document().setData({
         'by': by,
         'byToken': byToken,
-        'to': toToken,
+        'to': to,
         'toToken': toToken,
         'date': DateTime.now(),
+        'byName': byName,
+        'status': 'Pending',
       });
     } catch (e) {
       throw e.toString();
@@ -47,6 +49,7 @@ class DatabaseProvider {
       QuerySnapshot query = await _firestore
           .collection('service_requests')
           .where('to', isEqualTo: uid)
+          .where('status', whereIn: ['Pending'])
           .orderBy('date', descending: true)
           .getDocuments();
       List<DocumentSnapshot> documents = [];
@@ -65,7 +68,7 @@ class DatabaseProvider {
       QuerySnapshot query = await _firestore
           .collection('service_requests')
           .where('to', isEqualTo: uid)
-          .where('status', isEqualTo: 'complete')
+          .where('status', isEqualTo: 'Complete')
           .orderBy('date', descending: true)
           .getDocuments();
       List<DocumentSnapshot> documents = [];

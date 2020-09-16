@@ -171,10 +171,12 @@ class API with ChangeNotifier {
 
     try {
       //Update users collection
-      await Firestore.instance
-          .collection("users")
-          .document(uid)
-          .updateData({"phone": phone, "natId": natId, "service": service});
+      await Firestore.instance.collection("users").document(uid).updateData({
+        "phone": phone,
+        "natId": natId,
+        "service": service,
+        "uid": uid,
+      });
       print('The user was updated successfully');
       return true;
     } catch (e) {
