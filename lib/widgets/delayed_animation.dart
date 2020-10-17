@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class DelayedAnimation extends StatefulWidget {
@@ -13,7 +12,7 @@ class DelayedAnimation extends StatefulWidget {
 }
 
 class _DelayedAnimationState extends State<DelayedAnimation>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> _animOffset;
 
@@ -22,7 +21,6 @@ class _DelayedAnimationState extends State<DelayedAnimation>
     super.initState();
 
     _controller = AnimationController(
-      vsync: this,
       duration: Duration(milliseconds: 800),
     );
 

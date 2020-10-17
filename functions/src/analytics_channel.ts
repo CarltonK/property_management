@@ -8,77 +8,53 @@ const doc: FirebaseFirestore.DocumentReference = db.collection('analytics').doc(
 export const paymentTracker = functions.firestore
     .document('payments/{code}/received/{doc}')
     .onCreate(async snapshot => {
-        try {
-            const amount: number = snapshot.get('amount')
-            if (amount === null || typeof(amount) === "string") {
-                console.error()
-            }
-            await doc.update({
-                amount: admin.firestore.FieldValue.increment(amount),
-                payments: admin.firestore.FieldValue.increment(1)
-            })
-        } catch (error) {
-            throw error
+        const amount: number = snapshot.get('amount')
+        if (amount === null || typeof(amount) === "string") {
+            return console.error({status: 400, detail: 'The amount should be a valid integer'})
         }
+        return doc.update({
+            amount: admin.firestore.FieldValue.increment(amount),
+            payments: admin.firestore.FieldValue.increment(1)
+        })
     })
 
 export const complaintTracker = functions.firestore
     .document('complaints/{doc}')
     .onCreate(async snapshot => {
-        try {
-            await doc.update({
-                complaints: admin.firestore.FieldValue.increment(1)
-            })
-        } catch (error) {
-            throw error
-        }
+        return doc.update({
+            complaints: admin.firestore.FieldValue.increment(1)
+        })
     })
 
 
 export const landlordTracker = functions.firestore
     .document('landlords/{doc}')
     .onCreate(async snapshot => {
-        try {
-            await doc.update({
-                landlords: admin.firestore.FieldValue.increment(1)
-            })
-        } catch (error) {
-            throw error
-        }
+        return doc.update({
+            landlords: admin.firestore.FieldValue.increment(1)
+        })
     })
 
 export const tenantTracker = functions.firestore
     .document('tenants/{doc}')
     .onCreate(async snapshot => {
-        try {
-            await doc.update({
-                tenants: admin.firestore.FieldValue.increment(1)
-            })
-        } catch (error) {
-            throw error
-        }
+        return doc.update({
+            tenants: admin.firestore.FieldValue.increment(1)
+        })
     })
 
 export const listingTracker = functions.firestore
     .document('listings/{doc}')
     .onCreate(async snapshot => {
-        try {
-            await doc.update({
-                listings: admin.firestore.FieldValue.increment(1)
-            })
-        } catch (error) {
-            throw error
-        }
+        return doc.update({
+            listings: admin.firestore.FieldValue.increment(1)
+        })
     })
 
 export const vacationTracker = functions.firestore
     .document('vacations/{doc}')
     .onCreate(async snapshot => {
-        try {
-            await doc.update({
-                vacations: admin.firestore.FieldValue.increment(1)
-            })
-        } catch (error) {
-            throw error
-        }
+        return doc.update({
+            vacations: admin.firestore.FieldValue.increment(1)
+        })
     })

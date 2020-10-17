@@ -157,7 +157,6 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       checkFirstSeen();
     });
     _controller = AnimationController(
-      vsync: this,
       duration: Duration(
         milliseconds: 200,
       ),

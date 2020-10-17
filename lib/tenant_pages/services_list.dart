@@ -72,17 +72,17 @@ class _ServicesListState extends State<ServicesList> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.green[900],
-            Colors.green[800],
-            Colors.green[700],
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          tileMode: TileMode.clamp,
-        ),
-      ),
+          // gradient: LinearGradient(
+          //   colors: [
+          //     Colors.green[900],
+          //     Colors.green[800],
+          //     Colors.green[700],
+          //   ],
+          //   begin: Alignment.topCenter,
+          //   end: Alignment.bottomCenter,
+          //   tileMode: TileMode.clamp,
+          // ),
+          ),
     );
   }
 
