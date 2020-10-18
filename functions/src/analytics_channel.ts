@@ -10,7 +10,7 @@ export const paymentTracker = functions.firestore
     .onCreate(async snapshot => {
         const amount: number = snapshot.get('amount')
         if (amount === null || typeof(amount) === "string") {
-            return console.error({status: 400, detail: 'The amount should be a valid integer'})
+            return {status: 400, detail: 'The amount should be a valid integer'}
         }
         return doc.update({
             amount: admin.firestore.FieldValue.increment(amount),
