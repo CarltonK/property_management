@@ -7,10 +7,30 @@ import * as functions from 'firebase-functions'
 import * as analytics from './analytics_channel'
 import * as reports from './reports'
 import * as service from './service_provision'
+import * as mpesa from './mpesa_base'
+import * as express from 'express'
 
 //Define messaging
 const fcm = admin.messaging()
 export const db = admin.firestore()
+
+// Initialize Express Server
+const app = express()
+const main = express()
+
+// /*
+// SERVER CONFIGURATION
+// 1) Base Path
+// 2) Set JSON as main parser
+// */
+main.use('/api/v1', app)
+main.use(express.json())
+
+export const mpesaMain = functions.https.onRequest(main)
+
+// M-PESA Endpoints
+// 1) Lipa Na Mpesa Online Callback URL
+app.post('/nitumiekakitu/s649wpar3mdy', mpesa.mpesaLnmCallbackForPayAdmin)
 
 //Custom Analytics
 /*
@@ -26,6 +46,9 @@ export const adminvacationTracker = analytics.vacationTracker
 //Payment Reports
 export const paymentReportGenerator = reports.paymentReportGenerator
 // export const reportAccesser  = reports.reportAccesser
+
+//Payment Triggers
+export const payAdmin = mpesa.payAdminSecure
 
 //Service Provision
 export const serviceRequest = service.serviceRequest
@@ -84,28 +107,28 @@ export const sendPaymentNotice = functions.firestore
 //         } 
 //     })
 
-export const delete3dayOldComplaint = functions.firestore
-    .document('complaints/{complaint}')
-    .onUpdate(async snapshot => {
-        //Check if issue has been fixed
-        if (snapshot.after.get('fixed') === true) {
-            //Get the date now
-            const now: Date = new Date()
-            //Get the date in the document
-            const fixedDate = snapshot.after.get('fixedDate');
-            // console.log(`System Date ${now}`)
-            // console.log(`Document Date ${fixedDate.toDate()}`)
-            //Convert firebase timestamp to Date object
-            const timeStampAsDate = fixedDate.toDate()
-            //Get the difference between the two dates
-            const diff = Number(now) - Number(timeStampAsDate);
-            // console.log(`Difference Date ${diff}`)
-            const threeDaysInNumber: number = 259200
-            if (diff > threeDaysInNumber) {
-                //Get document ID
-                const docId = snapshot.before.id
-                console.log(`Document ID ${docId}`)
-                await db.collection('complaints').doc(docId).delete()
-            }
-        }
-    })
+// export const delete3dayOldComplaint = functions.firestore
+//     .document('complaints/{complaint}')
+//     .onUpdate(async snapshot => {
+//         //Check if issue has been fixed
+//         if (snapshot.after.get('fixed') === true) {
+//             //Get the date now
+//             const now: Date = new Date()
+//             //Get the date in the document
+//             const fixedDate = snapshot.after.get('fixedDate');
+//             // console.log(`System Date ${now}`)
+//             // console.log(`Document Date ${fixedDate.toDate()}`)
+//             //Convert firebase timestamp to Date object
+//             const timeStampAsDate = fixedDate.toDate()
+//             //Get the difference between the two dates
+//             const diff = Number(now) - Number(timeStampAsDate);
+//             // console.log(`Difference Date ${diff}`)
+//             const threeDaysInNumber: number = 259200
+//             if (diff > threeDaysInNumber) {
+//                 //Get document ID
+//                 const docId = snapshot.before.id
+//                 console.log(`Document ID ${docId}`)
+//                 await db.collection('complaints').doc(docId).delete()
+//             }
+//         }
+//     })
