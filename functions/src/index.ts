@@ -12,6 +12,8 @@ import * as express from 'express'
 
 //Define messaging
 const fcm = admin.messaging()
+
+// Define database
 export const db = admin.firestore()
 
 // Initialize Express Server

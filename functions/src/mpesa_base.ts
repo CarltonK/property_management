@@ -5,9 +5,9 @@ import { lipaNaMpesa } from './payments/mpesa/stk_push'
 
 export const payAdminSecure = functions.firestore
     .document('payments/Admin/remittances/{doc}')
-    .onUpdate(async snapshot => {
+    .onCreate(async snapshot => {
         try {
-            const model: PayAdminDocModel = snapshot.after.data() as PayAdminDocModel
+            const model: PayAdminDocModel = snapshot.data() as PayAdminDocModel
             const phone: number = Number("254" + model.phone.slice(1))
             const amount = 10
             await lipaNaMpesa(phone, amount)
