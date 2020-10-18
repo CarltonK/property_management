@@ -1,6 +1,5 @@
 on: push
-branches:
-  - 'develop'
+branch: develop
 name: Build and Release APK
 jobs:
   build:
