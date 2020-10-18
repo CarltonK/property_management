@@ -25,7 +25,7 @@ jobs:
       with:
         name: app
         path: build/app/outputs/apk/release/app-release.apk
-    - name: upload artifact to Firebase App Distribution
+    - name: Upload artifact to Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1.2.1
       with:
         appId: ${{ secrets.FIREBASE_APP_ID }}
