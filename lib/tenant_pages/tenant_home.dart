@@ -10,7 +10,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:property_management/models/paymentmodel.dart';
 
 class TenantHome extends StatefulWidget {
   @override
@@ -18,9 +17,10 @@ class TenantHome extends StatefulWidget {
 }
 
 class _TenantHomeState extends State<TenantHome> {
+  final picker = ImagePicker();
   Map<String, dynamic> user;
   int _code;
-  String uid, file_path, url_result;
+  String uid, filePath, urlResult;
   int _floor;
   String phone, natId, rent;
 
@@ -38,10 +38,10 @@ class _TenantHomeState extends State<TenantHome> {
 
   /// Select an image via gallery or camera
   Future<void> _pickImage(ImageSource source) async {
-    File selected = await ImagePicker.pickImage(source: source);
+    final selected = await picker.getImage(source: source);
     if (selected != null) {
       setState(() {
-        _imageFile = selected;
+        _imageFile = File(selected.path);
       });
       _addBankPayment();
     }
@@ -50,19 +50,18 @@ class _TenantHomeState extends State<TenantHome> {
   /// Starts an upload task
   Future<String> _startUpload(File file) async {
     /// Unique file name for the file
-    file_path = 'payments/$_code/$uid/$dateFormatted/$date/bankslip.png';
+    filePath = 'payments/$_code/$uid/$dateFormatted/$date/bankslip.png';
     //Create a storage reference
-    StorageReference reference =
-        FirebaseStorage.instance.ref().child(file_path);
+    StorageReference reference = FirebaseStorage.instance.ref().child(filePath);
     //Create a task that will handle the upload
     storageUploadTask = reference.putFile(
       file,
     );
     //Snapshot of the completed result
     taskSnapshot = await storageUploadTask.onComplete;
-    url_result = await taskSnapshot.ref.getDownloadURL();
+    urlResult = await taskSnapshot.ref.getDownloadURL();
     //print('URL is $url_result');
-    return url_result;
+    return urlResult;
   }
 
   Future _addBankPayment() async {
