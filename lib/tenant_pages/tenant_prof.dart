@@ -18,8 +18,9 @@ class TenantProfile extends StatefulWidget {
 }
 
 class _TenantProfileState extends State<TenantProfile> {
+  final picker = ImagePicker();
   String _phone, _natId;
-  String uid, file_path, url_result;
+  String uid, filePath, urlResult;
   Map<String, dynamic> user;
   final _formKey = GlobalKey<FormState>();
   double remaining;
@@ -127,7 +128,6 @@ class _TenantProfileState extends State<TenantProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -136,10 +136,10 @@ class _TenantProfileState extends State<TenantProfile> {
 
   /// Select an image via gallery or camera
   Future<void> _pickImage(ImageSource source) async {
-    File selected = await ImagePicker.pickImage(source: source);
+    final selected = await picker.getImage(source: source);
     if (selected != null) {
       setState(() {
-        _imageFile = selected;
+        _imageFile = File(selected.path);
       });
       _changePic();
     }
@@ -148,10 +148,9 @@ class _TenantProfileState extends State<TenantProfile> {
   /// Starts an upload task
   Future<String> _startUpload(File file) async {
     /// Unique file name for the file
-    file_path = 'profiles/$uid/displayPic.png';
+    filePath = 'profiles/$uid/displayPic.png';
     //Create a storage reference
-    StorageReference reference =
-        FirebaseStorage.instance.ref().child(file_path);
+    StorageReference reference = FirebaseStorage.instance.ref().child(filePath);
     //Create a task that will handle the upload
     storageUploadTask = reference.putFile(
       file,
@@ -162,9 +161,9 @@ class _TenantProfileState extends State<TenantProfile> {
           (taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount) * 100;
       print('remaining $remaining');
     });
-    url_result = await taskSnapshot.ref.getDownloadURL();
-    print('URL is $url_result');
-    return url_result;
+    urlResult = await taskSnapshot.ref.getDownloadURL();
+    print('URL is $urlResult');
+    return urlResult;
   }
 
   Future _changePic() async {
@@ -197,7 +196,7 @@ class _TenantProfileState extends State<TenantProfile> {
           .updateData({"url": value});
     }).whenComplete(() {
       setState(() {
-        user["url"] = url_result;
+        user["url"] = urlResult;
       });
 
       Navigator.of(context).pop();
