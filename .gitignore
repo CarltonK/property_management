@@ -14,6 +14,7 @@
 *.ipr
 *.iws
 .idea/
+.github/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -39,3 +40,4 @@ app.*.symbols
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+

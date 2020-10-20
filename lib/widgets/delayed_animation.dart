@@ -21,6 +21,7 @@ class _DelayedAnimationState extends State<DelayedAnimation>
     super.initState();
 
     _controller = AnimationController(
+      vsync: this,
       duration: Duration(milliseconds: 800),
     );
 

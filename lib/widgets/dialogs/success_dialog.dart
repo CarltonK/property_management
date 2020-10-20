@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SuccessDialog extends StatelessWidget {
   final String message;
-  const SuccessDialog({Key key, @required this.message}) : assert(message != null);
+  const SuccessDialog({Key key, @required this.message})
+      : assert(message != null);
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
