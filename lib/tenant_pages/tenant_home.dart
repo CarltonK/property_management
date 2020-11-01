@@ -66,22 +66,34 @@ class _TenantHomeState extends State<TenantHome> {
 
   Future _addBankPayment() async {
     //Action sheet to show upload status
-    showCupertinoModalPopup(
+    showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return CupertinoActionSheet(
-          title: Text(
-            'Uploading',
-            style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Colors.black,
-            )),
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
           ),
-          message: SpinKitDualRing(
-            color: Colors.red,
-            size: 50,
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Hang on while we upload your slip',
+                style: GoogleFonts.quicksand(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SpinKitDualRing(
+                color: Colors.red,
+                size: 50,
+              )
+            ],
           ),
         );
       },
@@ -629,6 +641,16 @@ class _TenantHomeState extends State<TenantHome> {
     );
   }
 
+  Stream<QuerySnapshot> getPayments() {
+    return Firestore.instance
+        .collection("payments")
+        .document(_code.toString())
+        .collection("received")
+        .where("uid", isEqualTo: uid)
+        .orderBy("date", descending: true)
+        .snapshots();
+  }
+
   @override
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
@@ -660,23 +682,19 @@ class _TenantHomeState extends State<TenantHome> {
                   Text(
                     'Payments',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white)),
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Expanded(
                     child: StreamBuilder(
-                      stream: Firestore.instance
-                          .collection("payments")
-                          .document(_code.toString())
-                          .collection("received")
-                          .where("uid", isEqualTo: uid)
-                          .orderBy("date", descending: true)
-                          .snapshots(),
+                      stream: getPayments(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
