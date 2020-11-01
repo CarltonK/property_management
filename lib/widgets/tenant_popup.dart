@@ -54,7 +54,7 @@ class _TenantPopupState extends State<TenantPopup> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.3,
         padding: EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           mainAxisSize: MainAxisSize.min,

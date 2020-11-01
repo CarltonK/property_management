@@ -39,8 +39,6 @@ class MyApp extends StatelessWidget {
       title: 'Kejani',
       debugShowCheckedModeBanner: false,
       routes: {
-        //Default route
-        '/': (context) => Welcome(),
         //Authentication
         '/register': (context) => Registration(),
         '/reset': (context) => ForgotPassword(),
@@ -79,6 +77,7 @@ class MyApp extends StatelessWidget {
         dividerColor: Colors.white,
         unselectedWidgetColor: Colors.white,
       ),
+      home: Welcome(),
     );
   }
 }

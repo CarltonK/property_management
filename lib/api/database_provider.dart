@@ -56,7 +56,6 @@ class DatabaseProvider {
       query.documents.forEach((element) {
         documents.add(element);
       });
-      print('How many providers? ' + documents.length.toString());
       return documents;
     } catch (e) {
       throw e.toString();

@@ -442,7 +442,7 @@ class _TenantSettingsState extends State<TenantSettings> {
         MaterialPageRoute(
           builder: (context) => ServicesList(
             type: service.title,
-            user: widget.data,
+            user: data,
           ),
         ),
       ),

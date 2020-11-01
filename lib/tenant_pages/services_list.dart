@@ -108,12 +108,12 @@ class _ServicesListState extends State<ServicesList> {
   }
 
   Widget singleProviderView(DocumentSnapshot prov) {
-    print(prov);
     String name = prov.data['fullName'];
     String rate = prov.data['rating'].toString();
     String to = prov.documentID;
     String toToken = prov.data['token'];
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
@@ -156,7 +156,7 @@ class _ServicesListState extends State<ServicesList> {
               ),
             ),
             Text(
-              rate,
+              rate != null ? rate : '0',
               style: GoogleFonts.quicksand(
                 textStyle: TextStyle(
                   color: Colors.white,

@@ -175,6 +175,7 @@ class API with ChangeNotifier {
         "phone": phone,
         "natId": natId,
         "service": service,
+        "rating": 0,
         "uid": uid,
       });
       print('The user was updated successfully');
