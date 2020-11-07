@@ -60,42 +60,35 @@ class _TenantPopupState extends State<TenantPopup> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Expanded(
-                child: Container(
-              child: FutureBuilder(
-                  future: _getTenants(widget.apartmentName),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-                    if (snapshot.hasError) {
-                      return errorMessage(
-                        'You have no tenant approval requests',
-                      );
-                    }
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.done:
-                        if (snapshot.data.length == 0) {
-                          return errorMessage(
-                            'You have no tenant approval requests',
-                          );
-                        } else {
-                          return ListView(
-                            children: snapshot.data.map((map) {
-                              //Date Parsing and Formatting
-                              var dateRetrieved = map["registerDate"];
-                              var formatter = new DateFormat('MMMd');
-                              String date =
-                                  formatter.format(dateRetrieved.toDate());
-                              //Placeholder map
-                              Map<String, dynamic> requiredData = map.data;
-                              requiredData["code"] = widget.code;
-                              requiredData["docId"] = map.documentID;
+                child: FutureBuilder(
+                    future: _getTenants(widget.apartmentName),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+                      if (snapshot.hasError) {
+                        return errorMessage(
+                          'You have no tenant approval requests',
+                        );
+                      }
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.done:
+                          if (snapshot.data.length == 0) {
+                            return errorMessage(
+                              'You have no tenant approval requests',
+                            );
+                          } else {
+                            return ListView(
+                              children: snapshot.data.map((map) {
+                                //Date Parsing and Formatting
+                                var dateRetrieved = map["registerDate"];
+                                var formatter = new DateFormat('MMMd');
+                                String date =
+                                    formatter.format(dateRetrieved.toDate());
+                                //Placeholder map
+                                Map<String, dynamic> requiredData = map.data;
+                                requiredData["code"] = widget.code;
+                                requiredData["docId"] = map.documentID;
 
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                  side:
-                                      BorderSide(color: Colors.green, width: 2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ListTile(
+                                return ListTile(
                                   title: Text(
                                     '${map["fullName"]}',
                                     style: GoogleFonts.quicksand(
@@ -167,29 +160,27 @@ class _TenantPopupState extends State<TenantPopup> {
                                       )
                                     ],
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            );
+                          }
+                          break;
+                        case ConnectionState.waiting:
+                          return SpinKitFadingCircle(
+                            color: Colors.green[900],
+                            size: 100,
                           );
-                        }
-                        break;
-                      case ConnectionState.waiting:
-                        return SpinKitFadingCircle(
-                          color: Colors.green[900],
-                          size: 100,
-                        );
-                        break;
-                      case ConnectionState.none:
-                        break;
-                      case ConnectionState.active:
-                        break;
-                    }
-                    return SpinKitFadingCircle(
-                      color: Colors.green[900],
-                      size: 100,
-                    );
-                  }),
-            )),
+                          break;
+                        case ConnectionState.none:
+                          break;
+                        case ConnectionState.active:
+                          break;
+                      }
+                      return SpinKitFadingCircle(
+                        color: Colors.green[900],
+                        size: 100,
+                      );
+                    })),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

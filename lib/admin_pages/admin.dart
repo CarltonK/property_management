@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/admin_pages/admin_home.dart';
 import 'package:property_management/admin_pages/admin_stats.dart';
 import 'package:property_management/api/firebase_api.dart';
@@ -15,10 +14,10 @@ class Admin extends StatefulWidget {
 class _AdminState extends State<Admin> {
   //Page Identifier
   int _selectedIndex = 0;
-  //Data retriever
-  static Map<String, dynamic> data;
-  //uid Identifiers
-  static String uid;
+  // //Data retriever
+  // static Map<String, dynamic> data;
+  // //uid Identifiers
+  // static String uid;
   //List of Pages
   List<Widget> _adminPages = [AdminHome(), AdminStats()];
   //Bottom bar page selector
@@ -49,6 +48,25 @@ class _AdminState extends State<Admin> {
     return _buildLogOutSheet(context) ?? false;
   }
 
+  List<BottomNavigationBarItem> navItems = [
+    BottomNavigationBarItem(
+      icon: Icon(
+        Icons.home,
+        color: Colors.green[900],
+        size: 30,
+      ),
+      label: 'Home',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(
+        Icons.subject,
+        color: Colors.green[900],
+        size: 30,
+      ),
+      label: 'Stats',
+    )
+  ];
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -78,38 +96,7 @@ class _AdminState extends State<Admin> {
             backgroundColor: Colors.white,
             selectedItemColor: Colors.green[900],
             selectedFontSize: 16,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.green[900],
-                  size: 30,
-                ),
-                title: Text(
-                  'Home',
-                  style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.subject,
-                  color: Colors.green[900],
-                  size: 30,
-                ),
-                title: Text(
-                  'Stats',
-                  style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            items: navItems,
             currentIndex: _selectedIndex,
             onTap: _onIndexChanged,
           ),

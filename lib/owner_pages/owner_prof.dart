@@ -355,14 +355,14 @@ class _OwnerProfState extends State<OwnerProf> {
                                                 textStyle: TextStyle(
                                                     color: Colors.white)),
                                           ),
-                                          Text(
-                                            paybill == ''
-                                                ? ''
-                                                : 'Paybill: $paybill',
-                                            style: GoogleFonts.quicksand(
-                                                textStyle: TextStyle(
-                                                    color: Colors.white)),
-                                          )
+                                          // Text(
+                                          //   paybill == ''
+                                          //       ? ''
+                                          //       : 'Paybill: $paybill',
+                                          //   style: GoogleFonts.quicksand(
+                                          //       textStyle: TextStyle(
+                                          //           color: Colors.white)),
+                                          // )
                                         ],
                                       ),
                                     ),

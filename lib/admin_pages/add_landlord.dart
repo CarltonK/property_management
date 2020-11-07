@@ -620,7 +620,7 @@ class _AddLandlordState extends State<AddLandlord> {
           phone: _phone,
           apartmentName: _apartmentName,
           location: _location,
-          paybill: _paybill,
+          // paybill: _paybill,
           designation: "Landlord",
           county: countyName,
           registerDate: DateTime.now().toLocal(),
@@ -671,11 +671,12 @@ class _AddLandlordState extends State<AddLandlord> {
                   message: Text(
                     'We have added $_fullName\nOwner of $_apartmentName',
                     style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 );
               },
@@ -702,27 +703,32 @@ class _AddLandlordState extends State<AddLandlord> {
               context: context,
               builder: (BuildContext context) {
                 return CupertinoActionSheet(
-                    title: Text(
-                      '$result',
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
+                  title: Text(
+                    '$result',
+                    style: GoogleFonts.quicksand(
+                      textStyle: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
                         color: Colors.black,
-                      )),
+                      ),
                     ),
-                    cancelButton: CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          'CANCEL',
-                          style: GoogleFonts.muli(
-                              textStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold)),
-                        )));
+                  ),
+                  cancelButton: CupertinoActionSheetAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                        textStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
             );
           }
@@ -790,11 +796,13 @@ class _AddLandlordState extends State<AddLandlord> {
         Text(
           'County',
           style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              letterSpacing: .2,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         SizedBox(
           height: 10,
@@ -814,13 +822,18 @@ class _AddLandlordState extends State<AddLandlord> {
             value: countyName,
             items: counties.map((map) {
               return DropdownMenuItem<String>(
-                  value: map.name,
-                  child: Text(map.name,
-                      style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                              fontSize: 20,
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold))));
+                value: map.name,
+                child: Text(
+                  map.name,
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
             }).toList(),
             onChanged: (value) {
               setState(() {
@@ -926,10 +939,10 @@ class _AddLandlordState extends State<AddLandlord> {
                           height: 20,
                         ),
                         _registerApartmentLocation(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        _registerPaybill(),
+                        // SizedBox(
+                        //   height: 20,
+                        // ),
+                        // _registerPaybill(),
                         SizedBox(
                           height: 20,
                         ),

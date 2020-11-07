@@ -625,72 +625,74 @@ class _NewTenantState extends State<NewTenant> {
   Widget body() {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          // ConnectionStatusBar(
-          //   height: 30,
-          //   animationDuration: Duration(milliseconds: 500),
-          //   color: Colors.black,
-          //   title: Text(
-          //     'Please check your internet connection',
-          //     style: GoogleFonts.quicksand(
-          //       textStyle: TextStyle(
-          //         color: Colors.white,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          Text(
-            'Hello',
-            style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                letterSpacing: 0.5,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // ConnectionStatusBar(
+            //   height: 30,
+            //   animationDuration: Duration(milliseconds: 500),
+            //   color: Colors.black,
+            //   title: Text(
+            //     'Please check your internet connection',
+            //     style: GoogleFonts.quicksand(
+            //       textStyle: TextStyle(
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Text(
+              'Hello',
+              style: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            'Please fill in the form below to open a new tenant account',
-            style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 18,
-                letterSpacing: 0.5,
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              'Please fill in the form below to open a new tenant account',
+              style: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 30),
-          _dropDownApartments(),
-          SizedBox(
-            height: 25,
-          ),
-          _registerFullName(),
-          SizedBox(
-            height: 25,
-          ),
-          _registerEmail(),
-          SizedBox(
-            height: 25,
-          ),
-          _registerPassword1(),
-          SizedBox(
-            height: 25,
-          ),
-          _registerPassword2(),
-          SizedBox(
-            height: 20,
-          ),
-          _registerBtn()
-        ],
+            SizedBox(height: 30),
+            _dropDownApartments(),
+            SizedBox(
+              height: 25,
+            ),
+            _registerFullName(),
+            SizedBox(
+              height: 25,
+            ),
+            _registerEmail(),
+            SizedBox(
+              height: 25,
+            ),
+            _registerPassword1(),
+            SizedBox(
+              height: 25,
+            ),
+            _registerPassword2(),
+            SizedBox(
+              height: 20,
+            ),
+            _registerBtn()
+          ],
+        ),
       ),
     );
   }
