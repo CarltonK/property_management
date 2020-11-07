@@ -44,6 +44,24 @@ class DatabaseProvider {
     }
   }
 
+  Future<List<DocumentSnapshot>> getDistinctions(String type) async {
+    try {
+      QuerySnapshot query = await _firestore
+          .collectionGroup('distinctions')
+          .where('type', isEqualTo: type)
+          .getDocuments();
+
+      List<DocumentSnapshot> documents = [];
+      query.documents.forEach((element) {
+        print(element.documentID);
+        documents.add(element);
+      });
+      return documents;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   Future<List<DocumentSnapshot>> receiveServiceRequests(String uid) async {
     try {
       QuerySnapshot query = await _firestore

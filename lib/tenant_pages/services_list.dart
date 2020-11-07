@@ -90,8 +90,8 @@ class _ServicesListState extends State<ServicesList> {
     String by = widget.user['uid'];
     String byToken = widget.user['token'];
     String byName = widget.user['fullName'];
-    DatabaseProvider provider = DatabaseProvider();
-    provider
+
+    _provider
         .sendServiceRequest(by, byToken, to, toToken, byName)
         .whenComplete(() {
       showCupertinoModalPopup(
@@ -107,11 +107,42 @@ class _ServicesListState extends State<ServicesList> {
     });
   }
 
+  String formattedDate(Timestamp date) {
+    DateTime now = DateTime.now();
+    Timestamp dateRegistered = date;
+    DateTime retrieved = dateRegistered.toDate();
+
+    int timeDiff = now.difference(retrieved).inDays;
+    String elapsed;
+
+    if (timeDiff < 1) {
+      int hours = now.difference(retrieved).inHours;
+      if (hours < 1) {
+        int minutes = now.difference(retrieved).inMinutes;
+        elapsed = '$minutes minutes ago';
+      } else if (hours == 1) {
+        elapsed = '$hours hour ago';
+      } else {
+        elapsed = '$hours hours ago';
+      }
+    } else {
+      if (timeDiff == 1) {
+        elapsed = '$timeDiff day ago';
+      } else {
+        elapsed = '$timeDiff days ago';
+      }
+    }
+    return elapsed;
+  }
+
   Widget singleProviderView(DocumentSnapshot prov) {
     String name = prov.data['fullName'];
     String rate = prov.data['rating'].toString();
     String to = prov.documentID;
     String toToken = prov.data['token'];
+
+    String elapsedDate = formattedDate(prov.data['registerDate']);
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
@@ -137,7 +168,7 @@ class _ServicesListState extends State<ServicesList> {
           color: Colors.white,
         ),
         subtitle: Text(
-          'Ngara, Nairobi',
+          'Member since $elapsedDate',
           style: GoogleFonts.quicksand(
             textStyle: TextStyle(
               color: Colors.white,
