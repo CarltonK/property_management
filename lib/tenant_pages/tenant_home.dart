@@ -424,10 +424,10 @@ class _TenantHomeState extends State<TenantHome> {
     //_getMessagesCount();
 
     _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-        showMessagePopup(message);
-      },
+      // onMessage: (Map<String, dynamic> message) async {
+      //   print('onMessage: $message');
+      //   showMessagePopup(message);
+      // },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         Navigator.of(context).pushNamed('/announcement', arguments: _code);
