@@ -51,6 +51,7 @@ export const paymentReportGenerator = reports.paymentReportGenerator
 
 //Payment Triggers
 export const payAdmin = mpesa.payAdminSecure
+export const payServiceCharge = mpesa.payServiceCharge
 
 //Service Provision
 export const serviceRequest = service.serviceRequest

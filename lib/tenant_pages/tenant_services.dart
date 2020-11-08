@@ -1,12 +1,14 @@
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/database_provider.dart';
-import 'package:property_management/models/serviceModel.dart';
 import 'package:property_management/tenant_pages/services_list.dart';
+import 'package:property_management/widgets/dialogs/error_dialog.dart';
 import 'package:property_management/widgets/utilities/loading_spinner.dart';
 import 'package:property_management/widgets/utilities/no_data.dart';
 
@@ -19,9 +21,9 @@ class TenantSettings extends StatefulWidget {
 }
 
 class _TenantSettingsState extends State<TenantSettings> {
-  final _formKey = GlobalKey<FormState>();
   String uid;
   int codeData;
+  String phone;
   Future future;
   Map<String, dynamic> user;
   DatabaseProvider provider = new DatabaseProvider();
@@ -209,112 +211,112 @@ class _TenantSettingsState extends State<TenantSettings> {
     }
   }
 
-  void _setCodeBtnPressed() {
-    print('set code btn pressed');
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+  // void _setCodeBtnPressed() {
+  //   print('set code btn pressed');
+  //   if (_formKey.currentState.validate()) {
+  //     _formKey.currentState.save();
 
-      setState(() {
-        isLoading = false;
-      });
+  //     setState(() {
+  //       isLoading = false;
+  //     });
 
-      serverCall().whenComplete(() {
-        if (callResponse == true) {
-          showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    'Your code has been accepted',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
-                  ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                                TextStyle(color: Colors.red, fontSize: 25)),
-                      )));
-            },
-          );
-          //Disable the circular progress dialog
-          setState(() {
-            isLoading = true;
-          });
-        } else {
-          showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) {
-              return CupertinoActionSheet(
-                  title: Text(
-                    'Invalid code entered',
-                    style: GoogleFonts.quicksand(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
-                  ),
-                  cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: Text(
-                        'CANCEL',
-                        style: GoogleFonts.quicksand(
-                            textStyle:
-                                TextStyle(color: Colors.red, fontSize: 25)),
-                      )));
-            },
-          );
-          //Disable the circular progress dialog
-          setState(() {
-            isLoading = true;
-          });
-        }
-      });
-    }
-  }
+  //     serverCall().whenComplete(() {
+  //       if (callResponse == true) {
+  //         showCupertinoModalPopup(
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return CupertinoActionSheet(
+  //                 title: Text(
+  //                   'Your code has been accepted',
+  //                   style: GoogleFonts.quicksand(
+  //                       textStyle: TextStyle(
+  //                     fontWeight: FontWeight.w600,
+  //                     fontSize: 20,
+  //                     color: Colors.black,
+  //                   )),
+  //                 ),
+  //                 cancelButton: CupertinoActionSheetAction(
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop();
+  //                       FocusScope.of(context).unfocus();
+  //                     },
+  //                     child: Text(
+  //                       'CANCEL',
+  //                       style: GoogleFonts.quicksand(
+  //                           textStyle:
+  //                               TextStyle(color: Colors.red, fontSize: 25)),
+  //                     )));
+  //           },
+  //         );
+  //         //Disable the circular progress dialog
+  //         setState(() {
+  //           isLoading = true;
+  //         });
+  //       } else {
+  //         showCupertinoModalPopup(
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return CupertinoActionSheet(
+  //                 title: Text(
+  //                   'Invalid code entered',
+  //                   style: GoogleFonts.quicksand(
+  //                       textStyle: TextStyle(
+  //                     fontWeight: FontWeight.w600,
+  //                     fontSize: 20,
+  //                     color: Colors.black,
+  //                   )),
+  //                 ),
+  //                 cancelButton: CupertinoActionSheetAction(
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop();
+  //                       FocusScope.of(context).unfocus();
+  //                     },
+  //                     child: Text(
+  //                       'CANCEL',
+  //                       style: GoogleFonts.quicksand(
+  //                           textStyle:
+  //                               TextStyle(color: Colors.red, fontSize: 25)),
+  //                     )));
+  //           },
+  //         );
+  //         //Disable the circular progress dialog
+  //         setState(() {
+  //           isLoading = true;
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
-  Widget _setCodeBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      width: double.infinity,
-      child: isLoading
-          ? RaisedButton(
-              color: Colors.white,
-              onPressed: _setCodeBtnPressed,
-              padding: EdgeInsets.all(15.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              child: Text(
-                'SUBMIT',
-                style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                        color: Colors.green[900],
-                        fontSize: 18,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold)),
-              ),
-            )
-          : Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.white,
-                strokeWidth: 3,
-              ),
-            ),
-    );
-  }
+  // Widget _setCodeBtn() {
+  //   return Container(
+  //     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+  //     width: double.infinity,
+  //     child: isLoading
+  //         ? RaisedButton(
+  //             color: Colors.white,
+  //             onPressed: _setCodeBtnPressed,
+  //             padding: EdgeInsets.all(15.0),
+  //             shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(30)),
+  //             child: Text(
+  //               'SUBMIT',
+  //               style: GoogleFonts.quicksand(
+  //                   textStyle: TextStyle(
+  //                       color: Colors.green[900],
+  //                       fontSize: 18,
+  //                       letterSpacing: 0.5,
+  //                       fontWeight: FontWeight.bold)),
+  //             ),
+  //           )
+  //         : Center(
+  //             child: CircularProgressIndicator(
+  //               backgroundColor: Colors.white,
+  //               strokeWidth: 3,
+  //             ),
+  //           ),
+  //   );
+  // }
 
   // Widget _linkToLandlord() {
   //   //If the code is 0, prompt the user to enter the landlord code
@@ -430,6 +432,164 @@ class _TenantSettingsState extends State<TenantSettings> {
     );
   }
 
+  Future payAdminServiceCharge(String phoneNumber, String userid) async {
+    await Firestore.instance
+        .collection("payments")
+        .document('Admin')
+        .collection('serviceremittances')
+        .document()
+        .setData(
+      {
+        "phone": phoneNumber,
+        "date": DateTime.now(),
+        "uid": userid,
+      },
+    );
+  }
+
+  Future showPaymentDialog(String type, String title) {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        title: Text(
+          'You will be required to pay KES 50 to view the list of service providers\nAn Mpesa prompt will be sent to your registered phone number',
+          style: GoogleFonts.quicksand(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              // Check if phone number exists
+              if (phone == null) {
+                Navigator.of(context).pop();
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => ErrorDialog(
+                    message:
+                        'Please navigate to the top left icon and complete your profile',
+                  ),
+                );
+              } else {
+                payAdminServiceCharge(phone, uid).whenComplete(
+                  () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => ServicesList(
+                          type: type,
+                          desc: title,
+                          user: data,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+            child: Text(
+              'I understand',
+              style: GoogleFonts.muli(
+                textStyle: TextStyle(
+                  color: Colors.green,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            'Cancel',
+            style: GoogleFonts.muli(
+              textStyle: TextStyle(
+                color: Colors.red,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget singleDistinction(DocumentSnapshot doc) {
+    String title = doc.data['title'];
+    String type = doc.data['type'];
+    return ListTile(
+      onTap: () async {
+        Navigator.of(context).pop();
+        await showPaymentDialog(type, title);
+      },
+      title: Text(title ?? ''),
+    );
+  }
+
+  Future showDistinctionSelection(
+      Future<List<DocumentSnapshot>> future, String title) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => FutureBuilder(
+        future: future,
+        builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                title: Text(
+                  'Please select a category',
+                ),
+                content: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot doc = snapshot.data[index];
+                      return singleDistinction(doc);
+                    },
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      'CANCEL',
+                      style: GoogleFonts.muli(
+                        textStyle: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+
+            case ConnectionState.waiting:
+              return LoadingSpinner();
+            case ConnectionState.none:
+              return NoData(message: 'There are no categories');
+            default:
+              return LoadingSpinner();
+          }
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -437,44 +597,68 @@ class _TenantSettingsState extends State<TenantSettings> {
   }
 
   Widget singleServiceCard(DocumentSnapshot doc) {
-    final String title = doc.data['type'].replaceFirst(
-      doc.data['type'][0],
-      doc.data['type'][0].toUpperCase(),
+    String _title = doc.data['type'];
+    String _url = doc.data['url'];
+    final String title = _title.replaceFirst(
+      _title[0],
+      _title[0].toUpperCase(),
     );
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ServicesList(
-            type: title,
-            user: data,
-          ),
-        ),
-      ),
+      onTap: () async {
+        Future<List<DocumentSnapshot>> futureDistinctions =
+            provider.getDistinctions(_title);
+        showDistinctionSelection(futureDistinctions, title);
+      },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Container(
-          height: 200,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.accessibility,
-                size: 35,
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: CachedNetworkImage(
+                imageUrl: _url,
+                height: double.infinity,
+                width: 200.0,
+                fit: BoxFit.cover,
               ),
-              SizedBox(
-                height: 10,
+            ),
+            Container(
+              height: double.infinity,
+              width: 200,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black26],
+                ),
+                borderRadius: BorderRadius.circular(12.0),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 2),
+                    blurRadius: 4.0,
+                  )
+                ],
               ),
-              Text(
+            ),
+            Positioned(
+              child: Text(
                 title ?? '',
                 style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
                     fontSize: 20,
+                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-              )
-            ],
-          ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              bottom: 8.0,
+              left: 8.0,
+              right: 8.0,
+            )
+          ],
         ),
       ),
     );
@@ -486,6 +670,7 @@ class _TenantSettingsState extends State<TenantSettings> {
     data = ModalRoute.of(context).settings.arguments;
     // print('Services Page Data: $data');
     codeData = data["landlord_code"];
+    phone = data['phone'];
     uid = data["uid"];
 
     return Scaffold(

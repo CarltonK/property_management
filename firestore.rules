@@ -78,7 +78,7 @@ service cloud.firestore {
     }
     
     match /payments/{doc=**} {
-    	allow read, write: if isSignedInUser();
+    	allow write: if isSignedInUser();
     }
 
     match /bookings/{doc} {

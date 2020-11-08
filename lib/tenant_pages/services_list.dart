@@ -10,8 +10,9 @@ import 'package:property_management/widgets/utilities/styles.dart';
 
 class ServicesList extends StatefulWidget {
   final String type;
+  final String desc;
   final Map<String, dynamic> user;
-  ServicesList({@required this.type, @required this.user});
+  ServicesList({@required this.type, @required this.desc, @required this.user});
 
   @override
   _ServicesListState createState() => _ServicesListState();
@@ -92,7 +93,7 @@ class _ServicesListState extends State<ServicesList> {
     String byName = widget.user['fullName'];
 
     _provider
-        .sendServiceRequest(by, byToken, to, toToken, byName)
+        .sendServiceRequest(by, byToken, to, toToken, byName, widget.desc)
         .whenComplete(() {
       showCupertinoModalPopup(
         context: context,

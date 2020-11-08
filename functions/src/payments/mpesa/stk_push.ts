@@ -5,7 +5,7 @@ import axios from 'axios'
 const passKey: any = process.env.PASS_KEY
 const shortCode: any = process.env.SHORT_CODE
 
-export async function lipaNaMpesa(phone: number, amount: number) {
+export async function lipaNaMpesa(phone: number, amount: number, desription: string) {
     const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, -3)
     const password = Buffer.from(shortCode + passKey + timestamp).toString("base64")
 
@@ -28,7 +28,7 @@ export async function lipaNaMpesa(phone: number, amount: number) {
                 PhoneNumber: phone,
                 CallBackURL: "https://us-central1-property-moha.cloudfunctions.net/mpesaMain/api/v1/nitumiekakitu/s649wpar3mdy",
                 AccountReference: phone,
-                TransactionDesc: "Landlord fee"
+                TransactionDesc: desription
             }
         })
     } catch (error) {

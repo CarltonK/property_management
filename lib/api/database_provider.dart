@@ -27,13 +27,14 @@ class DatabaseProvider {
   }
 
   Future<void> sendServiceRequest(String by, String byToken, String to,
-      String toToken, String byName) async {
+      String toToken, String byName, String description) async {
     try {
       String collection = 'service_requests';
       await _firestore.collection(collection).document().setData({
         'by': by,
         'byToken': byToken,
         'to': to,
+        'description': description,
         'toToken': toToken,
         'date': DateTime.now(),
         'byName': byName,

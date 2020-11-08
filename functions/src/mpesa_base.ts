@@ -11,7 +11,21 @@ export const payAdminSecure = functions.firestore
             const phone: number = Number("254" + model.phone.slice(1))
             //TODO change to actual amount
             const amount = 5
-            await lipaNaMpesa(phone, amount)
+            await lipaNaMpesa(phone, amount, "Landlord fee")
+        } catch (error) {
+            console.error(error)
+        }
+    })
+
+export const payServiceCharge = functions.firestore
+    .document('payments/Admin/serviceremittances/{doc}')
+    .onUpdate(async snapshot => {
+        try {
+            const model: PayAdminDocModel = snapshot.after.data() as PayAdminDocModel
+            const phone: number = Number("254" + model.phone.slice(1))
+            //TODO change to actual amount
+            const amount = 5
+            await lipaNaMpesa(phone, amount, "Service fee")
         } catch (error) {
             console.error(error)
         }

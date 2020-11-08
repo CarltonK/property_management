@@ -8,6 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Image Cache
+  cached_network_image: ^2.2.0+1
   # Fonts
   google_fonts: ^0.2.0
   # Datepicker
