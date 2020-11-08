@@ -1,13 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ServiceModel {
-  String title;
+  String type;
   String url;
 
-  ServiceModel({this.title, this.url});
+  ServiceModel({this.type, this.url});
+
+  factory ServiceModel.fromFirestore(DocumentSnapshot doc) =>
+      ServiceModel(type: doc.data['type'] ?? '', url: doc.data['url'] ?? '');
 }
-
-ServiceModel cleaning = ServiceModel(title: 'cleaning', url: '');
-ServiceModel plumbing = ServiceModel(title: 'plumbing', url: '');
-ServiceModel electrical = ServiceModel(title: 'electrical', url: '');
-ServiceModel delivery = ServiceModel(title: 'delivery', url: '');
-
-List<ServiceModel> appServices = [cleaning, plumbing, electrical, delivery];

@@ -6,6 +6,10 @@ service cloud.firestore {
       return request.auth.uid != null;
     }
 
+    // function isPremiumUser() {
+    //   return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium;
+    // }
+
     function isSuperAdmin() {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.designation == "Admin";
     }
@@ -78,7 +82,7 @@ service cloud.firestore {
     }
     
     match /payments/{doc=**} {
-    	allow read, write: if isSignedInUser();
+    	allow write: if isSignedInUser();
     }
 
     match /bookings/{doc} {

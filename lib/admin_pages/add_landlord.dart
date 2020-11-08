@@ -41,7 +41,7 @@ class _AddLandlordState extends State<AddLandlord> {
   String _fullName,
       _natId,
       _phone,
-      _paybill = '',
+      // _paybill = '',
       _apartmentName,
       _location,
       _email;
@@ -73,10 +73,10 @@ class _AddLandlordState extends State<AddLandlord> {
     print('Location: $_location');
   }
 
-  void _paybillHandler(String value) {
-    _paybill = value.trim();
-    print('Paybill: $_paybill');
-  }
+  // void _paybillHandler(String value) {
+  //   _paybill = value.trim();
+  //   print('Paybill: $_paybill');
+  // }
 
   void _apartmentHandler(String value) {
     _apartmentName = value.trim();
@@ -489,57 +489,57 @@ class _AddLandlordState extends State<AddLandlord> {
     );
   }
 
-  Widget _registerPaybill() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Paybill (Optional)',
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: .2,
-                  fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          focusNode: _focuspaybill,
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              labelText: 'Safaricom paybill',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.confirmation_number,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).unfocus();
-          },
-          textInputAction: TextInputAction.done,
-          onSaved: _paybillHandler,
-        )
-      ],
-    );
-  }
+  // Widget _registerPaybill() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: <Widget>[
+  //       Text(
+  //         'Paybill (Optional)',
+  //         style: GoogleFonts.quicksand(
+  //             textStyle: TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 20,
+  //                 letterSpacing: .2,
+  //                 fontWeight: FontWeight.bold)),
+  //       ),
+  //       SizedBox(
+  //         height: 10,
+  //       ),
+  //       TextFormField(
+  //         autofocus: false,
+  //         style: GoogleFonts.quicksand(
+  //             textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+  //         focusNode: _focuspaybill,
+  //         decoration: InputDecoration(
+  //             errorStyle: GoogleFonts.quicksand(
+  //               textStyle: TextStyle(color: Colors.white),
+  //             ),
+  //             enabledBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: Colors.white)),
+  //             focusedBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: Colors.white, width: 1.5)),
+  //             errorBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: Colors.red)),
+  //             labelText: 'Safaricom paybill',
+  //             labelStyle: GoogleFonts.quicksand(
+  //                 textStyle: TextStyle(color: Colors.white)),
+  //             icon: Icon(
+  //               Icons.confirmation_number,
+  //               color: Colors.white,
+  //             )),
+  //         keyboardType: TextInputType.number,
+  //         validator: (value) {
+  //           return null;
+  //         },
+  //         onFieldSubmitted: (value) {
+  //           FocusScope.of(context).unfocus();
+  //         },
+  //         textInputAction: TextInputAction.done,
+  //         onSaved: _paybillHandler,
+  //       )
+  //     ],
+  //   );
+  // }
 
   Widget _registerBtn() {
     return Container(

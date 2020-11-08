@@ -11,6 +11,8 @@ export const serviceRequest = functions.firestore
 
         if (toToken !== null) {
             try {
+                await db.collection('users').doc(by).update({isPremium: false})
+                functions.logger.info(`${by} has been downgraded from premium`, {structuredData: true})
                 await singleNotificationSend(toToken,'You have received a new request','Knock Knock')
                 const phone: string | null = await getPhone(by)
                 if (typeof(phone) === 'string') {
