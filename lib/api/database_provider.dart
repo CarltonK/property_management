@@ -26,6 +26,10 @@ class DatabaseProvider {
     }
   }
 
+  Stream<DocumentSnapshot> getUser(String uid) {
+    return _firestore.collection('users').document(uid).snapshots();
+  }
+
   Future<void> sendServiceRequest(String by, String byToken, String to,
       String toToken, String byName, String description) async {
     try {

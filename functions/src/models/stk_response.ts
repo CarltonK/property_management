@@ -1,29 +1,24 @@
-declare module namespace {
-
-    export interface Item {
-        Name: string;
-        Value: any;
-    }
-
-    export interface CallbackMetadata {
-        Item: Item[];
-    }
-
-    export interface StkCallback {
-        MerchantRequestID: string;
-        CheckoutRequestID: string;
-        ResultCode: number;
-        ResultDesc: string;
-        CallbackMetadata: CallbackMetadata;
-    }
-
-    export interface Body {
-        stkCallback: StkCallback;
-    }
-
-    export interface RootObject {
-        Body: Body;
-    }
-
+interface Body {
+    stkCallback: StkCallback;
 }
 
+interface StkCallback {
+    MerchantRequestID: string;
+    CheckoutRequestID: string;
+    ResultCode: number;
+    ResultDesc: string;
+    CallbackMetadata: CallbackMetadata;
+}
+
+interface CallbackMetadata {
+    Item: Item[];
+}
+
+interface Item {
+    Name: string;
+    Value: any;
+}
+
+export interface StkResponse {
+    Body: Body
+}

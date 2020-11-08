@@ -210,36 +210,68 @@ class _ServicesListState extends State<ServicesList> {
       body: Stack(
         children: [
           backgroundColor(),
-          FutureBuilder<List<DocumentSnapshot>>(
-            future: future,
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return LoadingSpinner();
-                case ConnectionState.none:
-                  return showError('There are no service providers available');
-                case ConnectionState.active:
-                case ConnectionState.done:
-                  if (snapshot.data.length == 0)
-                    return showError(
-                      'There are no service providers available',
+          Container(
+            height: MediaQuery.of(context).size.height,
+            child: StreamBuilder<DocumentSnapshot>(
+                stream: _provider.getUser(widget.user['uid']),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData &&
+                      snapshot.data.data['isPremium'] == true) {
+                    return FutureBuilder<List<DocumentSnapshot>>(
+                      future: future,
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return LoadingSpinner();
+                          case ConnectionState.none:
+                            return showError(
+                                'There are no service providers available');
+                          case ConnectionState.active:
+                          case ConnectionState.done:
+                            if (snapshot.data.length == 0)
+                              return showError(
+                                'There are no service providers available',
+                              );
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 5.0,
+                              ),
+                              child: ListView.builder(
+                                itemBuilder: (context, index) =>
+                                    singleProviderView(
+                                  snapshot.data[index],
+                                ),
+                                itemCount: snapshot.data.length,
+                              ),
+                            );
+                          default:
+                            return LoadingSpinner();
+                        }
+                      },
                     );
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 5.0,
-                    ),
-                    child: ListView.builder(
-                      itemBuilder: (context, index) => singleProviderView(
-                        snapshot.data[index],
+                  }
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      LoadingSpinner(),
+                      const SizedBox(
+                        height: 5,
                       ),
-                      itemCount: snapshot.data.length,
-                    ),
+                      Text(
+                        'Please wait while we process your request',
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                      )
+                    ],
                   );
-                default:
-                  return LoadingSpinner();
-              }
-            },
+                }),
           ),
         ],
       ),

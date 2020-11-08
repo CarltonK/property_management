@@ -31,8 +31,9 @@ main.use(express.json())
 export const mpesaMain = functions.https.onRequest(main)
 
 // M-PESA Endpoints
-// 1) Lipa Na Mpesa Online Callback URL
-app.post('/nitumiekakitu/s649wpar3mdy', mpesa.mpesaLnmCallbackForPayAdmin)
+// 1) Lipa Na Mpesa Online Callback URL(s)
+app.post('/nitumiekakitu/s649wpar3mdy', mpesa.mpesaLnmCallbackForPayAdminLandlord)
+app.post('/nitumiekakitu/iXDJuECDir5BG3muHncW', mpesa.mpesaLnmCallbackForPayAdminService)
 
 //Custom Analytics
 /*
