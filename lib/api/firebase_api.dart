@@ -175,6 +175,7 @@ class API with ChangeNotifier {
         "phone": phone,
         "natId": natId,
         "service": service,
+        "rating": 0,
         "uid": uid,
       });
       print('The user was updated successfully');
@@ -258,7 +259,7 @@ class API with ChangeNotifier {
       String fullName = user.fullName;
       String phone = user.phone;
       String natId = user.natId;
-      String paybill = user.paybill;
+      // String paybill = user.paybill;
       String location = user.location;
       String county = user.county;
       String designation = user.designation;
@@ -303,7 +304,7 @@ class API with ChangeNotifier {
         "add_date": DateTime.now().toLocal(),
         "owner": fullName,
         "apartment_code": landlordCode,
-        "paybill": paybill,
+        // "paybill": paybill,
         "location": location,
         "county": county,
         "selected": true

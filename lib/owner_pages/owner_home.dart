@@ -244,6 +244,7 @@ class _OwnerHomeState extends State<OwnerHome> {
     DateTime oneWeekAgo = DateTime.now().subtract(Duration(days: 7));
     DateTime now = DateTime.now();
     return showDatePicker(
+      currentDate: now,
       context: context,
       initialDate: oneWeekAgo,
       firstDate: oneYearAgo,
@@ -268,14 +269,12 @@ class _OwnerHomeState extends State<OwnerHome> {
           },
         );
       });
-    }).catchError((error) => {
-          showCupertinoModalPopup(
-            context: context,
-            builder: (context) => ErrorDialog(
-              message: error.toString(),
-            ),
-          )
-        });
+    }).catchError((error) => showCupertinoModalPopup(
+          context: context,
+          builder: (context) => ErrorDialog(
+            message: error.toString(),
+          ),
+        ));
   }
 
   Widget fab(Function func, IconData icon, String title) {
@@ -334,7 +333,7 @@ class _OwnerHomeState extends State<OwnerHome> {
   @override
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
-    print('Owner data: $data');
+    // print('Owner data: $data');
     code = data["landlord_code"];
     phone = data["phone"];
     uid = data['uid'];

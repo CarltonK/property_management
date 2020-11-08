@@ -449,7 +449,6 @@ class _LoginState extends State<Login> {
         ),
       ),
       onTap: () {
-        print('I want to create an account');
         Navigator.of(context).pushNamed('/register');
       },
       splashColor: Colors.white,

@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/database_provider.dart';
 import 'package:property_management/widgets/dialogs/error_dialog.dart';
+import 'package:property_management/widgets/dialogs/leave_page_dialog.dart';
 import 'package:property_management/widgets/dialogs/success_dialog.dart';
 import 'package:property_management/widgets/utilities/loading_spinner.dart';
 import 'package:property_management/widgets/utilities/styles.dart';
 
 class ServicesList extends StatefulWidget {
   final String type;
+  final String desc;
   final Map<String, dynamic> user;
-  ServicesList({@required this.type, @required this.user});
+  ServicesList({@required this.type, @required this.desc, @required this.user});
 
   @override
   _ServicesListState createState() => _ServicesListState();
@@ -90,9 +92,9 @@ class _ServicesListState extends State<ServicesList> {
     String by = widget.user['uid'];
     String byToken = widget.user['token'];
     String byName = widget.user['fullName'];
-    DatabaseProvider provider = DatabaseProvider();
-    provider
-        .sendServiceRequest(by, byToken, to, toToken, byName)
+
+    _provider
+        .sendServiceRequest(by, byToken, to, toToken, byName, widget.desc)
         .whenComplete(() {
       showCupertinoModalPopup(
         context: context,
@@ -107,13 +109,44 @@ class _ServicesListState extends State<ServicesList> {
     });
   }
 
+  String formattedDate(Timestamp date) {
+    DateTime now = DateTime.now();
+    Timestamp dateRegistered = date;
+    DateTime retrieved = dateRegistered.toDate();
+
+    int timeDiff = now.difference(retrieved).inDays;
+    String elapsed;
+
+    if (timeDiff < 1) {
+      int hours = now.difference(retrieved).inHours;
+      if (hours < 1) {
+        int minutes = now.difference(retrieved).inMinutes;
+        elapsed = '$minutes minutes ago';
+      } else if (hours == 1) {
+        elapsed = '$hours hour ago';
+      } else {
+        elapsed = '$hours hours ago';
+      }
+    } else {
+      if (timeDiff == 1) {
+        elapsed = '$timeDiff day ago';
+      } else {
+        elapsed = '$timeDiff days ago';
+      }
+    }
+    return elapsed;
+  }
+
   Widget singleProviderView(DocumentSnapshot prov) {
-    print(prov);
     String name = prov.data['fullName'];
     String rate = prov.data['rating'].toString();
     String to = prov.documentID;
     String toToken = prov.data['token'];
+
+    String elapsedDate = formattedDate(prov.data['registerDate']);
+
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
@@ -137,7 +170,7 @@ class _ServicesListState extends State<ServicesList> {
           color: Colors.white,
         ),
         subtitle: Text(
-          'Ngara, Nairobi',
+          'Member since $elapsedDate',
           style: GoogleFonts.quicksand(
             textStyle: TextStyle(
               color: Colors.white,
@@ -156,7 +189,7 @@ class _ServicesListState extends State<ServicesList> {
               ),
             ),
             Text(
-              rate,
+              rate != null ? rate : '0',
               style: GoogleFonts.quicksand(
                 textStyle: TextStyle(
                   color: Colors.white,
@@ -171,45 +204,93 @@ class _ServicesListState extends State<ServicesList> {
     );
   }
 
+  Future<bool> _onWillPop() {
+    return _buildLeavePageSheet(context) ?? false;
+  }
+
+  Future _buildLeavePageSheet(BuildContext context) {
+    return showCupertinoModalPopup(
+      builder: (context) {
+        return LeavePageDialog();
+      },
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      body: Stack(
-        children: [
-          backgroundColor(),
-          FutureBuilder<List<DocumentSnapshot>>(
-            future: future,
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return LoadingSpinner();
-                case ConnectionState.none:
-                  return showError('There are no service providers available');
-                case ConnectionState.active:
-                case ConnectionState.done:
-                  if (snapshot.data.length == 0)
-                    return showError(
-                      'There are no service providers available',
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: appBar(),
+        body: Stack(
+          children: [
+            backgroundColor(),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: StreamBuilder<DocumentSnapshot>(
+                  stream: _provider.getUser(widget.user['uid']),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data.data['isPremium'] == true) {
+                      return FutureBuilder<List<DocumentSnapshot>>(
+                        future: future,
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return LoadingSpinner();
+                            case ConnectionState.none:
+                              return showError(
+                                  'There are no service providers available');
+                            case ConnectionState.active:
+                            case ConnectionState.done:
+                              if (snapshot.data.length == 0)
+                                return showError(
+                                  'There are no service providers available',
+                                );
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 5.0,
+                                ),
+                                child: ListView.builder(
+                                  itemBuilder: (context, index) =>
+                                      singleProviderView(
+                                    snapshot.data[index],
+                                  ),
+                                  itemCount: snapshot.data.length,
+                                ),
+                              );
+                            default:
+                              return LoadingSpinner();
+                          }
+                        },
+                      );
+                    }
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        LoadingSpinner(),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Please wait while we process your request',
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        )
+                      ],
                     );
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 5.0,
-                    ),
-                    child: ListView.builder(
-                      itemBuilder: (context, index) => singleProviderView(
-                        snapshot.data[index],
-                      ),
-                      itemCount: snapshot.data.length,
-                    ),
-                  );
-                default:
-                  return LoadingSpinner();
-              }
-            },
-          ),
-        ],
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -24,6 +24,7 @@ export const complaintTracker = functions.firestore
         return doc.update({
             complaints: admin.firestore.FieldValue.increment(1)
         })
+        .catch((e) => console.error(e))
     })
 
 
@@ -33,6 +34,7 @@ export const landlordTracker = functions.firestore
         return doc.update({
             landlords: admin.firestore.FieldValue.increment(1)
         })
+        .catch((e) => console.error(e))
     })
 
 export const tenantTracker = functions.firestore
@@ -41,6 +43,7 @@ export const tenantTracker = functions.firestore
         return doc.update({
             tenants: admin.firestore.FieldValue.increment(1)
         })
+        .catch((e) => console.error(e))
     })
 
 export const listingTracker = functions.firestore
@@ -49,6 +52,7 @@ export const listingTracker = functions.firestore
         return doc.update({
             listings: admin.firestore.FieldValue.increment(1)
         })
+        .catch((e) => console.error(e))
     })
 
 export const vacationTracker = functions.firestore
@@ -57,4 +61,5 @@ export const vacationTracker = functions.firestore
         return doc.update({
             vacations: admin.firestore.FieldValue.increment(1)
         })
+        .catch((e) => console.error(e))
     })

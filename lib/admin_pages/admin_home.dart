@@ -105,12 +105,16 @@ class _AdminHomeState extends State<AdminHome> {
     );
   }
 
+  Stream<QuerySnapshot> _stream() {
+    return Firestore.instance.collection("landlords").snapshots();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[900],
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection("landlords").snapshots(),
+        stream: _stream(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.documents.length == 0) {
@@ -130,7 +134,9 @@ class _AdminHomeState extends State<AdminHome> {
             return ListView(
               padding: const EdgeInsets.only(top: 20.0),
               children: snapshot.data.documents
-                  .map((data) => _buildListItem(context, data))
+                  .map(
+                    (data) => _buildListItem(context, data),
+                  )
                   .toList(),
             );
           }

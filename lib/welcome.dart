@@ -7,12 +7,6 @@ import 'dart:async';
 import 'package:property_management/widgets/delayed_animation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AuthStatus {
-  NOT_DETERMINED,
-  NOT_LOGGED_IN,
-  LOGGED_IN,
-}
-
 class Welcome extends StatefulWidget {
   // Welcome({this.api});
 
@@ -26,7 +20,6 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   final int delayedAmount = 500;
   double _scale;
   AnimationController _controller;
-  AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
 
   Future checkFirstSeen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,31 +70,40 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       if (userdesignation == "Tenant") {
         //Timed Function
         Timer(Duration(milliseconds: 50), () {
-          Navigator.of(context)
-              .popAndPushNamed('/tenant-home', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/tenant-home',
+            arguments: userData,
+          );
         });
       }
       //Admin Page
       else if (userdesignation == "Admin") {
         //Timed Function
         Timer(Duration(milliseconds: 50), () {
-          Navigator.of(context).popAndPushNamed('/admin', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/admin',
+            arguments: userData,
+          );
         });
       }
       //Manager page
       else if (userdesignation == "Manager") {
         //Timed Function
         Timer(Duration(milliseconds: 50), () {
-          Navigator.of(context)
-              .popAndPushNamed('/manager', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/manager',
+            arguments: userData,
+          );
         });
       }
       //Landlord Page
       else if (userdesignation == "Landlord") {
         //Timed Function
         Timer(Duration(milliseconds: 50), () {
-          Navigator.of(context)
-              .popAndPushNamed('/owner_home', arguments: userData);
+          Navigator.of(context).popAndPushNamed(
+            '/owner_home',
+            arguments: userData,
+          );
         });
       } else {
         showCupertinoModalPopup(
@@ -133,11 +135,12 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
             message: Text(
               'You have been gone for too long. Please login again',
               style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                color: Colors.black,
-              )),
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
             ),
           );
         },
@@ -287,9 +290,10 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 child: Text(
                   "I Already have An Account",
                   style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               delay: delayedAmount + 4000,

@@ -26,19 +26,56 @@ class DatabaseProvider {
     }
   }
 
+  Stream<DocumentSnapshot> getUser(String uid) {
+    return _firestore.collection('users').document(uid).snapshots();
+  }
+
   Future<void> sendServiceRequest(String by, String byToken, String to,
-      String toToken, String byName) async {
+      String toToken, String byName, String description) async {
     try {
       String collection = 'service_requests';
       await _firestore.collection(collection).document().setData({
         'by': by,
         'byToken': byToken,
         'to': to,
+        'description': description,
         'toToken': toToken,
         'date': DateTime.now(),
         'byName': byName,
         'status': 'Pending',
       });
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<List<DocumentSnapshot>> getServices() async {
+    try {
+      QuerySnapshot query =
+          await _firestore.collection('services').getDocuments();
+
+      List<DocumentSnapshot> documents = [];
+      query.documents.forEach((element) {
+        documents.add(element);
+      });
+      return documents;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<List<DocumentSnapshot>> getDistinctions(String type) async {
+    try {
+      QuerySnapshot query = await _firestore
+          .collectionGroup('distinctions')
+          .where('type', isEqualTo: type)
+          .getDocuments();
+
+      List<DocumentSnapshot> documents = [];
+      query.documents.forEach((element) {
+        documents.add(element);
+      });
+      return documents;
     } catch (e) {
       throw e.toString();
     }
@@ -56,7 +93,6 @@ class DatabaseProvider {
       query.documents.forEach((element) {
         documents.add(element);
       });
-      print('How many providers? ' + documents.length.toString());
       return documents;
     } catch (e) {
       throw e.toString();

@@ -4,6 +4,7 @@ import 'package:property_management/admin_pages/add_landlord.dart';
 import 'package:property_management/admin_pages/admin.dart';
 import 'package:property_management/auth/forgot_pass.dart';
 import 'package:property_management/auth/login.dart';
+import 'package:property_management/auth/new_tenant.dart';
 import 'package:property_management/auth/registration.dart';
 import 'package:property_management/auth/service_register.dart';
 import 'package:property_management/manager_pages/manager.dart';
@@ -38,13 +39,12 @@ class MyApp extends StatelessWidget {
       title: 'Kejani',
       debugShowCheckedModeBanner: false,
       routes: {
-        //Default route
-        '/': (context) => Welcome(),
         //Authentication
         '/register': (context) => Registration(),
         '/reset': (context) => ForgotPassword(),
         '/login': (context) => Login(),
         '/service-create': (context) => ServiceRegister(),
+        '/join': (context) => NewTenant(),
         //Tenant
         '/tenant-home': (context) => TenantBase(),
         '/tenant-profile': (context) => TenantProfile(),
@@ -77,6 +77,7 @@ class MyApp extends StatelessWidget {
         dividerColor: Colors.white,
         unselectedWidgetColor: Colors.white,
       ),
+      home: Welcome(),
     );
   }
 }

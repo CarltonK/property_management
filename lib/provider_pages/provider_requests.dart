@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/database_provider.dart';
@@ -6,10 +7,12 @@ import 'package:property_management/widgets/utilities/backgroundColor.dart';
 import 'package:property_management/widgets/utilities/loading_spinner.dart';
 import 'package:property_management/widgets/utilities/no_data.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProviderRequest extends StatelessWidget {
   final String uid;
   ProviderRequest({@required this.uid});
+  static Future future;
 
   Widget appBar() {
     return AppBar(
@@ -50,6 +53,7 @@ class ProviderRequest extends StatelessWidget {
               child: ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) => singleRequestView(
+                  context,
                   snapshot.data[index],
                 ),
               ),
@@ -61,10 +65,73 @@ class ProviderRequest extends StatelessWidget {
     );
   }
 
-  Widget singleRequestView(DocumentSnapshot prov) {
+  Future showDialog(BuildContext context, DocumentSnapshot doc) {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        actions: [
+          FlatButton(
+            onPressed: () async {
+              String phone = doc.data['byPhone'];
+              if (phone != null) {
+                await launch("tel:$phone");
+              }
+            },
+            child: Text(
+              'Call',
+              style: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          FlatButton(
+            onPressed: () async {
+              String phone = doc.data['byPhone'];
+              if (phone != null) {
+                await launch("sms:$phone");
+              }
+            },
+            child: Text(
+              'Message',
+              style: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          FlatButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.quicksand(
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget singleRequestView(BuildContext context, DocumentSnapshot prov) {
     String name = prov.data['byName'];
     String status = prov.data['status'];
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
@@ -72,7 +139,7 @@ class ProviderRequest extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
-        onTap: () {},
+        onTap: () => showDialog(context, prov),
         title: Text(
           name,
           style: GoogleFonts.quicksand(
@@ -98,6 +165,9 @@ class ProviderRequest extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 5,
+            ),
             Text(
               status,
               style: GoogleFonts.quicksand(
@@ -116,8 +186,7 @@ class ProviderRequest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future future =
-        context.watch<DatabaseProvider>().receiveServiceRequests(uid);
+    future = context.watch<DatabaseProvider>().receiveServiceRequests(uid);
     return Scaffold(
       appBar: appBar(),
       body: Stack(
