@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_management/api/database_provider.dart';
 import 'package:property_management/widgets/dialogs/error_dialog.dart';
+import 'package:property_management/widgets/dialogs/leave_page_dialog.dart';
 import 'package:property_management/widgets/dialogs/success_dialog.dart';
 import 'package:property_management/widgets/utilities/loading_spinner.dart';
 import 'package:property_management/widgets/utilities/styles.dart';
@@ -203,77 +204,93 @@ class _ServicesListState extends State<ServicesList> {
     );
   }
 
+  Future<bool> _onWillPop() {
+    return _buildLeavePageSheet(context) ?? false;
+  }
+
+  Future _buildLeavePageSheet(BuildContext context) {
+    return showCupertinoModalPopup(
+      builder: (context) {
+        return LeavePageDialog();
+      },
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      body: Stack(
-        children: [
-          backgroundColor(),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            child: StreamBuilder<DocumentSnapshot>(
-                stream: _provider.getUser(widget.user['uid']),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData &&
-                      snapshot.data.data['isPremium'] == true) {
-                    return FutureBuilder<List<DocumentSnapshot>>(
-                      future: future,
-                      builder: (context, snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.waiting:
-                            return LoadingSpinner();
-                          case ConnectionState.none:
-                            return showError(
-                                'There are no service providers available');
-                          case ConnectionState.active:
-                          case ConnectionState.done:
-                            if (snapshot.data.length == 0)
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: appBar(),
+        body: Stack(
+          children: [
+            backgroundColor(),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: StreamBuilder<DocumentSnapshot>(
+                  stream: _provider.getUser(widget.user['uid']),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data.data['isPremium'] == true) {
+                      return FutureBuilder<List<DocumentSnapshot>>(
+                        future: future,
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return LoadingSpinner();
+                            case ConnectionState.none:
                               return showError(
-                                'There are no service providers available',
-                              );
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 5.0,
-                              ),
-                              child: ListView.builder(
-                                itemBuilder: (context, index) =>
-                                    singleProviderView(
-                                  snapshot.data[index],
+                                  'There are no service providers available');
+                            case ConnectionState.active:
+                            case ConnectionState.done:
+                              if (snapshot.data.length == 0)
+                                return showError(
+                                  'There are no service providers available',
+                                );
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 5.0,
                                 ),
-                                itemCount: snapshot.data.length,
-                              ),
-                            );
-                          default:
-                            return LoadingSpinner();
-                        }
-                      },
-                    );
-                  }
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      LoadingSpinner(),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'Please wait while we process your request',
-                        style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20,
-                          ),
+                                child: ListView.builder(
+                                  itemBuilder: (context, index) =>
+                                      singleProviderView(
+                                    snapshot.data[index],
+                                  ),
+                                  itemCount: snapshot.data.length,
+                                ),
+                              );
+                            default:
+                              return LoadingSpinner();
+                          }
+                        },
+                      );
+                    }
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        LoadingSpinner(),
+                        const SizedBox(
+                          height: 5,
                         ),
-                      )
-                    ],
-                  );
-                }),
-          ),
-        ],
+                        Text(
+                          'Please wait while we process your request',
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }
