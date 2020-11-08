@@ -436,16 +436,16 @@ class _TenantSettingsState extends State<TenantSettings> {
     future = provider.getServices();
   }
 
-  Widget singleServiceCard(ServiceModel service) {
-    final String title = service.title.replaceFirst(
-      service.title[0],
-      service.title[0].toUpperCase(),
+  Widget singleServiceCard(DocumentSnapshot doc) {
+    final String title = doc.data['type'].replaceFirst(
+      doc.data['type'][0],
+      doc.data['type'][0].toUpperCase(),
     );
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ServicesList(
-            type: service.title,
+            type: title,
             user: data,
           ),
         ),
@@ -503,7 +503,8 @@ class _TenantSettingsState extends State<TenantSettings> {
             ),
             FutureBuilder<List<DocumentSnapshot>>(
                 future: future,
-                builder: (context, snapshot) {
+                builder:
+                    (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                       return LoadingSpinner();
@@ -518,10 +519,9 @@ class _TenantSettingsState extends State<TenantSettings> {
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                           ),
-                          itemCount: appServices.length,
+                          itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
-                            ServiceModel singleService = appServices[index];
-                            return singleServiceCard(singleService);
+                            return singleServiceCard(snapshot.data[index]);
                           },
                         ),
                       );
