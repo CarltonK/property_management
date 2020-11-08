@@ -44,6 +44,21 @@ class DatabaseProvider {
     }
   }
 
+  Future<List<DocumentSnapshot>> getServices() async {
+    try {
+      QuerySnapshot query =
+          await _firestore.collection('services').getDocuments();
+
+      List<DocumentSnapshot> documents = [];
+      query.documents.forEach((element) {
+        documents.add(element);
+      });
+      return documents;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   Future<List<DocumentSnapshot>> getDistinctions(String type) async {
     try {
       QuerySnapshot query = await _firestore
@@ -53,7 +68,6 @@ class DatabaseProvider {
 
       List<DocumentSnapshot> documents = [];
       query.documents.forEach((element) {
-        print(element.documentID);
         documents.add(element);
       });
       return documents;

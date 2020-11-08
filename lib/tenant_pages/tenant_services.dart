@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_management/api/database_provider.dart';
 import 'package:property_management/models/serviceModel.dart';
 import 'package:property_management/tenant_pages/services_list.dart';
+import 'package:property_management/widgets/utilities/loading_spinner.dart';
+import 'package:property_management/widgets/utilities/no_data.dart';
 
 class TenantSettings extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -19,145 +22,146 @@ class _TenantSettingsState extends State<TenantSettings> {
   final _formKey = GlobalKey<FormState>();
   String uid;
   int codeData;
-  Future<int> future;
+  Future future;
   Map<String, dynamic> user;
+  DatabaseProvider provider = new DatabaseProvider();
 
-  Widget _ownerCode() {
-    return Card(
-      elevation: 10,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: Colors.white54,
-          width: 1.2,
-        ),
-      ),
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.green[800],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'This is your landlord code',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.quicksand(
-                textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Code: ',
-                  style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                Text(
-                  '${data["landlord_code"]}',
-                  style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      letterSpacing: .5,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _ownerCode() {
+  //   return Card(
+  //     elevation: 10,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(12),
+  //       side: BorderSide(
+  //         color: Colors.white54,
+  //         width: 1.2,
+  //       ),
+  //     ),
+  //     child: Container(
+  //       padding: EdgeInsets.all(16),
+  //       decoration: BoxDecoration(
+  //         color: Colors.green[800],
+  //         borderRadius: BorderRadius.circular(12),
+  //       ),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: <Widget>[
+  //           Text(
+  //             'This is your landlord code',
+  //             textAlign: TextAlign.center,
+  //             style: GoogleFonts.quicksand(
+  //               textStyle: TextStyle(
+  //                 fontWeight: FontWeight.bold,
+  //                 color: Colors.white,
+  //                 fontSize: 24,
+  //               ),
+  //             ),
+  //           ),
+  //           SizedBox(
+  //             height: 20,
+  //           ),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: <Widget>[
+  //               Text(
+  //                 'Code: ',
+  //                 style: GoogleFonts.quicksand(
+  //                   textStyle: TextStyle(
+  //                     color: Colors.white,
+  //                     fontSize: 20,
+  //                   ),
+  //                 ),
+  //               ),
+  //               Text(
+  //                 '${data["landlord_code"]}',
+  //                 style: GoogleFonts.quicksand(
+  //                   textStyle: TextStyle(
+  //                     color: Colors.white,
+  //                     fontSize: 20,
+  //                     letterSpacing: .5,
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Map<String, dynamic> data;
   int code;
   String codeStr;
 
-  Future<int> _getCode() async {
-    return codeData;
-  }
+  // Future<int> _getCode() async {
+  //   return codeData;
+  // }
 
-  void _codeHandler(String value) {
-    codeStr = value.trim();
-    code = int.parse(codeStr);
-    print('Code: $code');
-  }
+  // void _codeHandler(String value) {
+  //   codeStr = value.trim();
+  //   code = int.parse(codeStr);
+  //   print('Code: $code');
+  // }
 
-  Widget _addCode() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Code',
-          style: GoogleFonts.quicksand(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              letterSpacing: .2,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          autofocus: false,
-          style: GoogleFonts.quicksand(
-              textStyle: TextStyle(color: Colors.white, fontSize: 18)),
-          decoration: InputDecoration(
-              errorStyle: GoogleFonts.quicksand(
-                textStyle: TextStyle(color: Colors.white),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 1.5)),
-              errorBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red)),
-              helperText: 'This is the code given to you by your landlord',
-              helperStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              labelText: 'Please enter the code',
-              labelStyle: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: Colors.white)),
-              icon: Icon(
-                Icons.dialpad,
-                color: Colors.white,
-              )),
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            if (value.isEmpty) {
-              return 'Code is required';
-            }
-            return null;
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).unfocus();
-          },
-          textInputAction: TextInputAction.done,
-          onSaved: _codeHandler,
-        )
-      ],
-    );
-  }
+  // Widget _addCode() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: <Widget>[
+  //       Text(
+  //         'Code',
+  //         style: GoogleFonts.quicksand(
+  //           textStyle: TextStyle(
+  //             color: Colors.white,
+  //             fontSize: 20,
+  //             letterSpacing: .2,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ),
+  //       SizedBox(
+  //         height: 10,
+  //       ),
+  //       TextFormField(
+  //         autofocus: false,
+  //         style: GoogleFonts.quicksand(
+  //             textStyle: TextStyle(color: Colors.white, fontSize: 18)),
+  //         decoration: InputDecoration(
+  //             errorStyle: GoogleFonts.quicksand(
+  //               textStyle: TextStyle(color: Colors.white),
+  //             ),
+  //             enabledBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: Colors.white)),
+  //             focusedBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: Colors.white, width: 1.5)),
+  //             errorBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: Colors.red)),
+  //             helperText: 'This is the code given to you by your landlord',
+  //             helperStyle: GoogleFonts.quicksand(
+  //                 textStyle: TextStyle(color: Colors.white)),
+  //             labelText: 'Please enter the code',
+  //             labelStyle: GoogleFonts.quicksand(
+  //                 textStyle: TextStyle(color: Colors.white)),
+  //             icon: Icon(
+  //               Icons.dialpad,
+  //               color: Colors.white,
+  //             )),
+  //         keyboardType: TextInputType.number,
+  //         validator: (value) {
+  //           if (value.isEmpty) {
+  //             return 'Code is required';
+  //           }
+  //           return null;
+  //         },
+  //         onFieldSubmitted: (value) {
+  //           FocusScope.of(context).unfocus();
+  //         },
+  //         textInputAction: TextInputAction.done,
+  //         onSaved: _codeHandler,
+  //       )
+  //     ],
+  //   );
+  // }
 
   bool isLoading = true;
   dynamic result;
@@ -312,93 +316,93 @@ class _TenantSettingsState extends State<TenantSettings> {
     );
   }
 
-  Widget _linkToLandlord() {
-    //If the code is 0, prompt the user to enter the landlord code
-    //Else the user can see the landlord code
-    return FutureBuilder(
-      future: future,
-      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-        if (snapshot.hasError) {
-          print('Snapshot Error: ${snapshot.error.toString()}');
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 50,
-                ),
-                Text(
-                  'Ooops! ${snapshot.error.toString()}',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.greenAccent[700],
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-        switch (snapshot.connectionState) {
-          case ConnectionState.active:
-            break;
-          case ConnectionState.none:
-            break;
-          case ConnectionState.done:
-            if (snapshot.data == 0) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Please request a code from your landlord',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 24,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _addCode(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _setCodeBtn()
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              return _ownerCode();
-            }
-            break;
-          case ConnectionState.waiting:
-            return Center(
-                child: SpinKitFadingCircle(
-              color: Colors.white,
-              size: 150.0,
-            ));
-            break;
-        }
-        return Center(
-            child: SpinKitFadingCircle(
-          color: Colors.white,
-          size: 150.0,
-        ));
-      },
-    );
-  }
+  // Widget _linkToLandlord() {
+  //   //If the code is 0, prompt the user to enter the landlord code
+  //   //Else the user can see the landlord code
+  //   return FutureBuilder(
+  //     future: future,
+  //     builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+  //       if (snapshot.hasError) {
+  //         print('Snapshot Error: ${snapshot.error.toString()}');
+  //         return Center(
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: <Widget>[
+  //               SizedBox(
+  //                 height: 50,
+  //               ),
+  //               Text(
+  //                 'Ooops! ${snapshot.error.toString()}',
+  //                 textAlign: TextAlign.center,
+  //                 style: GoogleFonts.quicksand(
+  //                   textStyle: TextStyle(
+  //                     fontWeight: FontWeight.bold,
+  //                     color: Colors.greenAccent[700],
+  //                     fontSize: 20,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       }
+  //       switch (snapshot.connectionState) {
+  //         case ConnectionState.active:
+  //           break;
+  //         case ConnectionState.none:
+  //           break;
+  //         case ConnectionState.done:
+  //           if (snapshot.data == 0) {
+  //             return Container(
+  //               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //               child: Form(
+  //                 key: _formKey,
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: <Widget>[
+  //                     Text(
+  //                       'Please request a code from your landlord',
+  //                       textAlign: TextAlign.center,
+  //                       style: GoogleFonts.quicksand(
+  //                         textStyle: TextStyle(
+  //                           fontWeight: FontWeight.bold,
+  //                           color: Colors.white,
+  //                           fontSize: 24,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     SizedBox(
+  //                       height: 20,
+  //                     ),
+  //                     _addCode(),
+  //                     SizedBox(
+  //                       height: 10,
+  //                     ),
+  //                     _setCodeBtn()
+  //                   ],
+  //                 ),
+  //               ),
+  //             );
+  //           } else {
+  //             return _ownerCode();
+  //           }
+  //           break;
+  //         case ConnectionState.waiting:
+  //           return Center(
+  //               child: SpinKitFadingCircle(
+  //             color: Colors.white,
+  //             size: 150.0,
+  //           ));
+  //           break;
+  //       }
+  //       return Center(
+  //           child: SpinKitFadingCircle(
+  //         color: Colors.white,
+  //         size: 150.0,
+  //       ));
+  //     },
+  //   );
+  // }
 
   Widget appBar() {
     return AppBar(
@@ -429,7 +433,7 @@ class _TenantSettingsState extends State<TenantSettings> {
   @override
   void initState() {
     super.initState();
-    future = _getCode();
+    future = provider.getServices();
   }
 
   Widget singleServiceCard(ServiceModel service) {
@@ -497,21 +501,36 @@ class _TenantSettingsState extends State<TenantSettings> {
                 color: Colors.green[900],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              height: double.infinity,
-              width: MediaQuery.of(context).size.width,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemCount: appServices.length,
-                itemBuilder: (context, index) {
-                  ServiceModel singleService = appServices[index];
-                  return singleServiceCard(singleService);
-                },
-              ),
-            ),
+            FutureBuilder<List<DocumentSnapshot>>(
+                future: future,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return LoadingSpinner();
+                    case ConnectionState.done:
+                      return Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        height: double.infinity,
+                        width: MediaQuery.of(context).size.width,
+                        child: GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                          itemCount: appServices.length,
+                          itemBuilder: (context, index) {
+                            ServiceModel singleService = appServices[index];
+                            return singleServiceCard(singleService);
+                          },
+                        ),
+                      );
+                    case ConnectionState.none:
+                      return NoData(message: 'There are no services listed');
+                    default:
+                      return LoadingSpinner();
+                  }
+                }),
           ],
         ),
       ),

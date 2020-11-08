@@ -5,11 +5,12 @@ import { lipaNaMpesa } from './payments/mpesa/stk_push'
 
 export const payAdminSecure = functions.firestore
     .document('payments/Admin/remittances/{doc}')
-    .onCreate(async snapshot => {
+    .onUpdate(async snapshot => {
         try {
-            const model: PayAdminDocModel = snapshot.data() as PayAdminDocModel
+            const model: PayAdminDocModel = snapshot.after.data() as PayAdminDocModel
             const phone: number = Number("254" + model.phone.slice(1))
-            const amount = 10
+            //TODO change to actual amount
+            const amount = 5
             await lipaNaMpesa(phone, amount)
         } catch (error) {
             console.error(error)
@@ -20,6 +21,9 @@ export function mpesaLnmCallbackForPayAdmin(request: Request, response: Response
     try {
         console.log('---Received Safaricom M-PESA Webhook For Pay Admin---')
         const serverRequest = request.body
+
+        console.log(typeof(serverRequest))
+        functions.logger.info(serverRequest, {structuredData: true});
 
         const code: number = serverRequest['Body']['stkCallback']['ResultCode']
         if (code === 0) {
